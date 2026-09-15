@@ -7,3 +7,4 @@ Periodo: Septiembre - Diciembre 2026
 |ID|Numero de Practica| Nombre de la Practica| Potenciador| Estatus|
 |---|---|---|---|---|
 |1.|Practica 02|Conexion Remota en MySQL|42|🟡EN DESARROLLO|
+|2.|Practica 03|Agregar archivo de la BD de MySQL|42|🟡EN DESARROLLO|
