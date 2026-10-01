@@ -8,6 +8,7 @@ CREATE USER IF NOT EXISTS 'omar.sampayo'@'%' IDENTIFIED BY '240428';
 CREATE USER IF NOT EXISTS 'jhosep.escamilla'@'%' IDENTIFIED BY '240687';
 CREATE USER IF NOT EXISTS 'uriel.gonzalez'@'%' IDENTIFIED BY '240463';
 CREATE USER IF NOT EXISTS 'yhostin.ramirez'@'%' IDENTIFIED BY '240071';
+CREATE USER IF NOT EXISTS 'eduardo.amaro'@'%' IDENTIFIED BY '240726';
 
 /* ============================================================
    2. CREACIÓN DE ROLES PARA EL SISTEMA E-COMMERCE
@@ -33,12 +34,14 @@ GRANT ALL PRIVILEGES ON db_test.* TO 'admin';
 GRANT ALL PRIVILEGES ON respaldo_db_test.* TO 'admin';
 
 /* SUPPORT */
-GRANT SELECT, INSERT, UPDATE ON db_test.tb_users TO 'support';
-GRANT SELECT, INSERT, UPDATE ON db_test.tb_products TO 'support';
-GRANT SELECT, INSERT, UPDATE ON db_test.tb_users TO 'support';
+GRANT SELECT, INSERT, UPDATE, DELETE ON db_test.tb_users TO 'support';
+GRANT SELECT, INSERT, UPDATE, DELETE ON db_test.tb_products TO 'support';
+GRANT SELECT, INSERT, UPDATE, DELETE ON db_test.tbc_categories TO 'support';
+GRANT SELECT, INSERT, UPDATE, DELETE ON db_test.tbd_products_categories TO 'support';
 
 /* SELLER */
 GRANT SELECT, INSERT, UPDATE ON db_test.tb_products TO 'seller';
+GRANT SELECT ON db_test.tbc_categories TO 'seller';
 
 /* ============================================================
    4. ASIGNACIÓN DE PRIVILEGIOS DIRECTOS Y ROLES A USUARIOS
@@ -52,13 +55,9 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON db_test.* TO 'omar.sampayo'@'%';
 GRANT 'superadmin' TO 'jose.amaro'@'%';
 GRANT 'admin' TO 'marco.ramirez'@'%';
 GRANT 'support' TO 'jorge.garcia'@'%';
+GRANT 'support' TO 'eduardo.amaro'@'%';
 GRANT 'seller' TO 'jhosep.escamilla'@'%';
 GRANT 'seller' TO 'yhostin.ramirez'@'%';
-
-
-GRANT SELECT ON db_test.tbc_categories TO 'seller';
-GRANT SELECT ON db_test.tbc_categories TO 'support';
-GRANT SELECT, INSERT, UPDATE ON db_test.tbd_products_categories TO 'support';
 
 /* ============================================================
    5. CONFIGURACIÓN DE ROLES POR DEFECTO
@@ -66,8 +65,12 @@ GRANT SELECT, INSERT, UPDATE ON db_test.tbd_products_categories TO 'support';
 SET DEFAULT ROLE 'superadmin' TO 'jose.amaro'@'%';
 SET DEFAULT ROLE 'admin' TO 'marco.ramirez'@'%';
 SET DEFAULT ROLE 'support' TO 'jorge.garcia'@'%';
+SET DEFAULT ROLE 'support' TO 'eduardo.amaro'@'%';
 SET DEFAULT ROLE 'seller' TO 'jhosep.escamilla'@'%';
 SET DEFAULT ROLE 'seller' TO 'yhostin.ramirez'@'%';
+
+/* Recargar la tabla de privilegios */
+FLUSH PRIVILEGES;
 
 /* Mensaje final de éxito */
 SELECT "Los usuarios y privilegios han sido creados correctamente" AS mensaje;
