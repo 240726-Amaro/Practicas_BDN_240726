@@ -38,6 +38,11 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON db_test.tb_users TO 'support';
 GRANT SELECT, INSERT, UPDATE ON db_test.tb_products TO 'support';
 GRANT SELECT, INSERT, UPDATE ON db_test.tbc_categories TO 'support';
 GRANT SELECT, INSERT, UPDATE ON db_test.tbd_products_categories TO 'support';
+-- Otorgarle permiso a tu usuario para ejecutar este procedimiento específico
+GRANT EXECUTE ON PROCEDURE db_test.sp_soft_delete_user TO 'jorge.garcia'@'%';
+
+-- Aplicar los cambios de permisos
+FLUSH PRIVILEGES;
 
 /* SELLER */
 GRANT SELECT, INSERT, UPDATE ON db_test.tb_products TO 'seller';
@@ -65,7 +70,6 @@ GRANT 'seller' TO 'yhostin.ramirez'@'%';
 SET DEFAULT ROLE 'superadmin' TO 'jose.amaro'@'%';
 SET DEFAULT ROLE 'admin' TO 'marco.ramirez'@'%';
 SET DEFAULT ROLE 'support' TO 'jorge.garcia'@'%';
-SET DEFAULT ROLE 'support' TO 'eduardo.amaro'@'%';
 SET DEFAULT ROLE 'seller' TO 'jhosep.escamilla'@'%';
 SET DEFAULT ROLE 'seller' TO 'yhostin.ramirez'@'%';
 
