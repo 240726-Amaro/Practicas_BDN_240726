@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Data Atlas · db_test</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b1220;--panel:#111c2d;--line:#26364d;--muted:#8da0b8;--text:#edf4ff;--cyan:#56d6c5;--blue:#86a9ff;--amber:#ffc878}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% -15%,#183858,transparent 34%),var(--bg);color:var(--text);font:15px/1.6 Manrope,system-ui,sans-serif}.wrap{max-width:1400px;margin:auto;padding:28px 34px 70px}.top{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:20px;font-weight:800}.top small,.eyebrow{color:var(--muted);font:11px 'DM Mono',monospace;letter-spacing:.14em}.hero{padding:48px 0 24px}.eyebrow{color:var(--cyan)}h1{font-size:clamp(38px,5vw,64px);line-height:1.04;letter-spacing:-.05em;margin:12px 0}.hero p{max-width:760px;color:#b4c3d7}.stats,.tables,.queries{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat,.card{border:1px solid var(--line);background:linear-gradient(145deg,#121e30,#0e1827);border-radius:15px}.stat{padding:15px 18px}.stat b{display:block;font-size:27px}.stat span{font-size:12px;color:var(--muted)}section{margin:42px 0}.head{margin-bottom:15px}.head h2{margin:4px 0;font-size:24px}.head p{font-size:13px;color:var(--muted)}.diagram{overflow:auto}.mermaid{min-width:900px;display:flex;justify-content:center}.note{border-left:3px solid var(--amber);background:#211d19;padding:12px 15px;color:#d8c6a9;font-size:12px;margin-top:12px}.tools{display:flex;gap:12px;margin:15px 0}.search{background:#0e1827;color:var(--text);padding:11px 14px;border:1px solid var(--line);border-radius:9px;width:min(100%,360px)}.count{color:var(--muted);font:12px 'DM Mono',monospace}.tables,.queries{grid-template-columns:repeat(2,minmax(0,1fr))}.table-card,.code{padding:0;overflow:hidden}.title,.codehead{padding:12px 15px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}.title b{font:14px 'DM Mono',monospace;color:var(--cyan)}.title span{font-size:11px;color:var(--muted)}table{width:100%;border-collapse:collapse;font-size:11px}td,th{text-align:left;padding:8px 11px;border-bottom:1px solid #1d2b3e}th{font-size:9px;color:var(--muted);text-transform:uppercase}td:first-child,td:nth-child(2){font-family:'DM Mono',monospace}td:first-child{color:#dce8f8}.key{font-size:9px;color:var(--amber)}.codehead{font-size:12px}.codehead button{background:#142239;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:5px 8px;cursor:pointer}pre{margin:0;padding:15px;background:#0b1421;color:#c7d5e8;overflow:auto;font:11px/1.7 'DM Mono',monospace}.triggerlist{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.trigger{padding:12px;border:1px solid var(--line);border-radius:10px;background:#101a29}.trigger b{display:block;color:var(--blue);font:11px 'DM Mono',monospace}.trigger span{font-size:10px;color:var(--muted)}.wide{grid-column:1/-1}.foot{border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:11px}@media(max-width:850px){.wrap{padding:20px 15px}.stats{grid-template-columns:repeat(2,1fr)}.tables,.queries{grid-template-columns:1fr}.triggerlist{grid-template-columns:repeat(2,1fr)}}@media(max-width:500px){.top small{display:none}.triggerlist{grid-template-columns:1fr}}
+</style></head><body><main class="wrap">
+<header class="top"><span>◈ DATA ATLAS <span style="color:var(--muted)">/ db_test</span></span><small>SCHEMA REFERENCE · MYSQL 8</small></header>
+<div class="hero"><div class="eyebrow">CATÁLOGO DE BASE DE DATOS</div><h1>La estructura detrás<br>de la tienda.</h1><p>Mapa interactivo del esquema de comercio electrónico: entidades, relaciones, campos y rutinas de auditoría. Explora el modelo y copia consultas listas para adaptar.</p></div>
+<div class="stats"><div class="stat"><b>15</b><span>tablas documentadas</span></div><div class="stat"><b>18</b><span>relaciones FK observadas*</span></div><div class="stat"><b>15</b><span>triggers de auditoría</span></div><div class="stat"><b>3</b><span>procedimientos almacenados</span></div></div>
+<section><div class="head"><div class="eyebrow">01 / MODELO</div><h2>Diagrama entidad-relación</h2><p>Claves foráneas declaradas y trazabilidad lógica hacia la bitácora.</p></div><div class="card diagram"><pre class="mermaid">
+erDiagram
+ tb_users ||--o| tb_carts : owns
+ tb_users ||--o{ tb_orders : places
+ tb_orders ||--o{ tb_payments : receives
+ tbc_payment_methods ||--o{ tb_payments : method
+ tb_orders ||--o{ tbd_order_details : contains
+ tb_products ||--o{ tbd_order_details : item
+ tb_products ||--o{ tbd_products_categories : classified
+ tbc_categories ||--o{ tbd_products_categories : groups
+ tbc_categories ||--o{ tbc_categories : parent
+ tb_users ||--o{ tbd_products_users_providers : provides
+ tb_products ||--o{ tbd_products_users_providers : sourced
+ tb_users ||--o{ tbd_users_wishlist_products : saves
+ tb_products ||--o{ tbd_users_wishlist_products : wished
+ tb_users ||--o{ tbd_wishlist : owns
+ tb_products ||--o{ tbd_wishlist : listed
+ tb_users ||--o{ tbd_shopping_cart : shops
+ tb_products ||--o{ tbd_shopping_cart : product
+ tbd_users_offer_products ||--o{ tbd_shopping_cart : offer
+ tb_users ||--o{ tbd_users_offer_products : offers
+ tb_products ||--o{ tbd_users_offer_products : discounted
+ tb_logs }o..o{ tb_products : audits
+ tb_logs }o..o{ tb_users : audits
+</pre><p style="font-size:11px;color:var(--muted)">tb_logs audita por table_name; no tiene FK hacia las entidades.</p></div><div class="note">* Consolidado de BD11 (respaldo más reciente) con BD9 para completar tbd_users_offer_products: BD11 y BD10 apuntan a esa tabla, pero omiten su CREATE TABLE. BD9 aporta sus campos, sin declarar FKs. La relación con tb_logs es lógica.</div></section>
+<section><div class="head"><div class="eyebrow">02 / DICCIONARIO DE DATOS</div><h2>Tablas y campos</h2><p>Tipos, claves y atributos extraídos de CREATE TABLE.</p></div><div class="tools"><input class="search" id="filter" placeholder="Filtrar tabla o campo…"><span class="count" id="count"></span></div><div class="tables" id="tables"></div></section>
+<section><div class="head"><div class="eyebrow">03 / CONSULTAS</div><h2>Kit SQL por tabla</h2><p>SELECT, conteo y auditoría reciente desde tb_logs para cada entidad.</p></div><div class="queries" id="queries"></div></section>
+<section><div class="head"><div class="eyebrow">04 / AUTOMATIZACIÓN</div><h2>Triggers de auditoría</h2><p>BD11 define AFTER INSERT, UPDATE y DELETE en cinco tablas.</p></div><div class="triggerlist" id="triggerlist"></div><div class="queries" style="margin-top:14px"><article class="card code wide"><div class="codehead"><span>trg_products_after_insert · código extraído</span><button class="copy">Copiar</button></div><pre><code>CREATE TRIGGER trg_products_after_insert
+AFTER INSERT ON tb_products FOR EACH ROW
+BEGIN
+  INSERT INTO tb_logs (table_name, operation, db_user, description, operation_date, operation_status)
+  VALUES ('tb_products', 'Create', USER(),
+    CONCAT('Producto creado. ID: ', NEW.ID, ', SKU: ', COALESCE(NEW.SKU, 'NULL'), ', Nombre: ', COALESCE(NEW.name, 'NULL'), ', Precio: ', NEW.current_price, ', Stock: ', NEW.current_stock),
+    CURRENT_TIMESTAMP, b'1');
+END;</code></pre></article><div class="queries"><details class="card code wide"><summary class="codehead">trg_products_after_insert</summary><pre><code>CREATE TRIGGER `trg_products_after_insert` AFTER INSERT ON `tb_products` FOR EACH ROW BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        description,
+        operation_date,
+        operation_status
+    )
+    VALUES (
+        &#39;tb_products&#39;,
+        &#39;Create&#39;,
+        USER(),
+        CONCAT(&#39;Producto creado. ID: &#39;, NEW.ID, &#39;, SKU: &#39;, COALESCE(NEW.SKU, &#39;NULL&#39;), &#39;, Nombre: &#39;, COALESCE(NEW.name, &#39;NULL&#39;), &#39;, Precio: &#39;, NEW.current_price, &#39;, Stock: &#39;, NEW.current_stock),
+        CURRENT_TIMESTAMP,
+        b&#39;1&#39;
+    );
+END</code></pre></details>
+<details class="card code wide"><summary class="codehead">trg_products_after_update</summary><pre><code>CREATE TRIGGER `trg_products_after_update` AFTER UPDATE ON `tb_products` FOR EACH ROW BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        description,
+        operation_date,
+        operation_status
+    )
+    VALUES (
+        &#39;tb_products&#39;,
+        &#39;Update&#39;,
+        USER(),
+        CONCAT(
+            &#39;Producto actualizado. ID=&#39;, NEW.ID,
+            &#39;. Cambios: &#39;,
+            CONCAT_WS(&#39;, &#39;,
+                IF(NOT (OLD.SKU &lt;=&gt; NEW.SKU), CONCAT(&#39;SKU: [&#39;, COALESCE(OLD.SKU, &#39;NULL&#39;), &#39;] -&gt; [&#39;, COALESCE(NEW.SKU, &#39;NULL&#39;), &#39;]&#39;), NULL),
+                IF(NOT (OLD.name &lt;=&gt; NEW.name), CONCAT(&#39;name: [&#39;, COALESCE(OLD.name, &#39;NULL&#39;), &#39;] -&gt; [&#39;, COALESCE(NEW.name, &#39;NULL&#39;), &#39;]&#39;), NULL),
+                IF(NOT (OLD.description &lt;=&gt; NEW.description), CONCAT(&#39;description: [&#39;, COALESCE(OLD.description, &#39;NULL&#39;), &#39;] -&gt; [&#39;, COALESCE(NEW.description, &#39;NULL&#39;), &#39;]&#39;), NULL),
+                IF(NOT (OLD.current_price &lt;=&gt; NEW.current_price), CONCAT(&#39;price: [&#39;, COALESCE(OLD.current_price, &#39;0&#39;), &#39;] -&gt; [&#39;, COALESCE(NEW.current_price, &#39;0&#39;), &#39;]&#39;), NULL),
+                IF(NOT (OLD.current_stock &lt;=&gt; NEW.current_stock), CONCAT(&#39;stock: [&#39;, COALESCE(OLD.current_stock, &#39;0&#39;), &#39;] -&gt; [&#39;, COALESCE(NEW.current_stock, &#39;0&#39;), &#39;]&#39;), NULL),
+                IF(NOT (OLD.status &lt;=&gt; NEW.status), CONCAT(&#39;status: [&#39;, COALESCE(OLD.status, &#39;0&#39;), &#39;] -&gt; [&#39;, COALESCE(NEW.status, &#39;0&#39;), &#39;]&#39;), NULL)
+            )
+        ),
+        CURRENT_TIMESTAMP,
+        b&#39;1&#39;
+    );
+END</code></pre></details>
+<details class="card code wide"><summary class="codehead">trg_products_after_delete</summary><pre><code>CREATE TRIGGER `trg_products_after_delete` AFTER DELETE ON `tb_products` FOR EACH ROW BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        description,
+        operation_date,
+        operation_status
+    )
+    VALUES (
+        &#39;tb_products&#39;,
+        &#39;Delete&#39;,
+        USER(),
+        CONCAT(
+            &#39;Producto eliminado. ID=&#39;, OLD.ID,
+            &#39;, SKU=&#39;, COALESCE(OLD.SKU, &#39;NULL&#39;),
+            &#39;, Nombre=&#39;, COALESCE(OLD.name, &#39;NULL&#39;)
+        ),
+        CURRENT_TIMESTAMP,
+        b&#39;1&#39;
+    );
+END</code></pre></details>
+<details class="card code wide"><summary class="codehead">trg_users_after_insert</summary><pre><code>CREATE TRIGGER `trg_users_after_insert` AFTER INSERT ON `tb_users` FOR EACH ROW BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        description,
+        operation_date,
+        operation_status
+    )
+    VALUES (
+        &#39;tb_users&#39;,
+        &#39;Create&#39;,
+        USER(),
+        CONCAT(&#39;Usuario creado, ID: &#39;, NEW.ID, &#39;, email: &#39;, NEW.email, &#39;, nickname: &#39;, NEW.nickname),
+        CURRENT_TIMESTAMP,
+        b&#39;1&#39;
+    );
+END</code></pre></details>
+<details class="card code wide"><summary class="codehead">trg_users_after_update</summary><pre><code>CREATE TRIGGER `trg_users_after_update` AFTER UPDATE ON `tb_users` FOR EACH ROW BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        description,
+        operation_date,
+        operation_status
+    )
+    VALUES (
+        &#39;tb_users&#39;,
+        &#39;Update&#39;,
+        USER(),
+        CONCAT(
+            &#39;Usuario actualizado. ID=&#39;, NEW.ID,
+            &#39;. Cambios: &#39;,
+            CONCAT_WS(&#39;, &#39;,
+                IF(
+                    NOT (OLD.email &lt;=&gt; NEW.email),
+                    CONCAT(
+                        &#39;email: [&#39;,
+                        COALESCE(OLD.email, &#39;NULL&#39;),
+                        &#39;] -&gt; [&#39;,
+                        COALESCE(NEW.email, &#39;NULL&#39;),
+                        &#39;]&#39;
+                    ),
+                    NULL
+                ),
+                IF(
+                    NOT (OLD.nickname &lt;=&gt; NEW.nickname),
+                    CONCAT(
+                        &#39;nickname: [&#39;,
+                        COALESCE(OLD.nickname, &#39;NULL&#39;),
+                        &#39;] -&gt; [&#39;,
+                        COALESCE(NEW.nickname, &#39;NULL&#39;),
+                        &#39;]&#39;
+                    ),
+                    NULL
+                )
+            )
+        ),
+        CURRENT_TIMESTAMP,
+        b&#39;1&#39;
+    );
+END</code></pre></details>
+<details class="card code wide"><summary class="codehead">trg_users_after_delete</summary><pre><code>CREATE TRIGGER `trg_users_after_delete` AFTER DELETE ON `tb_users` FOR EACH ROW BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        description,
+        operation_date,
+        operation_status
+    )
+    VALUES (
+        &#39;tb_users&#39;,
+        &#39;Delete&#39;,
+        USER(),
+        CONCAT(
+            &#39;Usuario eliminado. ID=&#39;, OLD.ID,
+            &#39;, email=&#39;, COALESCE(OLD.email, &#39;NULL&#39;),
+            &#39;, nickname=&#39;, COALESCE(OLD.nickname, &#39;NULL&#39;)
+        ),
+        CURRENT_TIMESTAMP,
+        b&#39;1&#39;
+    );
+END</code></pre></details>
+<details class="card code wide"><summary class="codehead">trg_tbc_categories_after_insert</summary><pre><code>CREATE TRIGGER `trg_tbc_categories_after_insert` AFTER INSERT ON `tbc_categories` FOR EACH ROW BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        &#39;tbc_categories&#39;,
+        &#39;Create&#39;,
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            &#39;Categor�a creada. ID=&#39;, NEW.ID,
+            &#39;, nombre=&#39;, NEW.name
+        ),
+        b&#39;1&#39;
+    );
+END</code></pre></details>
+<details class="card code wide"><summary class="codehead">trg_tbc_categories_after_update</summary><pre><code>CREATE TRIGGER `trg_tbc_categories_after_update` AFTER UPDATE ON `tbc_categories` FOR EACH ROW BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        &#39;tbc_categories&#39;,
+        &#39;Update&#39;,
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            &#39;Categor�a actualizada. ID=&#39;, NEW.ID,
+            &#39;, nombre antiguo=&#39;, OLD.name, &#39;, nombre nuevo=&#39;, NEW.name,
+            &#39;, estado antiguo=&#39;, OLD.status, &#39;, estado nuevo=&#39;, NEW.status
+        ),
+        b&#39;1&#39;
+    );
+END</code></pre></details>
+<details class="card code wide"><summary class="codehead">trg_tbc_categories_after_delete</summary><pre><code>CREATE TRIGGER `trg_tbc_categories_after_delete` AFTER DELETE ON `tbc_categories` FOR EACH ROW BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        &#39;tbc_categories&#39;,
+        &#39;Delete&#39;,
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            &#39;Categor�a eliminada. ID=&#39;, OLD.ID,
+            &#39;, nombre=&#39;, OLD.name
+        ),
+        b&#39;1&#39;
+    );
+END</code></pre></details>
+<details class="card code wide"><summary class="codehead">trg_tbd_products_categories_after_insert</summary><pre><code>CREATE TRIGGER `trg_tbd_products_categories_after_insert` AFTER INSERT ON `tbd_products_categories` FOR EACH ROW BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        &#39;tbd_products_categories&#39;,
+        &#39;Create&#39;,
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            &#39;Asociaci�n producto-categor�a creada. category_ID=&#39;, NEW.category_ID,
+            &#39;, product_ID=&#39;, NEW.product_ID
+        ),
+        b&#39;1&#39;
+    );
+END</code></pre></details>
+<details class="card code wide"><summary class="codehead">trg_tbd_products_categories_after_update</summary><pre><code>CREATE TRIGGER `trg_tbd_products_categories_after_update` AFTER UPDATE ON `tbd_products_categories` FOR EACH ROW BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        &#39;tbd_products_categories&#39;,
+        &#39;Update&#39;,
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            &#39;Asociaci�n producto-categor�a actualizada. category_ID=&#39;, NEW.category_ID,
+            &#39;, product_ID=&#39;, NEW.product_ID,
+            &#39;, estado antiguo=&#39;, OLD.status, &#39;, estado nuevo=&#39;, NEW.status
+        ),
+        b&#39;1&#39;
+    );
+END</code></pre></details>
+<details class="card code wide"><summary class="codehead">trg_tbd_products_categories_after_delete</summary><pre><code>CREATE TRIGGER `trg_tbd_products_categories_after_delete` AFTER DELETE ON `tbd_products_categories` FOR EACH ROW BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        &#39;tbd_products_categories&#39;,
+        &#39;Delete&#39;,
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            &#39;Asociaci�n producto-categor�a eliminada. category_ID=&#39;, OLD.category_ID,
+            &#39;, product_ID=&#39;, OLD.product_ID
+        ),
+        b&#39;1&#39;
+    );
+END</code></pre></details>
+<details class="card code wide"><summary class="codehead">trg_tbd_products_users_providers_after_insert</summary><pre><code>CREATE TRIGGER `trg_tbd_products_users_providers_after_insert` AFTER INSERT ON `tbd_products_users_providers` FOR EACH ROW BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        &#39;tbd_products_users_providers&#39;,
+        &#39;Create&#39;,
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            &#39;Asociaci&#243;n proveedor-producto creada. user_ID=&#39;, NEW.user_ID,
+            &#39;, product_ID=&#39;, NEW.product_ID,
+            &#39;, tipo=&#39;, COALESCE(NEW.type_ownership, &#39;Sin definir&#39;),
+            &#39;, fecha_disponible=&#39;, NEW.avalaible_date
+        ),
+        b&#39;1&#39;
+    );
+END</code></pre></details>
+<details class="card code wide"><summary class="codehead">trg_tbd_products_users_providers_after_update</summary><pre><code>CREATE TRIGGER `trg_tbd_products_users_providers_after_update` AFTER UPDATE ON `tbd_products_users_providers` FOR EACH ROW BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        &#39;tbd_products_users_providers&#39;,
+        &#39;Update&#39;,
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            &#39;Asociaci&#243;n proveedor-producto actualizada. user_ID=&#39;, NEW.user_ID, 
+            &#39;, product_ID=&#39;, NEW.product_ID,
+            &#39;. Cambios: &#39;,
+            CONCAT_WS(&#39;, &#39;,
+                IF(NOT (OLD.type_ownership &lt;=&gt; NEW.type_ownership), CONCAT(&#39;tipo: [&#39;, COALESCE(OLD.type_ownership, &#39;NULL&#39;), &#39;] -&gt; [&#39;, COALESCE(NEW.type_ownership, &#39;NULL&#39;), &#39;]&#39;), NULL),
+                IF(NOT (OLD.status &lt;=&gt; NEW.status), CONCAT(&#39;status: [&#39;, OLD.status, &#39;] -&gt; [&#39;, NEW.status, &#39;]&#39;), NULL),
+                IF(NOT (OLD.avalaible_date &lt;=&gt; NEW.avalaible_date), CONCAT(&#39;fecha: [&#39;, OLD.avalaible_date, &#39;] -&gt; [&#39;, NEW.avalaible_date, &#39;]&#39;), NULL)
+            )
+        ),
+        b&#39;1&#39;
+    );
+END</code></pre></details>
+<details class="card code wide"><summary class="codehead">trg_tbd_products_users_providers_after_delete</summary><pre><code>CREATE TRIGGER `trg_tbd_products_users_providers_after_delete` AFTER DELETE ON `tbd_products_users_providers` FOR EACH ROW BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        &#39;tbd_products_users_providers&#39;,
+        &#39;Delete&#39;,
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            &#39;Asociaci&#243;n proveedor-producto eliminada. user_ID=&#39;, OLD.user_ID,
+            &#39;, product_ID=&#39;, OLD.product_ID
+        ),
+        b&#39;1&#39;
+    );
+END</code></pre></details></div><article class="card code wide"><div class="codehead">Resumen de los triggers</div><pre><code>Los 14 triggers restantes también insertan registros en tb_logs.
+AFTER UPDATE audita la modificación y AFTER DELETE registra los valores OLD.
+Sus definiciones completas están en Practica03/backups/BD11.sql.</code></pre></article></div></section>
+<section><div class="head"><div class="eyebrow">05 / RUTINAS</div><h2>Procedimientos almacenados</h2><p>Definiciones presentes en el respaldo BD11.</p></div><div class="queries"><article class="card code wide"><div class="codehead"><span>sp_soft_delete_product · definición del respaldo</span><button class="copy">Copiar</button></div><pre><code>DELIMITER $$
+CREATE PROCEDURE sp_soft_delete_product(IN p_product_id INT UNSIGNED)
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM tb_products WHERE ID = p_product_id
+  ) THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'El producto especificado no existe';
+  END IF;
+
+  IF EXISTS (
+    SELECT 1 FROM tb_products
+    WHERE ID = p_product_id AND status = b'0'
+  ) THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'El producto ya se encuentra eliminado';
+  END IF;
+
+  UPDATE tb_products SET status = b'0'
+  WHERE ID = p_product_id;
+END$$
+DELIMITER ;</code></pre></article><article class="card code"><div class="codehead">sp_soft_delete</div><pre><code>Presente en BD11. El cuerpo del
+respaldo termina tras validar que
+exista un esquema seleccionado.</code></pre></article><article class="card code"><div class="codehead">sp_soft_delete_user</div><pre><code>Valida ID, existencia y estado activo;
+actualiza status = b'0' y devuelve
+datos de confirmación de la operación.</code></pre></article></div></section>
+<footer class="foot">Fuente: Practica03/backups/BD11.sql · complemento puntual: BD9.sql. SQL para MySQL 8.</footer>
+</main><script>
+mermaid.initialize({startOnLoad:true,theme:'dark',securityLevel:'loose',er:{layoutDirection:'LR',entityPadding:14},themeVariables:{darkMode:true,background:'#111c2d',primaryColor:'#152b3e',primaryTextColor:'#edf4ff',primaryBorderColor:'#56d6c5',lineColor:'#7187a4',fontFamily:'Manrope'}});
+const tables=[
+['tb_users',[['ID','int','PK · AI'],['email','varchar(80)','UNIQUE'],['nickname','varchar(100)','UNIQUE'],['password','varchar(255)',''],['creation_date','datetime','DEFAULT NOW'],['last_login','datetime','NULL'],['status','bit(1)','DEFAULT 1']]],
+['tb_products',[['ID','int unsigned','PK · AI'],['SKU','varchar(50)','UNIQUE'],['name','varchar(250)',''],['description','text','NULL'],['current_price','decimal(10,2)','DEFAULT 0'],['current_stock','int unsigned','DEFAULT 0'],['status','tinyint','DEFAULT 1'],['creation_date','datetime','DEFAULT NOW'],['last_update','datetime','ON UPDATE']]],
+['tb_logs',[['ID','int','PK · AI'],['table_name','varchar(100)',''],['operation','enum(Create, Read, Update, Delete)',''],['db_user','varchar(80)',''],['description','text',''],['operation_date','datetime','DEFAULT NOW'],['operation_status','bit(1)','DEFAULT 1']]],
+['tb_carts',[['ID','int unsigned','PK · AI'],['user_ID','int','FK → tb_users.ID · UNIQUE'],['status','bit(1)','DEFAULT 1'],['creation_date','datetime','DEFAULT NOW'],['last_update','datetime','NULL · ON UPDATE']]],
+['tb_orders',[['ID','int unsigned','PK · AI'],['user_id','int','FK → tb_users.ID'],['total_amount','decimal(10,2)','DEFAULT 0'],['status','enum(Pending, Processing, Shipped, Delivered, Cancelled)','DEFAULT Pending'],['shipping_address','text','NULL'],['creation_date','datetime','DEFAULT NOW'],['last_update','datetime','ON UPDATE']]],
+['tb_payments',[['ID','int unsigned','PK · AI'],['order_id','int unsigned','FK → tb_orders.ID'],['payment_method_id','int unsigned','FK → tbc_payment_methods.ID'],['amount','decimal(10,2)',''],['payment_status','enum(Pending, Completed, Failed, Refunded)','DEFAULT Pending'],['transaction_reference','varchar(150)','NULL'],['payment_date','datetime','DEFAULT NOW']]],
+['tbc_payment_methods',[['ID','int unsigned','PK · AI'],['name','varchar(100)','UNIQUE'],['description','text','NULL'],['status','bit(1)','DEFAULT 1'],['creation_date','datetime','DEFAULT NOW']]],
+['tbc_categories',[['ID','int unsigned','PK · AI'],['name','varchar(120)','UNIQUE'],['description','text','NULL'],['sup_id_category','int unsigned','FK self · NULL'],['status','bit(1)','DEFAULT 1'],['creation_date','datetime','DEFAULT NOW'],['last_update','datetime','NULL · ON UPDATE']]],
+['tbd_order_details',[['ID','int unsigned','PK · AI'],['order_id','int unsigned','FK → tb_orders.ID'],['product_id','int unsigned','FK → tb_products.ID'],['quantity','int unsigned','DEFAULT 1'],['unit_price','decimal(10,2)',''],['subtotal','decimal(10,2)','GENERATED'],['creation_date','datetime','DEFAULT NOW']]],
+['tbd_products_categories',[['category_ID','int unsigned','PK · FK categoría'],['product_ID','int unsigned','PK · FK producto'],['status','bit(1)','DEFAULT 1'],['creation_date','datetime','DEFAULT NOW'],['last_update','datetime','ON UPDATE']]],
+['tbd_products_users_providers',[['user_ID','int','PK · FK usuario'],['product_ID','int unsigned','PK · FK producto'],['type_ownership','enum(Owner, Reseller, Distributor)','NULL'],['status','bit(1)','DEFAULT 1'],['avalaible_date','datetime',''],['creation_date','datetime','DEFAULT NOW'],['last_update','datetime','ON UPDATE']]],
+['tbd_users_wishlist_products',[['user_ID','int','PK · FK usuario'],['product_ID','int unsigned','PK · FK producto'],['status','bit(1)','DEFAULT 1'],['creation_date','datetime','DEFAULT NOW'],['last_update','datetime','ON UPDATE']]],
+['tbd_wishlist',[['ID','int unsigned','PK · AI'],['user_id','int','FK → tb_users.ID'],['product_id','int unsigned','FK → tb_products.ID'],['creation_date','datetime','DEFAULT NOW'],['(user_id, product_id)','composite','UNIQUE']]],
+['tbd_users_offer_products',[['product_offer_ID','int unsigned','PK · AI'],['user_ID','int unsigned',''],['product_ID','int unsigned',''],['available_stock','int','DEFAULT 1'],['status','bit(1)','DEFAULT 1'],['creation_date','datetime','DEFAULT NOW'],['available_date','datetime','NULL'],['last_update','datetime','NULL · ON UPDATE']]],
+['tbd_shopping_cart',[['ID','int unsigned','PK · AI'],['user_id','int','FK → tb_users.ID'],['offer_id','int unsigned','FK → tbd_users_offer_products'],['product_id','int unsigned','FK → tb_products.ID'],['quantity','int unsigned','DEFAULT 1'],['creation_date','datetime','DEFAULT NOW'],['last_update','datetime','ON UPDATE']]]
+];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function draw(q=''){let list=tables.filter(([n,f])=>(n+' '+f.flat().join(' ')).toLowerCase().includes(q.toLowerCase()));document.getElementById('tables').innerHTML=list.map(([n,f])=>'<article class="card table-card"><div class="title"><b>'+n+'</b><span>'+f.length+' campos</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Clave / atributo</th></tr></thead><tbody>'+f.map(([a,b,c])=>'<tr><td>'+esc(a)+'</td><td>'+esc(b)+'</td><td class="key">'+esc(c||'—')+'</td></tr>').join('')+'</tbody></table></article>').join('');document.getElementById('count').textContent=list.length+' / '+tables.length+' tablas'}draw();document.getElementById('filter').oninput=e=>draw(e.target.value);
+document.getElementById('queries').innerHTML=tables.map(([n])=>'<article class="card code"><div class="codehead"><span>'+n+'</span><button class="copy">Copiar</button></div><pre><code>-- Registros\nSELECT * FROM '+n+' LIMIT 100;\n\n-- Conteo\nSELECT COUNT(*) AS total FROM '+n+';\n\n-- Auditoría reciente\nSELECT ID, operation, db_user, description, operation_date, operation_status\nFROM tb_logs\nWHERE table_name = \' '+n+'\'\nORDER BY operation_date DESC\nLIMIT 50;</code></pre></article>').join('').replace(/WHERE table_name = ' /g,"WHERE table_name = '");
+const audited=['products:tb_products','users:tb_users','tbc_categories:tbc_categories','tbd_products_categories:tbd_products_categories','tbd_products_users_providers:tbd_products_users_providers'];document.getElementById('triggerlist').innerHTML=audited.map(s=>{let[n,t]=s.split(':');return ['INSERT','UPDATE','DELETE'].map(op=>'<div class="trigger"><b>trg_'+n+'_after_'+op.toLowerCase()+'</b><span>AFTER '+op+' ON '+t+' → tb_logs</span></div>').join('')}).join('');
+document.addEventListener('click',async e=>{let b=e.target.closest('.copy');if(!b)return;try{await navigator.clipboard.writeText(b.closest('.code').querySelector('pre').innerText);b.textContent='Copiado';setTimeout(()=>b.textContent='Copiar',1200)}catch{b.textContent='No disponible'}});
+</script></body></html>

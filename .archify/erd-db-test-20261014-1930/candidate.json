@@ -1,0 +1,818 @@
+{
+    "schema_version":  1,
+    "diagram_type":  "erd",
+    "meta":  {
+                 "title":  "Esquema de base de datos db_test",
+                 "locale":  "es",
+                 "output":  "diagrama/db-test-archify.html",
+                 "quality_profile":  "standard",
+                 "views":  [
+                               {
+                                   "id":  "catalogo",
+                                   "label":  "Catálogo",
+                                   "focus":  [
+                                                 "tb_products",
+                                                 "tbc_categories",
+                                                 "tbd_products_categories",
+                                                 "tbd_products_users_providers",
+                                                 "tbd_users_offer_products"
+                                             ],
+                                   "note":  "Productos, categorías y asociaciones de proveedores."
+                               },
+                               {
+                                   "id":  "ventas",
+                                   "label":  "Ventas",
+                                   "focus":  [
+                                                 "tb_orders",
+                                                 "tbd_order_details",
+                                                 "tb_payments",
+                                                 "tbc_payment_methods",
+                                                 "tbd_shopping_cart"
+                                             ],
+                                   "note":  "Pedidos y sus pagos, detalle y carrito."
+                               },
+                               {
+                                   "id":  "identidad",
+                                   "label":  "Identidad",
+                                   "focus":  [
+                                                 "tb_users",
+                                                 "tb_carts",
+                                                 "tbd_wishlist",
+                                                 "tbd_users_wishlist_products"
+                                             ],
+                                   "note":  "Cuentas y listas asociadas."
+                               },
+                               {
+                                   "id":  "auditoria",
+                                   "label":  "Auditoría",
+                                   "focus":  [
+                                                 "tb_logs"
+                                             ],
+                                   "note":  "Bitácora consultada por nombre lógico de tabla."
+                               }
+                           ]
+             },
+    "layout":  {
+                   "mode":  "grid",
+                   "gapX":  48,
+                   "gapY":  25,
+                   "entityW":  245,
+                   "rowH":  14
+               },
+    "entities":  [
+                     {
+                         "id":  "tb_products",
+                         "label":  "tb_products: 15,007",
+                         "tag":  "catalogo",
+                         "row":  0,
+                         "col":  0,
+                         "attributes":  [
+                                            {
+                                                "name":  "ID",
+                                                "type":  "int unsigned",
+                                                "key":  "pk"
+                                            },
+                                            {
+                                                "name":  "SKU",
+                                                "type":  "varchar(50)",
+                                                "key":  "uk"
+                                            },
+                                            {
+                                                "name":  "name",
+                                                "type":  "varchar(250)"
+                                            },
+                                            {
+                                                "name":  "description",
+                                                "type":  "text"
+                                            },
+                                            {
+                                                "name":  "current_price",
+                                                "type":  "decimal(10,2)"
+                                            },
+                                            {
+                                                "name":  "current_stock",
+                                                "type":  "int unsigned"
+                                            },
+                                            {
+                                                "name":  "status",
+                                                "type":  "tinyint"
+                                            },
+                                            {
+                                                "name":  "creation_date",
+                                                "type":  "datetime"
+                                            },
+                                            {
+                                                "name":  "last_update",
+                                                "type":  "datetime"
+                                            }
+                                        ]
+                     },
+                     {
+                         "id":  "tbc_categories",
+                         "label":  "tbc_categories: 160",
+                         "tag":  "catalogo",
+                         "row":  1,
+                         "col":  0,
+                         "attributes":  [
+                                            {
+                                                "name":  "ID",
+                                                "type":  "int unsigned",
+                                                "key":  "pk"
+                                            },
+                                            {
+                                                "name":  "name",
+                                                "type":  "varchar(120)",
+                                                "key":  "uk"
+                                            },
+                                            {
+                                                "name":  "description",
+                                                "type":  "text"
+                                            },
+                                            {
+                                                "name":  "sup_id_category",
+                                                "type":  "int unsigned",
+                                                "key":  "fk",
+                                                "references":  "tbc_categories.ID"
+                                            },
+                                            {
+                                                "name":  "status",
+                                                "type":  "bit(1)"
+                                            },
+                                            {
+                                                "name":  "creation_date",
+                                                "type":  "datetime"
+                                            },
+                                            {
+                                                "name":  "last_update",
+                                                "type":  "datetime"
+                                            }
+                                        ]
+                     },
+                     {
+                         "id":  "tbd_products_categories",
+                         "label":  "tbd_products_categories: 0",
+                         "tag":  "catalogo",
+                         "row":  2,
+                         "col":  0,
+                         "attributes":  [
+                                            {
+                                                "name":  "category_ID",
+                                                "type":  "int unsigned",
+                                                "key":  "pk"
+                                            },
+                                            {
+                                                "name":  "product_ID",
+                                                "type":  "int unsigned",
+                                                "key":  "pk",
+                                                "references":  "tb_products.ID"
+                                            },
+                                            {
+                                                "name":  "status",
+                                                "type":  "bit(1)"
+                                            },
+                                            {
+                                                "name":  "creation_date",
+                                                "type":  "datetime"
+                                            },
+                                            {
+                                                "name":  "last_update",
+                                                "type":  "datetime"
+                                            }
+                                        ]
+                     },
+                     {
+                         "id":  "tbd_products_users_providers",
+                         "label":  "tbd_products_users_providers: 0",
+                         "tag":  "catalogo",
+                         "row":  3,
+                         "col":  0,
+                         "attributes":  [
+                                            {
+                                                "name":  "user_ID",
+                                                "type":  "int",
+                                                "key":  "pk",
+                                                "references":  "tb_users.ID"
+                                            },
+                                            {
+                                                "name":  "product_ID",
+                                                "type":  "int unsigned",
+                                                "key":  "pk",
+                                                "references":  "tb_products.ID"
+                                            },
+                                            {
+                                                "name":  "type_ownership",
+                                                "type":  "enum(\u0027Owner\u0027,\u0027Reseller\u0027,\u0027Distributor\u0027)"
+                                            },
+                                            {
+                                                "name":  "status",
+                                                "type":  "bit(1)"
+                                            },
+                                            {
+                                                "name":  "avalaible_date",
+                                                "type":  "datetime"
+                                            },
+                                            {
+                                                "name":  "creation_date",
+                                                "type":  "datetime"
+                                            },
+                                            {
+                                                "name":  "last_update",
+                                                "type":  "datetime"
+                                            }
+                                        ],
+                         "width":  394
+                     },
+                     {
+                         "id":  "tb_orders",
+                         "label":  "tb_orders: 0",
+                         "tag":  "ventas",
+                         "row":  0,
+                         "col":  1,
+                         "attributes":  [
+                                            {
+                                                "name":  "ID",
+                                                "type":  "int unsigned",
+                                                "key":  "pk"
+                                            },
+                                            {
+                                                "name":  "user_id",
+                                                "type":  "int",
+                                                "key":  "fk",
+                                                "references":  "tb_users.ID"
+                                            },
+                                            {
+                                                "name":  "total_amount",
+                                                "type":  "decimal(10,2)"
+                                            },
+                                            {
+                                                "name":  "status",
+                                                "type":  "enum(\u0027Pending\u0027,\u0027Processing\u0027,\u0027Shipped\u0027,\u0027Delivered\u0027,\u0027Cancelled\u0027)"
+                                            },
+                                            {
+                                                "name":  "shipping_address",
+                                                "type":  "text"
+                                            },
+                                            {
+                                                "name":  "creation_date",
+                                                "type":  "datetime"
+                                            },
+                                            {
+                                                "name":  "last_update",
+                                                "type":  "datetime"
+                                            }
+                                        ],
+                         "width":  493
+                     },
+                     {
+                         "id":  "tbd_order_details",
+                         "label":  "tbd_order_details: 0",
+                         "tag":  "ventas",
+                         "row":  1,
+                         "col":  1,
+                         "attributes":  [
+                                            {
+                                                "name":  "ID",
+                                                "type":  "int unsigned",
+                                                "key":  "pk"
+                                            },
+                                            {
+                                                "name":  "order_id",
+                                                "type":  "int unsigned",
+                                                "key":  "fk",
+                                                "references":  "tb_orders.ID"
+                                            },
+                                            {
+                                                "name":  "product_id",
+                                                "type":  "int unsigned",
+                                                "key":  "fk",
+                                                "references":  "tb_products.ID"
+                                            },
+                                            {
+                                                "name":  "quantity",
+                                                "type":  "int unsigned"
+                                            },
+                                            {
+                                                "name":  "unit_price",
+                                                "type":  "decimal(10,2)"
+                                            },
+                                            {
+                                                "name":  "subtotal",
+                                                "type":  "decimal(10,2)"
+                                            },
+                                            {
+                                                "name":  "creation_date",
+                                                "type":  "datetime"
+                                            }
+                                        ]
+                     },
+                     {
+                         "id":  "tb_payments",
+                         "label":  "tb_payments: 0",
+                         "tag":  "ventas",
+                         "row":  2,
+                         "col":  1,
+                         "attributes":  [
+                                            {
+                                                "name":  "ID",
+                                                "type":  "int unsigned",
+                                                "key":  "pk"
+                                            },
+                                            {
+                                                "name":  "order_id",
+                                                "type":  "int unsigned",
+                                                "key":  "fk",
+                                                "references":  "tb_orders.ID"
+                                            },
+                                            {
+                                                "name":  "payment_method_id",
+                                                "type":  "int unsigned",
+                                                "key":  "fk",
+                                                "references":  "tbc_payment_methods.ID"
+                                            },
+                                            {
+                                                "name":  "amount",
+                                                "type":  "decimal(10,2)"
+                                            },
+                                            {
+                                                "name":  "payment_status",
+                                                "type":  "enum(\u0027Pending\u0027,\u0027Completed\u0027,\u0027Failed\u0027,\u0027Refunded\u0027)"
+                                            },
+                                            {
+                                                "name":  "transaction_reference",
+                                                "type":  "varchar(150)"
+                                            },
+                                            {
+                                                "name":  "payment_date",
+                                                "type":  "datetime"
+                                            }
+                                        ],
+                         "width":  451
+                     },
+                     {
+                         "id":  "tbc_payment_methods",
+                         "label":  "tbc_payment_methods: 0",
+                         "tag":  "ventas",
+                         "row":  3,
+                         "col":  1,
+                         "attributes":  [
+                                            {
+                                                "name":  "ID",
+                                                "type":  "int unsigned",
+                                                "key":  "pk"
+                                            },
+                                            {
+                                                "name":  "name",
+                                                "type":  "varchar(100)",
+                                                "key":  "uk"
+                                            },
+                                            {
+                                                "name":  "description",
+                                                "type":  "text"
+                                            },
+                                            {
+                                                "name":  "status",
+                                                "type":  "bit(1)"
+                                            },
+                                            {
+                                                "name":  "creation_date",
+                                                "type":  "datetime"
+                                            }
+                                        ]
+                     },
+                     {
+                         "id":  "tbd_shopping_cart",
+                         "label":  "tbd_shopping_cart: 0",
+                         "tag":  "ventas",
+                         "row":  4,
+                         "col":  1,
+                         "attributes":  [
+                                            {
+                                                "name":  "ID",
+                                                "type":  "int unsigned",
+                                                "key":  "pk"
+                                            },
+                                            {
+                                                "name":  "user_id",
+                                                "type":  "int",
+                                                "key":  "fk",
+                                                "references":  "tb_users.ID"
+                                            },
+                                            {
+                                                "name":  "offer_id",
+                                                "type":  "int unsigned",
+                                                "key":  "fk",
+                                                "references":  "tbd_users_offer_products.product_offer_ID"
+                                            },
+                                            {
+                                                "name":  "product_id",
+                                                "type":  "int unsigned",
+                                                "key":  "fk",
+                                                "references":  "tb_products.ID"
+                                            },
+                                            {
+                                                "name":  "quantity",
+                                                "type":  "int unsigned"
+                                            },
+                                            {
+                                                "name":  "creation_date",
+                                                "type":  "datetime"
+                                            },
+                                            {
+                                                "name":  "last_update",
+                                                "type":  "datetime"
+                                            }
+                                        ]
+                     },
+                     {
+                         "id":  "tb_users",
+                         "label":  "tb_users: 5",
+                         "tag":  "identidad",
+                         "row":  0,
+                         "col":  2,
+                         "attributes":  [
+                                            {
+                                                "name":  "ID",
+                                                "type":  "int",
+                                                "key":  "pk"
+                                            },
+                                            {
+                                                "name":  "email",
+                                                "type":  "varchar(80)",
+                                                "key":  "uk"
+                                            },
+                                            {
+                                                "name":  "nickname",
+                                                "type":  "varchar(100)",
+                                                "key":  "uk"
+                                            },
+                                            {
+                                                "name":  "password",
+                                                "type":  "varchar(255)"
+                                            },
+                                            {
+                                                "name":  "creation_date",
+                                                "type":  "datetime"
+                                            },
+                                            {
+                                                "name":  "last_login",
+                                                "type":  "datetime"
+                                            },
+                                            {
+                                                "name":  "status",
+                                                "type":  "bit(1)"
+                                            }
+                                        ]
+                     },
+                     {
+                         "id":  "tb_carts",
+                         "label":  "tb_carts: 0",
+                         "tag":  "identidad",
+                         "row":  1,
+                         "col":  2,
+                         "attributes":  [
+                                            {
+                                                "name":  "ID",
+                                                "type":  "int unsigned",
+                                                "key":  "pk"
+                                            },
+                                            {
+                                                "name":  "user_ID",
+                                                "type":  "int",
+                                                "key":  "fk",
+                                                "references":  "tb_users.ID"
+                                            },
+                                            {
+                                                "name":  "status",
+                                                "type":  "bit(1)"
+                                            },
+                                            {
+                                                "name":  "creation_date",
+                                                "type":  "datetime"
+                                            },
+                                            {
+                                                "name":  "last_update",
+                                                "type":  "datetime"
+                                            }
+                                        ]
+                     },
+                     {
+                         "id":  "tbd_wishlist",
+                         "label":  "tbd_wishlist: 0",
+                         "tag":  "identidad",
+                         "row":  2,
+                         "col":  2,
+                         "attributes":  [
+                                            {
+                                                "name":  "ID",
+                                                "type":  "int unsigned",
+                                                "key":  "pk"
+                                            },
+                                            {
+                                                "name":  "user_id",
+                                                "type":  "int",
+                                                "key":  "fk",
+                                                "references":  "tb_users.ID"
+                                            },
+                                            {
+                                                "name":  "product_id",
+                                                "type":  "int unsigned",
+                                                "key":  "fk",
+                                                "references":  "tb_products.ID"
+                                            },
+                                            {
+                                                "name":  "creation_date",
+                                                "type":  "datetime"
+                                            }
+                                        ]
+                     },
+                     {
+                         "id":  "tbd_users_wishlist_products",
+                         "label":  "tbd_users_wishlist_products: 0",
+                         "tag":  "identidad",
+                         "row":  3,
+                         "col":  2,
+                         "attributes":  [
+                                            {
+                                                "name":  "user_ID",
+                                                "type":  "int",
+                                                "key":  "pk",
+                                                "references":  "tb_users.ID"
+                                            },
+                                            {
+                                                "name":  "product_ID",
+                                                "type":  "int unsigned",
+                                                "key":  "pk",
+                                                "references":  "tb_products.ID"
+                                            },
+                                            {
+                                                "name":  "status",
+                                                "type":  "bit(1)"
+                                            },
+                                            {
+                                                "name":  "creation_date",
+                                                "type":  "datetime"
+                                            },
+                                            {
+                                                "name":  "last_update",
+                                                "type":  "datetime"
+                                            }
+                                        ]
+                     },
+                     {
+                         "id":  "tb_logs",
+                         "label":  "tb_logs: 40,183",
+                         "row":  0,
+                         "col":  3,
+                         "attributes":  [
+                                            {
+                                                "name":  "ID",
+                                                "type":  "int",
+                                                "key":  "pk"
+                                            },
+                                            {
+                                                "name":  "table_name",
+                                                "type":  "varchar(100)"
+                                            },
+                                            {
+                                                "name":  "operation",
+                                                "type":  "enum(\u0027Create\u0027,\u0027Read\u0027,\u0027Update\u0027,\u0027Delete\u0027)"
+                                            },
+                                            {
+                                                "name":  "db_user",
+                                                "type":  "varchar(80)"
+                                            },
+                                            {
+                                                "name":  "description",
+                                                "type":  "text"
+                                            },
+                                            {
+                                                "name":  "operation_date",
+                                                "type":  "datetime"
+                                            },
+                                            {
+                                                "name":  "operation_status",
+                                                "type":  "bit(1)"
+                                            }
+                                        ],
+                         "width":  368
+                     },
+                     {
+                         "id":  "tbd_users_offer_products",
+                         "label":  "tbd_users_offer_products: 0",
+                         "tag":  "catalogo",
+                         "row":  4,
+                         "col":  0,
+                         "attributes":  [
+                                            {
+                                                "name":  "product_offer_ID",
+                                                "type":  "int unsigned",
+                                                "key":  "pk"
+                                            },
+                                            {
+                                                "name":  "user_ID",
+                                                "type":  "int unsigned"
+                                            },
+                                            {
+                                                "name":  "product_ID",
+                                                "type":  "int unsigned"
+                                            },
+                                            {
+                                                "name":  "available_stock",
+                                                "type":  "int"
+                                            },
+                                            {
+                                                "name":  "status",
+                                                "type":  "bit(1)"
+                                            },
+                                            {
+                                                "name":  "creation_date",
+                                                "type":  "datetime"
+                                            },
+                                            {
+                                                "name":  "available_date",
+                                                "type":  "datetime"
+                                            },
+                                            {
+                                                "name":  "last_update",
+                                                "type":  "datetime"
+                                            }
+                                        ]
+                     }
+                 ],
+    "relationships":  [
+                          {
+                              "id":  "cart_user",
+                              "from":  "tb_carts",
+                              "to":  "tb_users",
+                              "label":  "belongs to",
+                              "fromCardinality":  "one",
+                              "toCardinality":  "one",
+                              "fromOptional":  true
+                          },
+                          {
+                              "id":  "orders_user",
+                              "from":  "tb_orders",
+                              "to":  "tb_users",
+                              "label":  "placed by",
+                              "fromCardinality":  "many",
+                              "toCardinality":  "one",
+                              "fromOptional":  true,
+                              "labelDy":  103
+                          },
+                          {
+                              "id":  "payments_order",
+                              "from":  "tb_payments",
+                              "to":  "tb_orders",
+                              "label":  "payment for",
+                              "fromCardinality":  "many",
+                              "toCardinality":  "one",
+                              "fromOptional":  true
+                          },
+                          {
+                              "id":  "payments_method",
+                              "from":  "tb_payments",
+                              "to":  "tbc_payment_methods",
+                              "label":  "uses method",
+                              "fromCardinality":  "many",
+                              "toCardinality":  "one",
+                              "fromOptional":  true,
+                              "labelDx":  1,
+                              "labelDy":  24
+                          },
+                          {
+                              "id":  "details_order",
+                              "from":  "tbd_order_details",
+                              "to":  "tb_orders",
+                              "label":  "line in",
+                              "fromCardinality":  "many",
+                              "toCardinality":  "one",
+                              "fromOptional":  true
+                          },
+                          {
+                              "id":  "details_product",
+                              "from":  "tbd_order_details",
+                              "to":  "tb_products",
+                              "label":  "item",
+                              "fromCardinality":  "many",
+                              "toCardinality":  "one"
+                          },
+                          {
+                              "id":  "products_categories_product",
+                              "from":  "tbd_products_categories",
+                              "to":  "tb_products",
+                              "label":  "classifies",
+                              "fromCardinality":  "many",
+                              "toCardinality":  "one"
+                          },
+                          {
+                              "id":  "providers_product",
+                              "from":  "tbd_products_users_providers",
+                              "to":  "tb_products",
+                              "label":  "source for",
+                              "fromCardinality":  "many",
+                              "toCardinality":  "one"
+                          },
+                          {
+                              "id":  "providers_user",
+                              "from":  "tbd_products_users_providers",
+                              "to":  "tb_users",
+                              "label":  "provided by",
+                              "fromCardinality":  "many",
+                              "toCardinality":  "one",
+                              "fromSide":  "left",
+                              "toSide":  "top",
+                              "via":  [
+                                          [
+                                              0,
+                                              612
+                                          ],
+                                          [
+                                              0,
+                                              20
+                                          ],
+                                          [
+                                              1137.5,
+                                              20
+                                          ]
+                                      ]
+                          },
+                          {
+                              "id":  "wishlist_products_user",
+                              "from":  "tbd_users_wishlist_products",
+                              "to":  "tb_users",
+                              "label":  "saved by",
+                              "fromCardinality":  "many",
+                              "toCardinality":  "one"
+                          },
+                          {
+                              "id":  "wishlist_products_product",
+                              "from":  "tbd_users_wishlist_products",
+                              "to":  "tb_products",
+                              "label":  "saved product",
+                              "fromCardinality":  "many",
+                              "toCardinality":  "one"
+                          },
+                          {
+                              "id":  "wishlist_user",
+                              "from":  "tbd_wishlist",
+                              "to":  "tb_users",
+                              "label":  "wishlist owner",
+                              "fromCardinality":  "many",
+                              "toCardinality":  "one"
+                          },
+                          {
+                              "id":  "wishlist_product",
+                              "from":  "tbd_wishlist",
+                              "to":  "tb_products",
+                              "label":  "wishlist item",
+                              "fromCardinality":  "many",
+                              "toCardinality":  "one"
+                          },
+                          {
+                              "id":  "shopping_user",
+                              "from":  "tbd_shopping_cart",
+                              "to":  "tb_users",
+                              "label":  "cart owner",
+                              "fromCardinality":  "many",
+                              "toCardinality":  "one"
+                          },
+                          {
+                              "id":  "shopping_product",
+                              "from":  "tbd_shopping_cart",
+                              "to":  "tb_products",
+                              "label":  "cart product",
+                              "fromCardinality":  "many",
+                              "toCardinality":  "one"
+                          },
+                          {
+                              "id":  "shopping_offer",
+                              "from":  "tbd_shopping_cart",
+                              "to":  "tbd_users_offer_products",
+                              "label":  "offer reference",
+                              "fromCardinality":  "many",
+                              "toCardinality":  "one"
+                          }
+                      ],
+    "cards":  [
+                  {
+                      "dot":  "amber",
+                      "title":  "Diferencias entre respaldos",
+                      "items":  [
+                                    "BD11 contiene 14 CREATE TABLE; tbd_users_offer_products no está definida allí, aunque tbd_shopping_cart.offer_id la referencia. Se añade su definición del respaldo BD9.",
+                                    "BD11 declara tbd_products_categories.category_ID como parte de la PK, pero no declara FK hacia tbc_categories.",
+                                    "tb_logs registra table_name como texto y no tiene claves foráneas; por eso no se dibujan relaciones FK de auditoría.",
+                                    "Fuente principal: Practica03/backups/BD11.sql en el árbol de trabajo (archivo no rastreado por Git); entidad complementaria tomada de BD9.sql.",
+                                    "tbc_categories.sup_id_category es una FK nullable hacia la propia tabla; su autorrelación queda documentada aquí.",
+                                    "Las etiquetas muestran filas INSERT del respaldo: BD11 para sus tablas declaradas y BD9 para tbd_users_offer_products; no son conteos en vivo."
+                                ]
+                  },
+                  {
+                      "dot":  "cyan",
+                      "title":  "Lectura de cardinalidad",
+                      "items":  [
+                                    "Las relaciones muestran las claves foráneas declaradas, con el lado hijo de muchos y el padre de uno salvo la relación única de tb_carts.",
+                                    "No se inventan claves foráneas ausentes, incluso cuando los nombres de columnas sugieren una relación."
+                                ]
+                  }
+              ]
+}
