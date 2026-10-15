@@ -9,6 +9,7 @@ CREATE USER IF NOT EXISTS 'jhosep.escamilla'@'%' IDENTIFIED BY '240687';
 CREATE USER IF NOT EXISTS 'uriel.gonzalez'@'%' IDENTIFIED BY '240463';
 CREATE USER IF NOT EXISTS 'yhostin.ramirez'@'%' IDENTIFIED BY '240071';
 CREATE USER IF NOT EXISTS 'eduardo.amaro'@'%' IDENTIFIED BY '240726';
+CREATE USER IF NOT EXISTS 'jose.castillo'@'%' IDENTIFIED BY '240628';
 
 /* ============================================================
    2. CREACIÓN DE ROLES PARA EL SISTEMA E-COMMERCE
@@ -48,6 +49,26 @@ FLUSH PRIVILEGES;
 GRANT SELECT, INSERT, UPDATE ON db_test.tb_products TO 'seller';
 GRANT SELECT ON db_test.tbc_categories TO 'seller';
 
+/* BUYER*/
+GRANT SELECT, INSERT, UPDATE
+ON db_test.tbd_carts_items
+TO 'buyer';
+
+GRANT SELECT, INSERT, UPDATE
+ON db_test.tb_buyer_orders
+TO 'buyer';
+
+GRANT SELECT, INSERT
+ON db_test.tbd_cart_items
+TO 'buyer';
+
+GRANT SELECT, INSERT, UPDATE
+ON db_test.tbd_users_wishlist_products
+TO 'buyer';
+
+
+
+
 /* ============================================================
    4. ASIGNACIÓN DE PRIVILEGIOS DIRECTOS Y ROLES A USUARIOS
    ============================================================ */
@@ -61,8 +82,9 @@ GRANT 'superadmin' TO 'jose.amaro'@'%';
 GRANT 'admin' TO 'marco.ramirez'@'%';
 GRANT 'support' TO 'jorge.garcia'@'%';
 GRANT 'support' TO 'eduardo.amaro'@'%';
-GRANT 'seller' TO 'jhosep.escamilla'@'%';
+GRANT 'seller' TO 'joseph.escamilla'@'%';
 GRANT 'seller' TO 'yhostin.ramirez'@'%';
+GRANT 'buyer' TO 'jose.castillo'@'%';
 
 /* ============================================================
    5. CONFIGURACIÓN DE ROLES POR DEFECTO
@@ -72,6 +94,7 @@ SET DEFAULT ROLE 'admin' TO 'marco.ramirez'@'%';
 SET DEFAULT ROLE 'support' TO 'jorge.garcia'@'%';
 SET DEFAULT ROLE 'seller' TO 'jhosep.escamilla'@'%';
 SET DEFAULT ROLE 'seller' TO 'yhostin.ramirez'@'%';
+SET DEFAULT ROLE 'buyer' TO 'jose.castillo'@'%';
 
 /* Recargar la tabla de privilegios */
 FLUSH PRIVILEGES;
