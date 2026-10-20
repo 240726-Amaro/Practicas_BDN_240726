@@ -1,0 +1,4 @@
+﻿backups/
+*.sql
+.archify/
+__pycache__/
