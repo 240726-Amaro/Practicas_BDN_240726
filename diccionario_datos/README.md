@@ -1,16 +1,19 @@
 # Diccionario de datos de db_test
 
-Se generaron `diccionario_datos.md`, `diccionario_datos.xlsx`, `diagrama_er.mmd` y `schema.dbml`. `estructura.json` contiene exclusivamente definiciones CREATE y metadatos derivados de columnas, restricciones y triggers; no contiene INSERT.
+Entregables generados desde el DDL extraído de `Practica03/backups/BD15.sql`: `diccionario_datos.md`, `diccionario_datos.xlsx`, `estructura.json`, `diagrama_er.mmd`, `schema.dbml` y el sitio estático `/docs`. No se guardan valores de filas del volcado. `estructura.json` contiene solo CREATE y metadatos del esquema más conteos agregados por tabla.
 
-## Regeneración
+## Regeneración segura
 
 Desde la raíz del repositorio, con Python 3:
 
 ```powershell
 python diccionario_datos\extraer.py
+python diccionario_datos\contar_filas.py
 python diccionario_datos\generar.py
 python diccionario_datos\generar_modelos.py
+python diccionario_datos\generar_sitio.py
 python diccionario_datos\validar.py
+python diccionario_datos\validar_sitio.py
 ```
 
-El XLSX incluye autofiltros, encabezado congelado y ajuste de texto. `Resumen estadístico` consolida las clasificaciones por naturaleza, obligatoriedad, origen y llaves. `validar.py` revisa secciones por tabla, descripciones y el total de filas de clasificación en Markdown y XLSX. No se requiere instalar librerías externas.
+`extraer.py` descarta INSERT y conserva exclusivamente CREATE TABLE/VIEW/TRIGGER/PROCEDURE/FUNCTION. `contar_filas.py` procesa las tuplas de INSERT en streaming y persiste únicamente conteos por tabla. No importa el volcado en `db_test`. El XLSX tiene filtros y encabezado congelado, e incluye volumen de datos, observaciones, dominios, convenciones e historial.

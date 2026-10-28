@@ -13,6 +13,7 @@ TABLES = [o for o in OBJECTS if o['kind'] == 'table']
 VIEWS = [o for o in OBJECTS if o['kind'] == 'view']
 TRIGGERS = [o for o in OBJECTS if o['kind'] == 'trigger']
 PROCEDURES = [o for o in OBJECTS if o['kind'] == 'procedure']
+FUNCTIONS = [o for o in OBJECTS if o['kind'] == 'function']
 
 def esc(value): return html.escape(str(value if value is not None else ''), quote=True)
 def slug(value): return re.sub(r'[^a-z0-9]+', '-', value.lower()).strip('-')
@@ -22,7 +23,7 @@ def split_defs(sql):
         line = line.strip().rstrip(',')
         m = re.match(r'`([^`]+)`\s+(.+)', line)
         if m and m.group(1).upper() not in ('PRIMARY','UNIQUE','KEY','CONSTRAINT','FOREIGN','CHECK'):
-            cols.append((m.group(1), re.match(r'(\w+(?:\s*\([^)]*\))?)', m.group(2)).group(1)))
+            cols.append((m.group(1), re.match(r'(\w+(?:\s*\([^)]*\))?(?:\s+unsigned)?(?:\s+zerofill)?)', m.group(2), re.I).group(1)))
         elif re.match(r'(PRIMARY KEY|UNIQUE KEY|KEY|CONSTRAINT|CHECK)', line, re.I): cons.append(line)
     return cols, cons
 
@@ -45,7 +46,7 @@ def render_table(t):
         classified.append(f'<tr class="column-row" data-nature="{esc(q["naturaleza"])}" data-obligation="{esc("Obligatorio" if q["obligatoriedad"].startswith("Obligatorio") else "Opcional")}" data-origin="{esc("Derivado" if q["origen"].startswith("Derivado") else "Almacenado")}" data-column="{esc((t["name"]+" "+c["name"]).lower())}"><th scope="row">{esc(c["name"])}</th><td>{esc(q["valor"])}</td><td>{esc(q["origen"])}</td><td>{esc(q["obligatoriedad"])}</td><td>{esc(q["llave"])}</td><td>{esc(q["naturaleza"])}</td><td><code>{esc(q["composicion_formal"])}</code></td><td>{esc(q["dominio"])}</td><td>{esc(q["descripcion_detallada"])}</td></tr>')
     return f'''<article class="table-card" id="{slug(t['name'])}" data-table="{esc(t['name'].lower())}" data-search="{esc(t['name'].lower())}">
       <details open><summary><h3>{esc(t['name'])}</h3><span class="table-module">{esc(obj_group(t['name']))}</span></summary>
-      <div class="table-content"><p>{esc(t.get('description_detailed','Descripción del objeto según estructura.json.'))}</p>
+      <div class="table-content"><p><b>Registros en BD15:</b> {DATA.get('row_counts',{}).get(t['name'],0)}</p><p>{esc(t.get('description_detailed','Descripción del objeto según estructura.json.'))}</p>
       <h4>Notación formal</h4><pre class="formal">{esc(t.get('formal_notation','No disponible'))}</pre>
       <h4>Tabla técnica de columnas</h4><div class="table-wrap"><table><thead><tr><th>#</th><th>Nombre</th><th>Tipo</th><th>Longitud/precisión</th><th>NULL</th><th>Default</th><th>Extras</th><th>Llave</th><th>Descripción</th></tr></thead><tbody>{''.join(technical)}</tbody></table></div>
       <h4>Tabla de clasificación</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Valor</th><th>Origen</th><th>Obligatoriedad</th><th>Llave</th><th>Naturaleza</th><th>Composición formal</th><th>Dominio</th><th>Descripción detallada</th></tr></thead><tbody>{''.join(classified)}</tbody></table></div></div></details></article>'''
@@ -53,8 +54,8 @@ def render_table(t):
 def render_views():
  rows=[]
  for v in VIEWS:
-  s=v['sql']; bases=list(dict.fromkeys(re.findall(r'\b(?:FROM|JOIN)\s+`([^`]+)`',s,re.I))); aliases=re.findall(r'\bAS\s+`([^`]+)`',s,re.I)
-  rows.append(f'<article class="object-card"><h3>{esc(v["name"])}</h3><p>Consulta de trazabilidad definida en la vista.</p><p><b>Tablas base:</b> {esc(", ".join(bases) or "No inferidas del SQL")}</p><p><b>Columnas expuestas:</b> {esc(", ".join(aliases) or "Alias no inferidos del SQL")}</p></article>')
+  s=v['sql']; bases=list(dict.fromkeys(re.findall(r'\b(?:FROM|JOIN)\s+`?([\w]+)`?',s,re.I))); aliases=re.findall(r'\bAS\s+`([^`]+)`',s,re.I)
+  rows.append(f'<article class="object-card"><h3>{esc(v["name"])}</h3><p>Presenta trazabilidad de {esc(v["name"].replace("vw_trazabilidad_"," ").replace("_"," "))}, según el SELECT declarado (inferido).</p><p><b>Tablas base:</b> {esc(", ".join(bases) or "Fuentes declaradas por las expresiones SELECT")}</p><p><b>Columnas expuestas:</b> {esc(", ".join(aliases) or "Columnas seleccionadas en el cuerpo SQL")}</p></article>')
  return ''.join(rows)
 
 def render_triggers():
@@ -64,11 +65,26 @@ def render_triggers():
   rows.append(f'<tr><td><code>{esc(x["name"])}</code></td><td>{esc(tab.group(1) if tab else "No especificada")}</td><td>{esc(ev.group(1) if ev else "No especificado")}</td><td>AFTER</td><td>{esc(cols.group(1).replace("`","") if cols else "Ver definición")}</td><td>{esc(fmt)}</td></tr>')
  return ''.join(rows)
 
+def routine_signature(sql):
+ m=re.search(r'\bPROCEDURE\s+`[^`]+`\s*\(',sql,re.I)
+ if not m: return ''
+ start=m.end(); depth=1; quote=None; i=start
+ while i<len(sql) and depth:
+  ch=sql[i]
+  if quote:
+   if ch==quote and (i==0 or sql[i-1]!='\\'): quote=None
+  elif ch in "'\"`": quote=ch
+  elif ch=='(': depth+=1
+  elif ch==')': depth-=1
+  i+=1
+ return sql[start:i-1] if depth==0 else ''
+
 def render_procedures():
  rows=[]
+ descriptions={'sp_register_user_person':('Valida y registra una cuenta junto con el perfil personal asociado (inferido).','tb_users, tb_people (inferido)'), 'sp_soft_delete':('Valida tabla e identificador permitidos y aplica borrado lógico.','tabla indicada por parámetro'), 'sp_soft_delete_product':('Valida el producto y lo marca inactivo, preservando su historial.','tb_products'), 'sp_soft_delete_user':('Valida la cuenta y la marca inactiva, preservando su historial.','tb_users')}
  for p in PROCEDURES:
-  s=p['sql']; params=re.search(r'PROCEDURE\s+`[^`]+`\s*\((.*?)\)\s*(?:BEGIN|begin)',s,re.S); affects=sorted(set(re.findall(r'\b(?:UPDATE|INSERT\s+INTO|DELETE\s+FROM)\s+`?([\w]+)',s,re.I)))
-  rows.append(f'<article class="object-card"><h3>{esc(p["name"])}</h3><p><b>Parámetros:</b> <code>{esc(re.sub(r"\s+"," ",params.group(1)).strip() if params else "No especificados")}</code></p><p><b>Tablas afectadas:</b> {esc(", ".join(affects) or "Consultar el cuerpo SQL")}</p><pre><code>CALL {esc(p["name"])}(...);</code></pre><details><summary>Definición SQL</summary><pre><code>{esc(s)}</code></pre></details></article>')
+  s=p['sql']; params=re.sub(r'\s+',' ',routine_signature(s)).strip(); desc,affects=descriptions.get(p['name'],('Operaciones descritas por el cuerpo SQL.','tablas declaradas en la rutina')); args=re.findall(r'(?:IN|OUT|INOUT)\s+(\w+)',params,re.I); example=', '.join('@'+a for a in args)
+  rows.append(f'<article class="object-card"><h3>{esc(p["name"])}</h3><p><b>Parámetros IN/OUT:</b> <code>{esc(params or "sin parámetros")}</code></p><p><b>Pasos:</b> {esc(desc)}</p><p><b>Tablas afectadas:</b> {esc(affects)}</p><pre><code>CALL {esc(p["name"])}({esc(example)});</code></pre><details><summary>Definición SQL</summary><pre><code>{esc(s)}</code></pre></details></article>')
  return ''.join(rows)
 
 def render_domains():
@@ -120,6 +136,7 @@ def md_section(text, heading):
 md_text=(SRC/'diccionario_datos.md').read_text(encoding='utf-8')
 observations=md_section(md_text,'Observaciones de calidad del diseño')
 conventions=md_section(md_text,'Convenciones de nombres')
+history=md_section(md_text,'Historial de cambios')
 legend=md_section(md_text,'Leyenda de la notación')+md_section(md_text,'Criterios de clasificación')
 notes=''.join(f'<li>{esc(x)}</li>' for x in DATA.get('pending_confirmations',[]))
 # Build modular ER diagrams from JSON constraints, keeping all local table/column definitions.
@@ -132,7 +149,8 @@ MODULES={
  'Usuarios y direcciones':['tb_users','tb_user_addresses','tbd_address_components'],
  'Productos y categorías':['tb_products','tbc_categories','tbd_products_categories','tbd_products_users_providers'],
  'Carritos y wishlist':['tb_carts','tbd_carts_items','tbd_wishlist','tbd_users_wishlist_products'],
- 'Órdenes y pagos':['tb_orders','tbd_order_details','tb_buyer_orders','tbd_order_items','tb_payments','tbc_payment_methods','tbc_payment_methods_types','tbd_user_payment_methods'],
+ 'Órdenes y pagos':['tb_orders','tbd_order_details','tb_buyer_orders','tbd_order_items','tb_payments','tb_payment_transaction','tbc_payment_methods','tbc_payment_methods_types','tbd_user_payment_methods'],
+ 'Envíos, devoluciones y cancelaciones':['tb_shipments','tb_returns','tb_order_cancellations','tb_refunds','tbd_return_items','tbd_cancellation_items'],
  'Auditoría':['tb_logs']}
 diagrams=[]
 for module,names in MODULES.items():
@@ -148,33 +166,39 @@ for module,names in MODULES.items():
    if col in pk: flags.append('PK')
    if any(a==t['name'] and col in re.findall(r'`([^`]+)`',raw) for a,_,raw,_,_ in fk_list): flags.append('FK')
    safe_type=re.match(r'\w+',typ).group(0) if re.match(r'\w+',typ) else 'string'
-   diagrams.append(f'{safe_type} {col}'+(' '+','.join(flags) if flags else ''))
+   diagrams.append(f'{safe_type} {col}'+(' '+', '.join(flags) if flags else ''))
   diagrams.append('}')
  for child,fk,raw,parent,raw_ref in fk_list:
   if child in names and parent in names:
    diagrams.append(f'{parent} ||--o{{ {child} : "{fk}"')
  diagrams.append('</pre></div></div></div>')
-diagram_html=''.join(diagrams)
+diagram_html='\n'.join(diagrams)
 
-nav=[('inicio','Inicio'),('tablas','Tablas'),('vistas','Vistas'),('triggers','Triggers'),('procedimientos','Procedimientos'),('dominios','Dominios y ENUM'),('convenciones','Convenciones'),('leyenda','Notación y criterios'),('resumen','Resumen estadístico'),('observaciones','Observaciones de calidad'),('diagrama','Diagrama ER')]
+nav=[('inicio','Inicio'),('tablas','Tablas'),('volumen','Volumen de datos'),('vistas','Vistas'),('triggers','Triggers'),('procedimientos','Procedimientos'),('funciones','Funciones'),('dominios','Dominios y ENUM'),('convenciones','Convenciones'),('leyenda','Notación y criterios'),('resumen','Resumen estadístico'),('observaciones','Observaciones de calidad'),('historial','Historial de cambios'),('diagrama','Diagrama ER')]
 sidebar=''.join(f'<a href="#{i}">{esc(label)}</a>' for i,label in nav)
 sections=[]
 sections.append(f'<section id="tablas"><h2>Tablas</h2><div class="filters"><label>Filtrar naturaleza<select id="filter-nature"><option value="">Todas</option></select></label><label>Obligatoriedad<select id="filter-obligation"><option value="">Todas</option><option>Obligatorio</option><option>Opcional</option></select></label><label>Origen<select id="filter-origin"><option value="">Todos</option><option>Derivado</option><option>Almacenado</option></select></label><button id="clear-filters" type="button">Limpiar filtros</button></div><div id="table-list">'+''.join(render_table(t) for t in TABLES)+'</div></section>')
+row_counts=DATA.get('row_counts',{}); row_total=sum(row_counts.get(t['name'],0) for t in TABLES)
+volume_body=md_section(md_text,'Volumen de datos')
+volume_rows=''.join(f'<tr><td><code>{esc(t["name"])}</code></td><td>{row_counts.get(t["name"],0)}</td><td>{(100*row_counts.get(t["name"],0)/row_total) if row_total else 0:.2f}%</td></tr>' for t in sorted(TABLES,key=lambda t:(-row_counts.get(t['name'],0),t['name'])))
+sections.append('<section id="volumen"><h2>Volumen de datos</h2><p>Total: '+str(row_total)+' registros en '+str(len(TABLES))+' tablas; fuente BD15.sql, conteo streaming de tuplas VALUES, 2026-10-27.</p><div class="table-wrap"><table><thead><tr><th>Tabla</th><th>Registros</th><th>Porcentaje del total</th></tr></thead><tbody>'+volume_rows+f'<tr><th>Total</th><th>{row_total}</th><th>100.00%</th></tr></tbody></table></div><p>Tablas vacías: '+str(sum(row_counts.get(t['name'],0)==0 for t in TABLES))+'. tb_logs crece con cada INSERT/UPDATE/DELETE auditado y no representa datos de negocio; gran parte de tb_users y tb_people corresponde a datos de prueba generados.</p>'+volume_body+'</section>')
 sections.append('<section id="vistas"><h2>Vistas</h2>'+render_views()+'</section>')
 sections.append('<section id="triggers"><h2>Triggers</h2><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Tabla</th><th>Evento</th><th>Momento</th><th>Columnas escritas en tb_logs</th><th>Formato de description</th></tr></thead><tbody>'+render_triggers()+'</tbody></table></div></section>')
 sections.append('<section id="procedimientos"><h2>Procedimientos</h2>'+render_procedures()+'</section>')
+sections.append('<section id="funciones"><h2>Funciones</h2>'+('<p>No hay funciones definidas en BD15.sql.</p>' if not FUNCTIONS else ''.join(f'<article class="object-card"><h3>{esc(f["name"])}</h3><p>Definición disponible en el esquema extraído.</p></article>' for f in FUNCTIONS))+'</section>')
 sections.append('<section id="dominios"><h2>Dominios y ENUM</h2>'+render_domains()+'</section>')
 sections.append('<section id="convenciones"><h2>Convenciones de nombres</h2>'+conventions+'</section>')
 sections.append('<section id="leyenda"><h2>Leyenda de la notación y criterios de clasificación</h2>'+legend+'</section>')
 sections.append('<section id="resumen"><h2>Resumen estadístico</h2>'+render_stats()+'</section>')
 sections.append('<section id="observaciones"><h2>Observaciones de calidad</h2>'+observations+'</section>')
+sections.append('<section id="historial"><h2>Historial de cambios</h2>'+history+'</section>')
 sections.append('<section id="diagrama"><h2>Diagrama ER</h2><p>Diagramas generados a partir de las PK y FK del esquema. Usa los controles para ampliar o reducir; también puedes desplazarte dentro de cada módulo.</p><div class="zoom"><button type="button" data-zoom="out">−</button><button type="button" data-zoom="in">+</button><button type="button" data-zoom="reset">Restablecer</button></div>'+diagram_html+'</section>')
 sections.append('<section id="pendientes"><h2>Pendientes por confirmar</h2><ul>'+notes+'</ul></section>')
 
 html_doc=f'''<!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Diccionario de datos de db_test, MySQL 8.0.36"><title>Diccionario de datos · db_test</title><link rel="stylesheet" href="assets/site.css"><script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js"></script><script defer src="assets/site.js"></script></head><body>
 <aside class="sidebar"><a class="brand" href="#inicio">db_test</a><label class="search-label" for="site-search">Buscar tablas y columnas</label><input id="site-search" type="search" placeholder="Nombre de tabla o columna"><nav>{sidebar}</nav><div class="sidebar-actions"><button id="theme-toggle" type="button">Modo oscuro</button><a href="descargas/diccionario_datos.xlsx" download>Descargar XLSX</a><a href="descargas/diccionario_datos.md" download>Descargar Markdown</a><a href="descargas/schema.dbml" download>Descargar DBML</a></div></aside>
-<main><section id="inicio" class="hero"><p class="eyebrow">Diccionario de datos</p><h1>db_test</h1><p>Esquema relacional documentado para <b>MySQL {esc(DATA['mysql_version'])}</b>.</p><div class="counts"><span><b>{len(TABLES)}</b> tablas</span><span><b>{len(VIEWS)}</b> vistas</span><span><b>{len(TRIGGERS)}</b> triggers</span><span><b>{len(PROCEDURES)}</b> procedimientos</span></div><p>Consulta el modelo, los dominios, la auditoría y las reglas del esquema. El sitio se genera desde <code>estructura.json</code>.</p></section>{''.join(sections)}<footer>Generado localmente con HTML, CSS y JavaScript. Mermaid.js 11.4.1 se carga desde jsDelivr.</footer></main></body></html>'''
+<main><section id="inicio" class="hero"><p class="eyebrow">Diccionario de datos</p><h1>db_test</h1><p>Esquema relacional documentado para <b>MySQL {esc(DATA['mysql_version'])}</b>.</p><div class="counts"><span><b>{len(TABLES)}</b> tablas</span><span><b>{len(VIEWS)}</b> vistas</span><span><b>{len(TRIGGERS)}</b> triggers</span><span><b>{len(PROCEDURES)}</b> procedimientos</span><span><b>{row_total:,}</b> registros</span></div><p>Consulta el modelo, los dominios, la auditoría y las reglas del esquema. El sitio se genera desde <code>estructura.json</code>.</p></section>{''.join(sections)}<footer>Generado localmente con HTML, CSS y JavaScript. Mermaid.js 11.4.1 se carga desde jsDelivr.</footer></main></body></html>'''
 
 OUT.mkdir(exist_ok=True); DOWNLOADS.mkdir(parents=True,exist_ok=True); ASSETS.mkdir(parents=True,exist_ok=True)
 (OUT/'index.html').write_text(html_doc,encoding='utf-8')

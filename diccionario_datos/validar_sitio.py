@@ -3,6 +3,7 @@ from pathlib import Path
 import json
 import re
 from zipfile import BadZipFile, ZipFile
+import xml.etree.ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -24,13 +25,14 @@ class Links(HTMLParser):
 
 
 data = json.loads(SOURCE.read_text(encoding="utf-8-sig"))
-expected = {"tables": 20, "views": 18, "triggers": 57, "procedures": 3}
+expected = {"tables": 26, "views": 24, "triggers": 75, "procedures": 4, "functions": 0}
 objects = data.get("objects", [])
 actual = {
     "tables": sum(o.get("kind") == "table" for o in objects),
     "views": sum(o.get("kind") == "view" for o in objects),
     "triggers": sum(o.get("kind") == "trigger" for o in objects),
     "procedures": sum(o.get("kind") == "procedure" for o in objects),
+    "functions": sum(o.get("kind") == "function" for o in objects),
 }
 assert actual == expected, (actual, expected)
 
@@ -45,6 +47,17 @@ required = [
 ]
 assert all(path.is_file() for path in required), [str(p) for p in required if not p.is_file()]
 
+with ZipFile(DOCS / "descargas" / "diccionario_datos.xlsx") as book:
+    ns = {"m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
+    workbook = ET.fromstring(book.read("xl/workbook.xml"))
+    sheet_names = [s.attrib["name"] for s in workbook.findall("m:sheets/m:sheet", ns)]
+    assert "Volumen_datos" in sheet_names and "Historial_cambios" in sheet_names and "Convenciones" in sheet_names, sheet_names
+    worksheet_checks = []
+    for index in range(1, len(sheet_names) + 1):
+        root = ET.fromstring(book.read(f"xl/worksheets/sheet{index}.xml"))
+        worksheet_checks.append(root.find("m:autoFilter", ns) is not None and root.find("m:sheetViews/m:sheetView/m:pane", ns) is not None)
+    assert all(worksheet_checks), "Falta autofiltro o encabezado congelado en alguna hoja"
+
 html = (DOCS / "index.html").read_text(encoding="utf-8")
 parser = Links()
 parser.feed(html)
@@ -55,8 +68,11 @@ for value in parser.targets:
     elif not (DOCS / value).exists():
         broken.append(f"missing:{value}")
 assert not broken, broken
+volume_total = f"{sum(data.get('row_counts', {}).values()):,}"
+for marker in ('id="volumen"', 'Volumen de datos', volume_total, 'Historial de cambios', 'Envíos, devoluciones y cancelaciones'):
+    assert marker in html or marker in (DOCS / "descargas" / "diccionario_datos.md").read_text(encoding="utf-8"), marker
 
-patterns = {"@utxicotepec": 0, "$2": 0}
+patterns = {"@" + "utxicotepec": 0, "@" + "example.": 0, "$" + "2": 0}
 for path in DOCS.rglob("*"):
     if not path.is_file():
         continue
@@ -77,4 +93,4 @@ assert not any(patterns.values()), patterns
 print(f"Conteos: {actual}")
 print(f"Archivos requeridos: {len(required)}/{len(required)}")
 print(f"Rutas locales válidas: {len(parser.targets)}; rutas absolutas o faltantes: 0")
-print(f"Patrones sensibles: @utxicotepec={patterns['@utxicotepec']}, $2={patterns['$2']}")
+print("Patrones sensibles: " + ", ".join(f"{key}={value}" for key,value in patterns.items()))
