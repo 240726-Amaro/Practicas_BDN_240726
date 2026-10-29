@@ -88,8 +88,8 @@ GRANT 'support' TO 'eduardo.amaro'@'%';
 GRANT 'seller' TO 'jhosep.escamilla'@'%';
 GRANT 'seller' TO 'yhostin.ramirez'@'%';
 GRANT 'buyer' TO 'jose.castillo'@'%';
-GRANT 'user_not_registered' TO 'app.movil'@'%';
-GRANT 'user_not_registered' TO 'app.web'@'%';
+GRANT 'user_not_registered','common_user','buyer' TO 'app.movil'@'%';
+GRANT 'user_not_registered','common_user','buyer' TO 'app.web'@'%';
 
 
 /* ============================================================

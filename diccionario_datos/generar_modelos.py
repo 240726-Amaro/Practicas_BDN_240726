@@ -2,6 +2,7 @@
 import json,re,pathlib,zipfile,xml.sax.saxutils as sx
 from collections import defaultdict
 D=pathlib.Path(__file__).parent; DATA=json.loads((D/'estructura.json').read_text(encoding='utf-8')); O=DATA['objects']; ts=[x for x in O if x['kind']=='table']; vs=[x for x in O if x['kind']=='view']; gs=[x for x in O if x['kind']=='trigger']; ps=[x for x in O if x['kind']=='procedure']; fs=[x for x in O if x['kind']=='function']
+SOURCE_NOTE=f"Estructura y totales de registros obtenidos del respaldo BD17.sql (fecha del archivo: {DATA.get('source_modified')}). Conteo de registros realizado el: {DATA.get('row_counted_at')}. Los totales corresponden al respaldo, no a la instancia en vivo."
 def tablecols(t):
  cols=[]; cons=[]
  for ln in t['sql'].splitlines():
@@ -43,7 +44,7 @@ for module in dict.fromkeys(er_module(a) for a,_,_,_,_,_ in fks):
  mmd.append('  %% Relaciones: '+module)
  for a,n,c,b,bc,act in fks:
   if er_module(a)==module: mmd.append(f'  {b} ||--o{{ {a} : "{n}"')
-(D/'diagrama_er.mmd').write_text('\n'.join(mmd)+'\n',encoding='utf-8')
+# No reescribir diagramas en esta actualización de solo diccionario.
 # DBML
 bml=[]
 for t in ts:
@@ -55,10 +56,10 @@ for t in ts:
  bml.append('}')
 for a,n,c,b,bc,act in fks:
  ca=re.findall(r'`([^`]+)`',c); cb=re.findall(r'`([^`]+)`',bc); left=f'{a}.{ca[0]}' if len(ca)==1 else f'({", ".join(a+"."+q for q in ca)})'; right=f'{b}.{cb[0]}' if len(cb)==1 else f'({", ".join(b+"."+q for q in cb)})'; bml.append(f'Ref: {left} > {right} // {n} {act}')
-(D/'schema.dbml').write_text('\n'.join(bml)+'\n',encoding='utf-8')
+# No reescribir el modelo gráfico/DBML en esta actualización de solo diccionario.
 # workbook rows from schema (inline strings, no optional packages)
 sheets={}
-sheets['Tablas']=[['Tabla','Registros BD15','Prefijo/tipo','Módulo','Motor','Charset','Collation','Descripción detallada','Notación formal']]+[[t['name'],DATA.get('row_counts',{}).get(t['name'],0), 'principal tb_' if t['name'].startswith('tb_') else 'catálogo tbc_' if t['name'].startswith('tbc_') else 'detalle tbd_','Según descripción inferida','InnoDB','utf8mb4','utf8mb4_0900_ai_ci',t.get('description_detailed','Descripción derivada del esquema.'),t.get('formal_notation','')] for t in ts]
+sheets['Tablas']=[['Tabla','Registros BD17','Prefijo/tipo','Módulo','Motor','Charset','Collation','Descripción detallada','Notación formal']]+[[t['name'],DATA.get('row_counts',{}).get(t['name'],0), 'principal tb_' if t['name'].startswith('tb_') else 'catálogo tbc_' if t['name'].startswith('tbc_') else 'detalle tbd_','Según descripción inferida','InnoDB','utf8mb4','utf8mb4_0900_ai_ci',t.get('description_detailed','Descripción derivada del esquema.'),t.get('formal_notation','')] for t in ts]
 sheets['Columnas']=[['Tabla','#','Columna','Tipo','Longitud/precisión','NULL','Default','Extras','Llave técnica','Valor','Origen','Obligatoriedad','Llave','Naturaleza','Composición formal','Dominio','Descripción detallada']]
 for t in ts:
  cs,co=tablecols(t)
@@ -66,6 +67,12 @@ for t in ts:
   full=next((z.strip().rstrip(',') for z in t['sql'].splitlines() if re.match(r'\s*`'+re.escape(c)+r'`\s+',z)), ''); null='NO' if 'NOT NULL' in full.upper() else 'Sí'; default=(re.search(r'\bDEFAULT\s+((?:\'[^\']*\')|(?:[^\s,]+))',full,re.I) or [None,'Sin dato declarado'])[1]; extra='AUTO_INCREMENT' if 'AUTO_INCREMENT' in full else 'GENERATED STORED' if 'STORED' in full else 'ON UPDATE CURRENT_TIMESTAMP' if 'ON UPDATE' in full else '—'; key='PK' if any(z.startswith('PRIMARY KEY') and f'`{c}`' in z for z in co) else 'FK' if any(a==t['name'] and f'`{c}`' in cc for a,_,cc,_,_,_ in fks) else 'UK/INDEX' if any(('UNIQUE' in z or z.startswith('KEY')) and f'`{c}`' in z for z in co) else '—'; length=typ[typ.find('(')+1:-1] if '(' in typ else '—'; desc='1 activo / 0 inactivo' if c.lower()=='status' and typ.lower().startswith('bit') else 'Sin dato declarado'
   rich=next((x for x in t.get('columns',[]) if x['name']==c),None); q=rich.get('classification',{}) if rich else {}; sheets['Columnas'].append([t['name'],i,c,typ,length,null,default,extra,key,q.get('valor','Sin dato declarado'),q.get('origen','Sin dato declarado'),q.get('obligatoriedad','Sin dato declarado'),q.get('llave','Sin dato declarado'),q.get('naturaleza','Sin dato declarado'),q.get('composicion_formal','Sin dato declarado'),q.get('dominio','Sin dato declarado'),q.get('descripcion_detallada','Sin dato declarado')])
 sheets['Relaciones']=[['Nombre FK','Tabla','Columna(s)','Tabla referenciada','Columna(s) ref.','Acciones']]+[list(x) for x in fks]
+sheets['Indices_restricciones']=[['Tabla','Tipo','Nombre/definición']]
+for table in ts:
+ for definition in tablecols(table)[1]:
+  upper=definition.upper()
+  kind='PK' if upper.startswith('PRIMARY KEY') else 'UNIQUE' if upper.startswith('UNIQUE') else 'INDEX' if upper.startswith('KEY') else 'FK' if 'FOREIGN KEY' in upper else 'CHECK' if 'CHECK' in upper else 'CONSTRAINT'
+  sheets['Indices_restricciones'].append([table['name'],kind,definition])
 sheets['Vistas']=[['Vista','Tablas base','Columnas expuestas','Origen/tipo']]
 for v in vs:
  s=v['sql']; bases=', '.join(dict.fromkeys(re.findall(r'\b(?:FROM|JOIN)\s+`([^`]+)`',s,re.I))); aliases=', '.join(re.findall(r'\bAS\s+`([^`]+)`',s,re.I)); sheets['Vistas'].append([v['name'],bases,aliases,'Derivado de expresión SQL; tipo inferido'])
@@ -83,6 +90,9 @@ def routine_signature(sql, kind='PROCEDURE'):
   i+=1
  return sql[start:i-1] if depth==0 else ''
 proc_descriptions={
+ 'sp_gen_validate_params':('Valida total (1–100000), edades (18–100), porcentaje activo (0–100) y país existente; señala error si falla.', 'tbc_gen_country_profile'),
+ 'sp_gen_insert_user_person':('Inserta la cuenta y su perfil personal, y devuelve el ID mediante parámetro OUT.', 'tb_users, tb_people'),
+ 'sp_generate_users':('Valida los argumentos y genera en lote usuarios/personas usando los catálogos y funciones fn_gen_* dentro de una transacción.', 'tb_users, tb_people, tbc_gen_*; tb_logs por triggers'),
  'sp_register_user_person':('Valida y registra conjuntamente una cuenta y su perfil personal (inferido).','tb_users, tb_people (inferido)'),
  'sp_soft_delete':('Valida la tabla e identificador indicados y aplica borrado lógico al registro permitido.','tabla indicada por parámetro'),
  'sp_soft_delete_product':('Comprueba el producto y marca su status como inactivo, conservando el historial.','tb_products'),
@@ -92,20 +102,21 @@ for p in ps:
 if fs:
  sheets['Funciones']=[['Nombre','Parámetros','Retorno','Características','Descripción','Ejemplo']]
  for f in fs:
-  sig=re.search(r'FUNCTION\s+`[^`]+`\s*\((.*?)\)\s*RETURNS\s+([^\s]+)',f['sql'],re.S|re.I)
-  sheets['Funciones'].append([f['name'],re.sub(r'\s+',' ',sig.group(1)).strip() if sig else '',sig.group(2) if sig else '',', '.join(x for x in ('DETERMINISTIC','NO SQL','READS SQL DATA') if re.search(r'\b'+x+r'\b',f['sql'],re.I)),'Según cuerpo SQL',f"SELECT {f['name']}(...);"])
+  sig=re.search(r'FUNCTION\s+`[^`]+`\s*\((.*?)\)\s*RETURNS\s+([^\n]+)',f['sql'],re.S|re.I)
+  descriptions={'fn_gen_birth_date':'Fecha aleatoria dentro de edades mínima/máxima.','fn_gen_courtesy_title':'Título de cortesía por país y género.','fn_gen_datetime_between':'Fecha y hora aleatoria entre dos límites.','fn_gen_email':'Construye correo de prueba desde nombre, apellido y secuencia.','fn_gen_email_domain':'Elige dominio example.com, example.org o example.net.','fn_gen_family_name':'Selecciona apellido aleatorio del catálogo del país.','fn_gen_gender_id':'Devuelve género aleatorio 1 o 2.','fn_gen_given_name':'Selecciona nombre por país y género.','fn_gen_is_active':'Distribuye estado activo según porcentaje solicitado.','fn_gen_nickname':'Construye alias con inicial, apellido y secuencia.','fn_gen_password_hash':'Genera SHA-256 de texto aleatorio basado en UUID/RAND.','fn_gen_phone':'Construye teléfono según perfil del país.','fn_gen_random_country':'Elige un perfil de país activo.','fn_gen_random_int':'Devuelve entero aleatorio en rango inclusivo.','fn_gen_slug':'Normaliza texto eliminando espacios y signos indicados.'}
+  sheets['Funciones'].append([f['name'],re.sub(r'\s+',' ',sig.group(1)).strip() if sig else '',sig.group(2).strip() if sig else '',', '.join(x for x in ('DETERMINISTIC','NO SQL','READS SQL DATA') if re.search(r'\b'+x+r'\b',f['sql'],re.I)),descriptions.get(f['name'],'Descripción derivada del SQL.'),f"SELECT {f['name']}( ... );"])
 row_counts=DATA.get('row_counts',{})
-for table in ts: row_counts.setdefault(table['name'],0)
-row_total=sum(row_counts.values())
+for table in ts: row_counts.setdefault(table['name'],'No verificable en el respaldo')
+row_total=sum(v for v in row_counts.values() if isinstance(v,int)); verified=sum(isinstance(row_counts.get(t['name']),int) for t in ts)
 sheets['Volumen_datos']=[['Tabla','Registros','Porcentaje del total']]
-for table in sorted(ts,key=lambda t:(-row_counts[t['name']],t['name'])):
- n=row_counts[table['name']]; sheets['Volumen_datos'].append([table['name'],n,f'{100*n/row_total:.2f}%' if row_total else '0.00%'])
-sheets['Volumen_datos'].append(['TOTAL',row_total,'100.00%'])
-sheets['Volumen_datos'] += [['Tablas vacías',sum(row_counts[t['name']]==0 for t in ts),''],['Fuente','BD15.sql; parser streaming de tuplas VALUES','2026-10-27'],['Nota','tb_logs crece con INSERT/UPDATE/DELETE auditados; tb_users y tb_people contienen gran parte de datos de prueba generados.','']]
+for table in sorted(ts,key=lambda t:(-(row_counts[t['name']] if isinstance(row_counts[t['name']],int) else -1),t['name'])):
+ n=row_counts[table['name']]; sheets['Volumen_datos'].append([table['name'],n,f'{100*n/row_total:.2f}%' if isinstance(n,int) and row_total else '—'])
+sheets['Volumen_datos'].append(['TOTAL verificable',row_total,'100.00%'])
+sheets['Volumen_datos'] += [['Tablas sin INSERT verificable',len(ts)-verified,''],['Fuente',SOURCE_NOTE,'Conteo de filas INSERT; no es un conteo en vivo.'],['Nota','tb_logs crece con INSERT/UPDATE/DELETE auditados; tb_users y tb_people contienen gran parte de datos de prueba generados.','']]
 sheets['Convenciones']=[['Elemento','Convención'],['tb_','Tabla principal'],['tbc_','Catálogo'],['tbd_','Detalle o relación'],['vw_','Vista'],['trg_','Trigger'],['sp_','Procedimiento'],['fk_','Llave foránea'],['uk_','Restricción UNIQUE'],['chk_','Restricción CHECK'],['creation_date / last_update','Fechas de ciclo de vida; ver default por columna'],['status','Dominio depende del tipo SQL; bit(1) y tinyint no se presumen equivalentes']]
-sheets['Historial_cambios']=[['Versión','Objeto','Anterior BDE (cantidades informadas)','BD15','Cambio exacto por nombre/tipo']]
-for label,old,new in [('Tablas',26,DATA.get('counts',{}).get('tables',len(ts))),('Vistas',24,DATA.get('counts',{}).get('views',len(vs))),('Triggers',75,DATA.get('counts',{}).get('triggers',len(gs))),('Procedimientos',4,DATA.get('counts',{}).get('procedures',len(ps))),('Funciones',0,DATA.get('counts',{}).get('functions',len(fs))),('Columnas',198,DATA.get('counts',{}).get('columns',sum(len(t.get('columns',[])) for t in ts))),('FK',37,DATA.get('counts',{}).get('foreign_keys',len(fks)))]:
- sheets['Historial_cambios'].append(['BDE → BD15',label,old,new,'Sin cambio de cantidad; BDE.sql no está disponible para cotejo nominal.'])
+sheets['Historial_cambios']=[['Versión','Objeto','Anterior BD16','BD17','Cambio exacto por nombre/tipo']]
+for label,old,new in [('Tablas',26,DATA.get('counts',{}).get('tables',len(ts))),('Vistas',25,DATA.get('counts',{}).get('views',len(vs))),('Triggers',75,DATA.get('counts',{}).get('triggers',len(gs))),('Procedimientos',4,DATA.get('counts',{}).get('procedures',len(ps))),('Funciones',0,DATA.get('counts',{}).get('functions',len(fs))),('Columnas',sum(len(t.get('columns',[])) for t in ts if t['name'] not in ('tbc_gen_country_profile','tbc_gen_family_names','tbc_gen_given_names')),DATA.get('counts',{}).get('columns',sum(len(t.get('columns',[])) for t in ts))),('FK',37,DATA.get('counts',{}).get('foreign_keys',len(fks)))]:
+ sheets['Historial_cambios'].append(['BD16 -> BD17',label,old,new,'Nuevas tablas de generación; vistas existentes sin cambios.' if label=='Tablas' else 'Conteo estructural según BD17.sql.'])
 sheets['Dominios_ENUM']=[['Tipo/dominio','Valores','Usos']]
 enums=defaultdict(list); stats=defaultdict(list)
 for t in ts:
@@ -150,7 +161,7 @@ with zipfile.ZipFile(D/'diccionario_datos.xlsx','w',zipfile.ZIP_DEFLATED) as z:
   end=colname(max(len(r) for r in sheets[n])); z.writestr(f'xl/worksheets/sheet{i}.xml','<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><sheetFormatPr defaultRowHeight="30"/><sheetData>'+''.join(rows)+f'</sheetData><autoFilter ref="A1:{end}{len(sheets[n])}"/></worksheet>')
  z.writestr('xl/styles.xml','<?xml version="1.0" encoding="UTF-8"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFD9EAF7"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="3"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf><xf numFmtId="0" fontId="1" fillId="1" borderId="0" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="0" fillId="0" borderId="0" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf></cellXfs></styleSheet>')
 # README
-(D/'README.md').write_text('# Diccionario de datos de db_test\n\nEntregables generados desde el DDL extraído de `Practica03/backups/BD15.sql`: `diccionario_datos.md`, `diccionario_datos.xlsx`, `estructura.json`, `diagrama_er.mmd`, `schema.dbml` y el sitio estático `/docs`. No se guardan valores de filas del volcado. `estructura.json` contiene solo CREATE y metadatos del esquema más conteos agregados por tabla.\n\n## Regeneración segura\n\nDesde la raíz del repositorio, con Python 3:\n\n```powershell\npython diccionario_datos\\extraer.py\npython diccionario_datos\\contar_filas.py\npython diccionario_datos\\generar.py\npython diccionario_datos\\generar_modelos.py\npython diccionario_datos\\generar_sitio.py\npython diccionario_datos\\validar.py\npython diccionario_datos\\validar_sitio.py\n```\n\n`extraer.py` descarta INSERT y conserva exclusivamente CREATE TABLE/VIEW/TRIGGER/PROCEDURE/FUNCTION. `contar_filas.py` procesa las tuplas de INSERT en streaming y persiste únicamente conteos por tabla. No importa el volcado en `db_test`. El XLSX tiene filtros y encabezado congelado, e incluye volumen de datos, observaciones, dominios, convenciones e historial.\n',encoding='utf-8')
+(D/'README.md').write_text('# Diccionario de datos de BD17\n\nEntregables generados desde el DDL extraído de `Practica03/backups/BD17.sql`: `diccionario_datos.md`, `diccionario_datos.xlsx`, `estructura.json`, `diagrama_er.mmd`, `schema.dbml` y el sitio estático `/docs`. No se guardan valores de filas del volcado. `estructura.json` contiene solo CREATE y metadatos del esquema más conteos agregados por tabla.\n\n## Regeneración segura\n\nDesde la raíz del repositorio, con Python 3:\n\n```powershell\npython diccionario_datos\\extraer.py\npython diccionario_datos\\contar_filas.py\npython diccionario_datos\\generar.py\npython diccionario_datos\\generar_modelos.py\npython diccionario_datos\\generar_sitio.py\npython diccionario_datos\\validar.py\npython diccionario_datos\\validar_sitio.py\n```\n\n`extraer.py` descarta INSERT y conserva exclusivamente CREATE TABLE/VIEW/TRIGGER/PROCEDURE/FUNCTION. `contar_filas.py` procesa las tuplas de INSERT en streaming y persiste únicamente conteos por tabla. No importa el volcado en `BD17`. El XLSX tiene filtros y encabezado congelado, e incluye volumen de datos, observaciones, dominios, convenciones e historial.\n',encoding='utf-8')
 # validation
 counts={k:sum(x['kind']==k for x in O) for k in ('table','view','trigger','procedure')}; missing=[x[1] for x in fks if x[1] not in (D/'diccionario_datos.md').read_text(encoding='utf-8')]
 print(json.dumps({'conteos':counts,'FK_SQL':len(fks),'FK_nombres_ausentes_en_diccionario':missing,'hojas_XLSX':names},ensure_ascii=False))

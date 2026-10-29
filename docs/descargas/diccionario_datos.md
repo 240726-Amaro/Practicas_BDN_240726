@@ -1,6 +1,6 @@
-# Diccionario de datos — db_test
+# Diccionario de datos — BD17
 
-**Motor objetivo:** MySQL 8.0.36. Fuente de esquema y conteos: `BD15.sql` (2026-10-27); los valores de INSERT se descartaron y solo se conservaron conteos agregados.
+**Motor objetivo:** MySQL 8.0.36. Estructura y totales de registros obtenidos del respaldo BD17.sql (fecha del archivo: 2026-10-28 19:01:58 -06:00). Conteo de registros realizado el: 2026-10-28 19:11:25 -06:00. Los totales corresponden al respaldo, no a la instancia en vivo.
 
 ## Leyenda de la notación
 
@@ -34,7 +34,7 @@
 
 ### `tb_buyer_orders`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** principal (tb_). **Módulo:** órdenes (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -92,7 +92,7 @@
 
 ### `tb_carts`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** principal (tb_). **Módulo:** carritos (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -139,7 +139,7 @@
 
 ### `tb_logs`
 
-- **Registros en BD15:** 40186.
+- **Total de registros:** 60630. 
 - **Prefijo/tipo:** principal (tb_). **Módulo:** auditoría (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -187,7 +187,7 @@
 
 ### `tb_order_cancellations`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** principal (tb_). **Módulo:** envíos, devoluciones y cancelaciones (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -244,7 +244,7 @@
 
 ### `tb_orders`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** principal (tb_). **Módulo:** órdenes (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -295,7 +295,7 @@
 
 ### `tb_payment_transaction`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** principal (tb_). **Módulo:** pagos (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -351,7 +351,7 @@
 
 ### `tb_payments`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** principal (tb_). **Módulo:** pagos (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -406,7 +406,7 @@
 
 ### `tb_people`
 
-- **Registros en BD15:** 3.
+- **Total de registros:** 10225. 
 - **Prefijo/tipo:** principal (tb_). **Módulo:** usuarios y perfiles personales (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -463,7 +463,7 @@
 
 ### `tb_products`
 
-- **Registros en BD15:** 15007.
+- **Total de registros:** 15007. 
 - **Prefijo/tipo:** principal (tb_). **Módulo:** productos (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -519,7 +519,7 @@
 
 ### `tb_refunds`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** principal (tb_). **Módulo:** envíos, devoluciones y cancelaciones (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -581,7 +581,7 @@
 
 ### `tb_returns`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** principal (tb_). **Módulo:** envíos, devoluciones y cancelaciones (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -638,7 +638,7 @@
 
 ### `tb_shipments`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** principal (tb_). **Módulo:** envíos, devoluciones y cancelaciones (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -699,7 +699,7 @@
 
 ### `tb_user_addresses`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** principal (tb_). **Módulo:** usuarios (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -764,7 +764,7 @@
 
 ### `tb_users`
 
-- **Registros en BD15:** 5.
+- **Total de registros:** 10227. 
 - **Prefijo/tipo:** principal (tb_). **Módulo:** usuarios (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -824,7 +824,7 @@
 
 ### `tbc_categories`
 
-- **Registros en BD15:** 160.
+- **Total de registros:** 160. 
 - **Prefijo/tipo:** catálogo (tbc_). **Módulo:** productos (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -874,9 +874,146 @@
 | `creation_date` | Monovalor | Almacenado | Obligatorio (NOT NULL); valor por sistema (DEFAULT CURRENT_TIMESTAMP) | No | Cuantitativa (temporal) | creation_date = {fecha/hora} | creation_date ∈ DATETIME; default CURRENT_TIMESTAMP | Registra una fecha u hora del ciclo de vida/auditoría (inferido); se asigna por defecto CURRENT_TIMESTAMP. |
 | `last_update` | Monovalor | Almacenado | Opcional (NULL); valor por sistema (DEFAULT NULL) | No | Cuantitativa (temporal) | last_update = {fecha/hora} | last_update ∈ DATETIME; default NULL | Registra una fecha u hora del ciclo de vida/auditoría (inferido); se asigna por defecto NULL. |
 
+### `tbc_gen_country_profile`
+
+- **Total de registros:** 12. 
+- **Prefijo/tipo:** catálogo (tbc_). **Módulo:** direcciones (inferido).
+- **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
+- **Descripción general detallada:**
+  - Catálogo de apoyo para la generación masiva de usuarios; define el país y los parámetros locales usados para construir teléfono y título de cortesía.
+  - Pertenece al módulo de direcciones (inferido por el prefijo y el nombre del objeto).
+  - Relaciones salientes: ninguna FK declarada. Relaciones entrantes: tbc_gen_family_names.`country_code`; tbc_gen_given_names.`country_code`.
+  - Reglas SQL: sin CHECK; sin UNIQUE. Acciones ON DELETE/UPDATE: sin FK salientes con acciones. Columnas generadas: ninguna.
+  - Triggers asociados: ninguno.
+
+**Notación formal:** `tbc_gen_country_profile = @country_code + country_name + phone_prefix + phone_digits + title_male + title_female + status`
+
+**Tabla técnica de columnas**
+
+| # | Nombre | Tipo | Longitud/precisión | NULL | Default | Extras | Llave | Descripción |
+|---:|---|---|---|:---:|---|---|---|---|
+| 1 | `country_code` | `char(2)` | 2 | NO | Sin default | — | PK | Código ISO de dos caracteres que identifica el país usado como clave del perfil de generación; permite relacionar los catálogos auxiliares con sus parámetros locales. |
+| 2 | `country_name` | `varchar(60)` | 60 | NO | Sin default | — | — | Nombre legible del país asociado al código country_code. |
+| 3 | `phone_prefix` | `varchar(6)` | 6 | NO | Sin default | — | — | Prefijo telefónico internacional que se antepone a los dígitos locales al generar teléfonos. |
+| 4 | `phone_digits` | `tinyint` | — | NO | Sin default | — | — | Cantidad de dígitos locales que deben generarse para completar el teléfono del país. |
+| 5 | `title_male` | `varchar(10)` | 10 | NO | Sin default | — | — | Título de cortesía que se asigna a personas del género masculino en el contexto del país. |
+| 6 | `title_female` | `varchar(10)` | 10 | NO | Sin default | — | — | Título de cortesía que se asigna a personas del género femenino en el contexto del país. |
+| 7 | `status` | `bit(1)` | 1 | NO | b'1' | — | — | Indica el estado lógico del registro (inferido); usa DEFAULT b'1'. |
+
+**Restricciones e índices del DDL**
+
+- `PRIMARY KEY (\`country_code\`)`
+
+**Relaciones**
+
+- Sin FK salientes.
+- Referenciada por `tbc_gen_family_names` mediante `country_code`.
+- Referenciada por `tbc_gen_given_names` mediante `country_code`.
+
+**Triggers asociados:** Ninguno.
+
+**Tabla de clasificación de columnas**
+
+| Nombre | Valor | Origen | Obligatoriedad | Llave | Naturaleza | Composición formal | Dominio | Descripción detallada |
+|---|---|---|---|---|---|---|---|---|
+| `country_code` | Monovalor | Almacenado | Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido) | PK | Cualitativa nominal | country_code = {carácter} | country_code ∈ cadena(≤2); tipo char(2) | Código ISO de dos caracteres que identifica el país usado como clave del perfil de generación; permite relacionar los catálogos auxiliares con sus parámetros locales. |
+| `country_name` | Monovalor | Almacenado | Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido) | No | Cualitativa nominal | country_name = {carácter} | country_name ∈ cadena(≤60); tipo varchar(60) | Nombre legible del país asociado al código country_code. |
+| `phone_prefix` | Monovalor | Almacenado | Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido) | No | Cualitativa nominal | phone_prefix = {carácter} | phone_prefix ∈ cadena(≤6); tipo varchar(6) | Prefijo telefónico internacional que se antepone a los dígitos locales al generar teléfonos. |
+| `phone_digits` | Monovalor | Almacenado | Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido) | No | Cualitativa nominal | phone_digits = {entero} | phone_digits ∈ ℤ; tipo tinyint | Cantidad de dígitos locales que deben generarse para completar el teléfono del país. |
+| `title_male` | Monovalor | Almacenado | Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido) | No | Cualitativa nominal | title_male = {carácter} | title_male ∈ cadena(≤10); tipo varchar(10) | Título de cortesía que se asigna a personas del género masculino en el contexto del país. |
+| `title_female` | Monovalor | Almacenado | Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido) | No | Cualitativa nominal | title_female = {carácter} | title_female ∈ cadena(≤10); tipo varchar(10) | Título de cortesía que se asigna a personas del género femenino en el contexto del país. |
+| `status` | Monovalor | Almacenado | Obligatorio (NOT NULL); valor por sistema (DEFAULT b'1') | No | Cualitativa nominal | status = {0 \| 1} | status ∈ {0,1}; 1 activo, 0 inactivo (borrado lógico); bit(1) | Indica el estado lógico del registro (inferido); usa DEFAULT b'1'. |
+
+### `tbc_gen_family_names`
+
+- **Total de registros:** 225. 
+- **Prefijo/tipo:** catálogo (tbc_). **Módulo:** direcciones (inferido).
+- **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
+- **Descripción general detallada:**
+  - Catálogo de apoyo para la generación masiva de usuarios; almacena apellidos por país y mantiene FK al perfil del país.
+  - Pertenece al módulo de direcciones (inferido por el prefijo y el nombre del objeto).
+  - Relaciones salientes: `country_code` → tbc_gen_country_profile.`country_code`. Relaciones entrantes: ninguna FK entrante.
+  - Reglas SQL: sin CHECK; UNIQUE UNIQUE KEY `uk_gen_family` (`country_code`,`name`). Acciones ON DELETE/UPDATE: fk_gen_family_country: sin acción referencial explícita. Columnas generadas: ninguna.
+  - Triggers asociados: ninguno.
+
+**Notación formal:** `tbc_gen_family_names = @ID + #country_code + name`
+
+**Tabla técnica de columnas**
+
+| # | Nombre | Tipo | Longitud/precisión | NULL | Default | Extras | Llave | Descripción |
+|---:|---|---|---|:---:|---|---|---|---|
+| 1 | `ID` | `int` | — | NO | Sin default | AUTO_INCREMENT | PK | Identificador numérico generado automáticamente para distinguir registros; es llave primaria y se incrementa al insertar. |
+| 2 | `country_code` | `char(2)` | 2 | NO | Sin default | — | FK → tbc_gen_country_profile.country_code; UK | Identifica o enlaza el registro con `tbc_gen_country_profile.country_code`; su valor se almacena al crear la relación y debe corresponder a la fila referenciada. |
+| 3 | `name` | `varchar(60)` | 60 | NO | Sin default | — | UK | Apellido disponible para selección aleatoria durante la generación masiva de usuarios. |
+
+**Restricciones e índices del DDL**
+
+- `PRIMARY KEY (\`ID\`)`
+- `UNIQUE KEY \`uk_gen_family\` (\`country_code\`,\`name\`)`
+- `CONSTRAINT \`fk_gen_family_country\` FOREIGN KEY (\`country_code\`) REFERENCES \`tbc_gen_country_profile\` (\`country_code\`)`
+
+**Relaciones**
+
+- `country_code` → `tbc_gen_country_profile.country_code`; sin acción referencial explícita
+
+**Triggers asociados:** Ninguno.
+
+**Tabla de clasificación de columnas**
+
+| Nombre | Valor | Origen | Obligatoriedad | Llave | Naturaleza | Composición formal | Dominio | Descripción detallada |
+|---|---|---|---|---|---|---|---|---|
+| `ID` | Monovalor | Almacenado | Obligatorio (NOT NULL); valor aportado por sistema (AUTO_INCREMENT) | PK | Cualitativa nominal | ID = {dígito} | ID ∈ ℤ⁺; tipo int; AUTO_INCREMENT | Identificador numérico generado automáticamente para distinguir registros; es llave primaria y se incrementa al insertar. |
+| `country_code` | Monovalor | Almacenado | Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido) | FK → tbc_gen_country_profile.country_code; UK | Cualitativa nominal | country_code = {carácter} | country_code ∈ {tbc_gen_country_profile.country_code}; ON DELETE sin acción | Identifica o enlaza el registro con `tbc_gen_country_profile.country_code`; su valor se almacena al crear la relación y debe corresponder a la fila referenciada. |
+| `name` | Monovalor | Almacenado | Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido) | UK | Cualitativa nominal | name = {carácter} | name ∈ cadena(≤60); tipo varchar(60) | Apellido disponible para selección aleatoria durante la generación masiva de usuarios. |
+
+### `tbc_gen_given_names`
+
+- **Total de registros:** 344. 
+- **Prefijo/tipo:** catálogo (tbc_). **Módulo:** direcciones (inferido).
+- **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
+- **Descripción general detallada:**
+  - Catálogo de apoyo para la generación masiva de usuarios; almacena nombres por país y género, con FK al perfil del país y CHECK de género.
+  - Pertenece al módulo de direcciones (inferido por el prefijo y el nombre del objeto).
+  - Relaciones salientes: `country_code` → tbc_gen_country_profile.`country_code`. Relaciones entrantes: ninguna FK entrante.
+  - Reglas SQL: CHECK ((`gender_ID` in (1,2))); UNIQUE UNIQUE KEY `uk_gen_given` (`country_code`,`gender_ID`,`name`). Acciones ON DELETE/UPDATE: fk_gen_given_country: sin acción referencial explícita. Columnas generadas: ninguna.
+  - Triggers asociados: ninguno.
+
+**Notación formal:** `tbc_gen_given_names = @ID + #country_code + gender_ID + name`
+
+**Tabla técnica de columnas**
+
+| # | Nombre | Tipo | Longitud/precisión | NULL | Default | Extras | Llave | Descripción |
+|---:|---|---|---|:---:|---|---|---|---|
+| 1 | `ID` | `int` | — | NO | Sin default | AUTO_INCREMENT | PK | Identificador numérico generado automáticamente para distinguir registros; es llave primaria y se incrementa al insertar. |
+| 2 | `country_code` | `char(2)` | 2 | NO | Sin default | — | FK → tbc_gen_country_profile.country_code; UK | Identifica o enlaza el registro con `tbc_gen_country_profile.country_code`; su valor se almacena al crear la relación y debe corresponder a la fila referenciada. |
+| 3 | `gender_ID` | `tinyint unsigned` | — | NO | Sin default | — | UK | Identificador del género al que se asocia el nombre; CHECK restringe el valor a 1 o 2. |
+| 4 | `name` | `varchar(60)` | 60 | NO | Sin default | — | UK | Nombre de pila disponible para selección por país y género durante la generación masiva de usuarios. |
+
+**Restricciones e índices del DDL**
+
+- `PRIMARY KEY (\`ID\`)`
+- `UNIQUE KEY \`uk_gen_given\` (\`country_code\`,\`gender_ID\`,\`name\`)`
+- `CONSTRAINT \`fk_gen_given_country\` FOREIGN KEY (\`country_code\`) REFERENCES \`tbc_gen_country_profile\` (\`country_code\`)`
+- `CONSTRAINT \`chk_gen_given_gender\` CHECK ((\`gender_ID\` in (1,2)))`
+
+**Relaciones**
+
+- `country_code` → `tbc_gen_country_profile.country_code`; sin acción referencial explícita
+
+**Triggers asociados:** Ninguno.
+
+**Tabla de clasificación de columnas**
+
+| Nombre | Valor | Origen | Obligatoriedad | Llave | Naturaleza | Composición formal | Dominio | Descripción detallada |
+|---|---|---|---|---|---|---|---|---|
+| `ID` | Monovalor | Almacenado | Obligatorio (NOT NULL); valor aportado por sistema (AUTO_INCREMENT) | PK | Cualitativa nominal | ID = {dígito} | ID ∈ ℤ⁺; tipo int; AUTO_INCREMENT | Identificador numérico generado automáticamente para distinguir registros; es llave primaria y se incrementa al insertar. |
+| `country_code` | Monovalor | Almacenado | Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido) | FK → tbc_gen_country_profile.country_code; UK | Cualitativa nominal | country_code = {carácter} | country_code ∈ {tbc_gen_country_profile.country_code}; ON DELETE sin acción | Identifica o enlaza el registro con `tbc_gen_country_profile.country_code`; su valor se almacena al crear la relación y debe corresponder a la fila referenciada. |
+| `gender_ID` | Monovalor | Almacenado | Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido) | UK | Cualitativa nominal | gender_ID = {dígito} | gender_ID ∈ ℤ⁺ ∪ {0}; tipo tinyint unsigned; CHECK ((`gender_ID` in (1,2))) | Identificador del género al que se asocia el nombre; CHECK restringe el valor a 1 o 2. |
+| `name` | Monovalor | Almacenado | Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido) | UK | Cualitativa nominal | name = {carácter} | name ∈ cadena(≤60); tipo varchar(60) | Nombre de pila disponible para selección por país y género durante la generación masiva de usuarios. |
+
 ### `tbc_payment_methods`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** catálogo (tbc_). **Módulo:** pagos (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -922,7 +1059,7 @@
 
 ### `tbc_payment_methods_types`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** catálogo (tbc_). **Módulo:** pagos (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -970,7 +1107,7 @@
 
 ### `tbd_address_components`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** detalle/relación (tbd_). **Módulo:** direcciones (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -1026,7 +1163,7 @@
 
 ### `tbd_cancellation_items`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** detalle/relación (tbd_). **Módulo:** envíos, devoluciones y cancelaciones (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -1074,7 +1211,7 @@
 
 ### `tbd_carts_items`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** detalle/relación (tbd_). **Módulo:** carritos (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -1126,7 +1263,7 @@
 
 ### `tbd_order_items`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** detalle/relación (tbd_). **Módulo:** órdenes (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -1190,7 +1327,7 @@
 
 ### `tbd_products_categories`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** detalle/relación (tbd_). **Módulo:** productos (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -1236,7 +1373,7 @@
 
 ### `tbd_products_users_providers`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** detalle/relación (tbd_). **Módulo:** usuarios (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -1292,7 +1429,7 @@
 
 ### `tbd_return_items`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** detalle/relación (tbd_). **Módulo:** envíos, devoluciones y cancelaciones (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -1342,7 +1479,7 @@
 
 ### `tbd_user_payment_methods`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** detalle/relación (tbd_). **Módulo:** usuarios (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -1404,7 +1541,7 @@
 
 ### `tbd_users_wishlist_products`
 
-- **Registros en BD15:** 0.
+- **Total de registros:** No verificable en el respaldo. 
 - **Prefijo/tipo:** detalle/relación (tbd_). **Módulo:** usuarios (inferido).
 - **Motor/charset/collation:** InnoDB / utf8mb4 / utf8mb4_0900_ai_ci, según opciones del DDL.
 - **Descripción general detallada:**
@@ -1551,6 +1688,12 @@
 ### `vw_trazabilidad_productos`
 
 - **Propósito:** presenta trazabilidad de productos mediante la consulta definida en SQL (inferido).
+- **Tablas base:** La consulta no expone tablas base identificables..
+- **Columnas expuestas:** `log_id` (tipo derivado de expresión; origen en SELECT), `operation` (tipo derivado de expresión; origen en SELECT), `inserted_by` (tipo derivado de expresión; origen en SELECT), `operation_description` (tipo derivado de expresión; origen en SELECT), `operation_date` (tipo derivado de expresión; origen en SELECT).
+
+### `vw_trazabilidad_productos_categorias`
+
+- **Propósito:** presenta trazabilidad de productos categorias mediante la consulta definida en SQL (inferido).
 - **Tablas base:** La consulta no expone tablas base identificables..
 - **Columnas expuestas:** `log_id` (tipo derivado de expresión; origen en SELECT), `operation` (tipo derivado de expresión; origen en SELECT), `inserted_by` (tipo derivado de expresión; origen en SELECT), `operation_description` (tipo derivado de expresión; origen en SELECT), `operation_date` (tipo derivado de expresión; origen en SELECT).
 
@@ -1804,6 +1947,27 @@
 
 ## Procedimientos
 
+### `sp_generate_users`
+
+- **Parámetros:** IN p_total INT; IN p_country CHAR(2); IN p_min_age INT; IN p_max_age INT; IN p_active_pct DECIMAL(5,2).
+- **Pasos:** Valida parámetros y genera en lote cuentas y personas usando los catálogos y funciones fn_gen_*; controla la operación con transacción.
+- **Tablas afectadas:** `tb_users`, `tb_people`, `tbc_gen_*`; `tb_logs` mediante triggers.
+- **Ejemplo:** `CALL sp_generate_users(@p_total, @p_country, @p_min_age, @p_max_age, @p_active_pct);`
+
+### `sp_gen_insert_user_person`
+
+- **Parámetros:** IN p_email VARCHAR(80); IN p_nickname VARCHAR(100); IN p_password_hash VARCHAR(255); IN p_creation_date DATETIME; IN p_last_login DATETIME; IN p_status TINYINT; IN p_courtesy_title CHAR(10); IN p_given_names VARCHAR(150); IN p_family_names VARCHAR(150); IN p_birth_date DATE; IN p_gender_ID TINYINT UNSIGNED; IN p_country_code CHAR(2); IN p_phone VARCHAR(25); OUT p_user_id INT.
+- **Pasos:** Inserta la cuenta en tb_users y su perfil en tb_people; devuelve el identificador mediante parámetro OUT.
+- **Tablas afectadas:** `tb_users`, `tb_people`.
+- **Ejemplo:** `CALL sp_gen_insert_user_person(@p_email, @p_nickname, @p_password_hash, @p_creation_date, @p_last_login, @p_status, @p_courtesy_title, @p_given_names, @p_family_names, @p_birth_date, @p_gender_ID, @p_country_code, @p_phone, @p_user_id);`
+
+### `sp_gen_validate_params`
+
+- **Parámetros:** IN p_total INT; IN p_country CHAR(2); IN p_min_age INT; IN p_max_age INT; IN p_active_pct DECIMAL(5,2).
+- **Pasos:** Valida total, rango de edades, porcentaje activo y país; genera error SQL si algún parámetro no cumple sus límites.
+- **Tablas afectadas:** `tbc_gen_country_profile`.
+- **Ejemplo:** `CALL sp_gen_validate_params(@p_total, @p_country, @p_min_age, @p_max_age, @p_active_pct);`
+
 ### `sp_register_user_person`
 
 - **Parámetros:** IN p_nickname VARCHAR(100); IN p_password VARCHAR(255); IN p_given_names VARCHAR(150); IN p_family_names VARCHAR(150); IN p_birth_date DATE; IN p_gender_ID TINYINT UNSIGNED; IN p_country_code CHAR(2); IN p_phone VARCHAR(25).
@@ -1832,10 +1996,113 @@
 - **Tablas afectadas:** `tb_users`.
 - **Ejemplo:** `CALL sp_soft_delete_user(@p_user_id);`
 
-- `sp_generate_users`, `sp_gen_validate_params` y `sp_gen_insert_user_person` no están definidos en BD15.sql; sí existe `sp_register_user_person`.
 ## Funciones
 
-- BD15.sql no define funciones.
+### `fn_gen_birth_date`
+- **Parámetros:** `p_min_age INT, p_max_age INT`.
+- **Retorno:** `date`.
+- **Características:** NO SQL.
+- **Qué hace:** Genera fecha de nacimiento aleatoria dentro del rango de edades indicado. (descripción derivada del SQL).
+- **Ejemplo:** `SELECT fn_gen_birth_date(...);`
+
+### `fn_gen_courtesy_title`
+- **Parámetros:** `p_country CHAR(2), p_gender TINYINT UNSIGNED`.
+- **Retorno:** `char(10)`.
+- **Características:** READS SQL DATA.
+- **Qué hace:** Devuelve el título de cortesía según país y género. (descripción derivada del SQL).
+- **Ejemplo:** `SELECT fn_gen_courtesy_title(...);`
+
+### `fn_gen_datetime_between`
+- **Parámetros:** `p_from DATETIME, p_to DATETIME`.
+- **Retorno:** `datetime`.
+- **Características:** NO SQL.
+- **Qué hace:** Genera DATETIME aleatorio entre dos límites. (descripción derivada del SQL).
+- **Ejemplo:** `SELECT fn_gen_datetime_between(...);`
+
+### `fn_gen_email`
+- **Parámetros:** `p_given VARCHAR(60), p_family VARCHAR(60), p_seq BIGINT`.
+- **Retorno:** `varchar(80)`.
+- **Características:** NO SQL.
+- **Qué hace:** Construye correo con nombre, apellido, secuencia y dominio de prueba. (descripción derivada del SQL).
+- **Ejemplo:** `SELECT fn_gen_email(...);`
+
+### `fn_gen_email_domain`
+- **Parámetros:** ``.
+- **Retorno:** `varchar(20)`.
+- **Características:** NO SQL.
+- **Qué hace:** Elige example.com, example.org o example.net. (descripción derivada del SQL).
+- **Ejemplo:** `SELECT fn_gen_email_domain(...);`
+
+### `fn_gen_family_name`
+- **Parámetros:** `p_country CHAR(2)`.
+- **Retorno:** `varchar(60)`.
+- **Características:** READS SQL DATA.
+- **Qué hace:** Selecciona apellido al azar del catálogo del país. (descripción derivada del SQL).
+- **Ejemplo:** `SELECT fn_gen_family_name(...);`
+
+### `fn_gen_gender_id`
+- **Parámetros:** ``.
+- **Retorno:** `tinyint`.
+- **Características:** NO SQL.
+- **Qué hace:** Devuelve aleatoriamente 1 o 2. (descripción derivada del SQL).
+- **Ejemplo:** `SELECT fn_gen_gender_id(...);`
+
+### `fn_gen_given_name`
+- **Parámetros:** `p_country CHAR(2), p_gender TINYINT UNSIGNED`.
+- **Retorno:** `varchar(60)`.
+- **Características:** READS SQL DATA.
+- **Qué hace:** Selecciona nombre al azar por país y género. (descripción derivada del SQL).
+- **Ejemplo:** `SELECT fn_gen_given_name(...);`
+
+### `fn_gen_is_active`
+- **Parámetros:** `p_index INT, p_total INT, p_active_pct DECIMAL(5,2)`.
+- **Retorno:** `tinyint`.
+- **Características:** DETERMINISTIC, NO SQL.
+- **Qué hace:** Distribuye el estado activo conforme al porcentaje solicitado. (descripción derivada del SQL).
+- **Ejemplo:** `SELECT fn_gen_is_active(...);`
+
+### `fn_gen_nickname`
+- **Parámetros:** `p_given VARCHAR(60), p_family VARCHAR(60), p_seq BIGINT`.
+- **Retorno:** `varchar(100)`.
+- **Características:** DETERMINISTIC, NO SQL.
+- **Qué hace:** Construye alias con inicial, apellido normalizado y secuencia. (descripción derivada del SQL).
+- **Ejemplo:** `SELECT fn_gen_nickname(...);`
+
+### `fn_gen_password_hash`
+- **Parámetros:** ``.
+- **Retorno:** `varchar(255)`.
+- **Características:** NO SQL.
+- **Qué hace:** Genera hash SHA-256 sobre texto aleatorio con UUID y RAND(). (descripción derivada del SQL).
+- **Ejemplo:** `SELECT fn_gen_password_hash(...);`
+
+### `fn_gen_phone`
+- **Parámetros:** `p_country CHAR(2)`.
+- **Retorno:** `varchar(25)`.
+- **Características:** READS SQL DATA.
+- **Qué hace:** Construye teléfono con prefijo y longitud del perfil del país. (descripción derivada del SQL).
+- **Ejemplo:** `SELECT fn_gen_phone(...);`
+
+### `fn_gen_random_country`
+- **Parámetros:** ``.
+- **Retorno:** `char(2)`.
+- **Características:** READS SQL DATA.
+- **Qué hace:** Selecciona un país cuyo perfil esté activo. (descripción derivada del SQL).
+- **Ejemplo:** `SELECT fn_gen_random_country(...);`
+
+### `fn_gen_random_int`
+- **Parámetros:** `p_min INT, p_max INT`.
+- **Retorno:** `int`.
+- **Características:** NO SQL.
+- **Qué hace:** Devuelve entero aleatorio en el intervalo inclusivo indicado. (descripción derivada del SQL).
+- **Ejemplo:** `SELECT fn_gen_random_int(...);`
+
+### `fn_gen_slug`
+- **Parámetros:** `p_text VARCHAR(150)`.
+- **Retorno:** `varchar(150)`.
+- **Características:** DETERMINISTIC, NO SQL.
+- **Qué hace:** Normaliza a minúsculas y elimina espacios, apóstrofos, guiones y puntos. (descripción derivada del SQL).
+- **Ejemplo:** `SELECT fn_gen_slug(...);`
+
 ## Catálogo de dominios
 
 ### ENUM
@@ -1854,7 +2121,7 @@
 
 ### status
 
-- `bit`: `tb_buyer_orders.status (bit(1))`, `tb_carts.status (bit(1))`, `tb_user_addresses.status (bit(1))`, `tb_users.status (bit(1))`, `tbc_categories.status (bit(1))`, `tbc_payment_methods.status (bit(1))`, `tbc_payment_methods_types.status (bit(1))`, `tbd_address_components.status (bit(1))`, `tbd_products_categories.status (bit(1))`, `tbd_products_users_providers.status (bit(1))`, `tbd_user_payment_methods.status (bit(1))`, `tbd_users_wishlist_products.status (bit(1))`.
+- `bit`: `tb_buyer_orders.status (bit(1))`, `tb_carts.status (bit(1))`, `tb_user_addresses.status (bit(1))`, `tb_users.status (bit(1))`, `tbc_categories.status (bit(1))`, `tbc_gen_country_profile.status (bit(1))`, `tbc_payment_methods.status (bit(1))`, `tbc_payment_methods_types.status (bit(1))`, `tbd_address_components.status (bit(1))`, `tbd_products_categories.status (bit(1))`, `tbd_products_users_providers.status (bit(1))`, `tbd_user_payment_methods.status (bit(1))`, `tbd_users_wishlist_products.status (bit(1))`.
 - `tinyint`: `tb_products.status (tinyint)`.
 
 ## Convenciones de nombres
@@ -1875,7 +2142,7 @@
 - **Media —** `tbd_carts_items` y `tbd_order_items` separan referencias a usuario y producto hacia `tbd_products_users_providers` en vez de declarar una FK compuesta. Recomendación: añadir integridad compuesta o validación equivalente.
 - **Baja —** courtesy_title_ID y country_code sin catálogo ni FK: en `tb_people` son `char(10)` y `char(2)` respectivamente; tampoco existe `fk_people_courtesy_title` ni `fk_people_country`. Recomendación: incorporar catálogos y restricciones si esos códigos deben validarse.
 
-**Referencias huérfanas:** las definiciones de BD15 no contienen referencias a `tbd_order_details`, `tbd_wishlist`, `tbd_shopping_cart` ni `tb_users_offer_products`; esas tablas no aparecen en esta versión. La ausencia de referencias se verifica en DDL, no en valores de filas.
+**Referencias huérfanas:** las definiciones de BD17 no contienen referencias a `tbd_order_details`, `tbd_wishlist`, `tbd_shopping_cart` ni `tb_users_offer_products`; esas tablas no aparecen en esta versión. La ausencia de referencias se verifica en DDL, no en valores de filas.
 
 ## Pendientes por confirmar
 
@@ -1890,61 +2157,65 @@
 
 ## Resumen estadístico
 
-- Columnas clasificadas: 198.
-- llave:FK: 37.
-- llave:PK: 33.
-- llave:UK: 11.
-- naturaleza:Cualitativa nominal: 119.
+- Columnas clasificadas: 212.
+- llave:FK: 39.
+- llave:PK: 36.
+- llave:UK: 16.
+- naturaleza:Cualitativa nominal: 133.
 - naturaleza:Cualitativa ordinal: 8.
 - naturaleza:Cuantitativa (temporal): 55.
 - naturaleza:Cuantitativa continua: 11.
 - naturaleza:Cuantitativa discreta: 5.
-- obligatoriedad:Obligatorio: 153.
+- obligatoriedad:Obligatorio: 167.
 - obligatoriedad:Opcional: 45.
-- origen:Almacenado: 197.
+- origen:Almacenado: 211.
 - origen:Derivado: 1.
 
 ## Volumen de datos
 
-- Fuente: conteo streaming de tuplas `VALUES` de `BD15.sql`; fecha: 2026-10-27. Se conservaron únicamente agregados.
-- Total: 55,361 registros en 26 tablas; tablas vacías: 21.
-- `tb_logs` crece con cada INSERT/UPDATE/DELETE auditado; sus filas son bitácora y no datos de negocio. Gran parte de `tb_users` y `tb_people` corresponde a datos de prueba generados.
+Estructura y totales de registros obtenidos del respaldo BD17.sql (fecha del archivo: 2026-10-28 19:01:58 -06:00). Conteo de registros realizado el: 2026-10-28 19:11:25 -06:00. Los totales corresponden al respaldo, no a la instancia en vivo.
+- Conteo de registros realizado el: 2026-10-28 19:11:25 -06:00. Los valores son conteos de filas INSERT del respaldo BD17.sql, no de la instancia en vivo.
+- Total verificable: 96,830 registros en 8 tablas; 21 tablas sin INSERT no son verificables en el respaldo.
 
-| Tabla | Registros | Porcentaje del total |
+| Tabla | Registros | Porcentaje del total verificable |
 |---|---:|---:|
-| `tb_logs` | 40186 | 72.59% |
-| `tb_products` | 15007 | 27.11% |
-| `tbc_categories` | 160 | 0.29% |
-| `tb_users` | 5 | 0.01% |
-| `tb_people` | 3 | 0.01% |
-| `tb_buyer_orders` | 0 | 0.00% |
-| `tb_carts` | 0 | 0.00% |
-| `tb_order_cancellations` | 0 | 0.00% |
-| `tb_orders` | 0 | 0.00% |
-| `tb_payment_transaction` | 0 | 0.00% |
-| `tb_payments` | 0 | 0.00% |
-| `tb_refunds` | 0 | 0.00% |
-| `tb_returns` | 0 | 0.00% |
-| `tb_shipments` | 0 | 0.00% |
-| `tb_user_addresses` | 0 | 0.00% |
-| `tbc_payment_methods` | 0 | 0.00% |
-| `tbc_payment_methods_types` | 0 | 0.00% |
-| `tbd_address_components` | 0 | 0.00% |
-| `tbd_cancellation_items` | 0 | 0.00% |
-| `tbd_carts_items` | 0 | 0.00% |
-| `tbd_order_items` | 0 | 0.00% |
-| `tbd_products_categories` | 0 | 0.00% |
-| `tbd_products_users_providers` | 0 | 0.00% |
-| `tbd_return_items` | 0 | 0.00% |
-| `tbd_user_payment_methods` | 0 | 0.00% |
-| `tbd_users_wishlist_products` | 0 | 0.00% |
-| **Total** | **55361** | **100.00%** |
+| `tb_logs` | 60630 | 62.61% |
+| `tb_products` | 15007 | 15.50% |
+| `tb_users` | 10227 | 10.56% |
+| `tb_people` | 10225 | 10.56% |
+| `tbc_gen_given_names` | 344 | 0.36% |
+| `tbc_gen_family_names` | 225 | 0.23% |
+| `tbc_categories` | 160 | 0.17% |
+| `tbc_gen_country_profile` | 12 | 0.01% |
+| `tb_buyer_orders` | No verificable en el respaldo | — |
+| `tb_carts` | No verificable en el respaldo | — |
+| `tb_order_cancellations` | No verificable en el respaldo | — |
+| `tb_orders` | No verificable en el respaldo | — |
+| `tb_payment_transaction` | No verificable en el respaldo | — |
+| `tb_payments` | No verificable en el respaldo | — |
+| `tb_refunds` | No verificable en el respaldo | — |
+| `tb_returns` | No verificable en el respaldo | — |
+| `tb_shipments` | No verificable en el respaldo | — |
+| `tb_user_addresses` | No verificable en el respaldo | — |
+| `tbc_payment_methods` | No verificable en el respaldo | — |
+| `tbc_payment_methods_types` | No verificable en el respaldo | — |
+| `tbd_address_components` | No verificable en el respaldo | — |
+| `tbd_cancellation_items` | No verificable en el respaldo | — |
+| `tbd_carts_items` | No verificable en el respaldo | — |
+| `tbd_order_items` | No verificable en el respaldo | — |
+| `tbd_products_categories` | No verificable en el respaldo | — |
+| `tbd_products_users_providers` | No verificable en el respaldo | — |
+| `tbd_return_items` | No verificable en el respaldo | — |
+| `tbd_user_payment_methods` | No verificable en el respaldo | — |
+| `tbd_users_wishlist_products` | No verificable en el respaldo | — |
+| **Total verificable** | **96830** | **100.00%** |
 
 ## Historial de cambios
 
-- Referencia BDE indicada: 26 tablas, 24 vistas, 75 triggers, 4 procedimientos, 0 funciones, 198 columnas y 37 FK.
-- BD15: tables=26, views=24, triggers=75, procedures=4, functions=0, columns=198, foreign_keys=37, derived_columns=1, 198 columnas y 37 FK.
-- La copia BDE.sql no está disponible en el repositorio; por ello la lista exacta de nombres/cambios de tipo entre esa versión y BD15 no se puede reconstruir con evidencia local. La comparación exacta con la estructura anterior versionada se conserva en el historial Git, pero corresponde a BD13 y no se presenta como BDE.
+- Comparación contra BD16: se agregaron tbc_gen_country_profile, tbc_gen_family_names y tbc_gen_given_names; no se eliminaron ni modificaron tablas existentes.
+- Conteos de filas del respaldo BD16 → BD17: tb_users 5 → 10,227; tb_people 3 → 10,225; tb_logs 40,186 → 60,630. tb_products conserva 15,007 y tbc_categories conserva 160.
+- BD17: tables=29, views=25, triggers=75, procedures=7, functions=15, columns=212, foreign_keys=39, derived_columns=1, 212 columnas y 39 FK. Se incorporan 3 procedimientos y 15 funciones de generación masiva.
+- Las 25 vistas y 75 triggers no cambiaron; no se detectan modificaciones de columnas, restricciones o índices en tablas anteriores.
 
 ## Descripciones marcadas (inferido)
 
@@ -2063,6 +2334,21 @@
 - Columna `tbc_categories.status`: interpretación funcional o aporte inferido.
 - Columna `tbc_categories.creation_date`: interpretación funcional o aporte inferido.
 - Columna `tbc_categories.last_update`: interpretación funcional o aporte inferido.
+- Tabla `tbc_gen_country_profile`: descripción de propósito/módulo inferida de nombres y relaciones.
+- Columna `tbc_gen_country_profile.country_code`: interpretación funcional o aporte inferido.
+- Columna `tbc_gen_country_profile.country_name`: interpretación funcional o aporte inferido.
+- Columna `tbc_gen_country_profile.phone_prefix`: interpretación funcional o aporte inferido.
+- Columna `tbc_gen_country_profile.phone_digits`: interpretación funcional o aporte inferido.
+- Columna `tbc_gen_country_profile.title_male`: interpretación funcional o aporte inferido.
+- Columna `tbc_gen_country_profile.title_female`: interpretación funcional o aporte inferido.
+- Columna `tbc_gen_country_profile.status`: interpretación funcional o aporte inferido.
+- Tabla `tbc_gen_family_names`: descripción de propósito/módulo inferida de nombres y relaciones.
+- Columna `tbc_gen_family_names.country_code`: interpretación funcional o aporte inferido.
+- Columna `tbc_gen_family_names.name`: interpretación funcional o aporte inferido.
+- Tabla `tbc_gen_given_names`: descripción de propósito/módulo inferida de nombres y relaciones.
+- Columna `tbc_gen_given_names.country_code`: interpretación funcional o aporte inferido.
+- Columna `tbc_gen_given_names.gender_ID`: interpretación funcional o aporte inferido.
+- Columna `tbc_gen_given_names.name`: interpretación funcional o aporte inferido.
 - Tabla `tbc_payment_methods`: descripción de propósito/módulo inferida de nombres y relaciones.
 - Columna `tbc_payment_methods.name`: interpretación funcional o aporte inferido.
 - Columna `tbc_payment_methods.description`: interpretación funcional o aporte inferido.

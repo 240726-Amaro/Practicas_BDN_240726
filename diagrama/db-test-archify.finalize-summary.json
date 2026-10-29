@@ -1,97 +1,196 @@
 {
   "schemaVersion": 1,
-  "ok": true,
+  "ok": false,
   "command": "finalize",
-  "status": "pass",
+  "status": "fail",
   "type": "erd",
   "quality": "standard",
   "specification": {
-    "path": "C:\\Users\\ti_la\\Practicas_BDN_240726\\.archify\\erd-db-test-20261014-1930\\candidate.json",
-    "sha256": "b54f2ce63949b4b9319b951869ef37ac4a971ed3424cf203456df2a47dc032b7",
-    "bytes": 44796
+    "path": "C:\\Users\\PC-07\\Practicas_BDN_240726\\.archify\\erd-db-test-20261014-1930\\candidate.json",
+    "sha256": "ae3d64585db0a89551dcb1d3c4813a9d2ac95c9937c0efced90018ebc4754fc2",
+    "bytes": 36749
   },
   "artifact": {
-    "path": "C:\\Users\\ti_la\\Practicas_BDN_240726\\diagrama\\db-test-archify.html",
-    "sha256": "39ee4bcc1103912e52a5836ce08bb2eed503b7904cef915aae2b67e3f5954e97",
-    "bytes": 898486
+    "path": "C:\\Users\\PC-07\\Practicas_BDN_240726\\diagrama\\db-test-archify.html",
+    "sha256": "6a06ed653d9938a51c70bbf53ca2cd3b71bdee1392098f4e4bc36c0e43de7e5b",
+    "bytes": 1010017
   },
   "gates": {
     "validate": "pass",
     "deliver": "pass",
     "check": "pass",
-    "browser-check": "pass"
+    "browser-check": "fail"
   },
-  "diagnostics": [],
+  "failedStage": "browser-check",
+  "diagnostics": [
+    {
+      "code": "viewer/viewport-overflow",
+      "severity": "error",
+      "message": "The rendered artifact overflows 3 viewport/theme combinations.",
+      "subject": {},
+      "evidence": {
+        "overflows": [
+          {
+            "detection": "browser-measurement",
+            "subject": {
+              "viewport": {
+                "width": 1440,
+                "height": 900,
+                "theme": "light"
+              }
+            },
+            "evidence": {
+              "scrollWidth": 1440,
+              "scrollHeight": 1886,
+              "overflowX": false,
+              "overflowY": true,
+              "overflowDisposition": "unexpected-overflow",
+              "pageComposition": {
+                "bodyPaddingPx": 12,
+                "headerPx": 52,
+                "diagramChromePx": 78,
+                "svgPx": 1744,
+                "cardsPx": 0,
+                "viewBoxHeight": 2954
+              },
+              "pageCompositionMeasurement": "CSS pixels at this viewport; body padding, header, diagram chrome, SVG and cards stack vertically and sum to scrollHeight"
+            }
+          },
+          {
+            "detection": "browser-measurement",
+            "subject": {
+              "viewport": {
+                "width": 1600,
+                "height": 1000,
+                "theme": "light"
+              }
+            },
+            "evidence": {
+              "scrollWidth": 1600,
+              "scrollHeight": 2160,
+              "overflowX": false,
+              "overflowY": true,
+              "overflowDisposition": "unexpected-overflow",
+              "pageComposition": {
+                "bodyPaddingPx": 64,
+                "headerPx": 60,
+                "diagramChromePx": 84,
+                "svgPx": 1951,
+                "cardsPx": 0,
+                "viewBoxHeight": 2954
+              },
+              "pageCompositionMeasurement": "CSS pixels at this viewport; body padding, header, diagram chrome, SVG and cards stack vertically and sum to scrollHeight"
+            }
+          },
+          {
+            "detection": "browser-measurement",
+            "subject": {
+              "viewport": {
+                "width": 1440,
+                "height": 900,
+                "theme": "dark"
+              }
+            },
+            "evidence": {
+              "scrollWidth": 1440,
+              "scrollHeight": 1886,
+              "overflowX": false,
+              "overflowY": true,
+              "overflowDisposition": "unexpected-overflow",
+              "pageComposition": {
+                "bodyPaddingPx": 12,
+                "headerPx": 52,
+                "diagramChromePx": 78,
+                "svgPx": 1744,
+                "cardsPx": 0,
+                "viewBoxHeight": 2954
+              },
+              "pageCompositionMeasurement": "CSS pixels at this viewport; body padding, header, diagram chrome, SVG and cards stack vertically and sum to scrollHeight"
+            }
+          }
+        ]
+      },
+      "supportedFixes": [
+        "contain the rendered layout within 1440x900 (smallest reported viewport), then rerun browser-check"
+      ]
+    },
+    {
+      "code": "viewer/projected-text-readability",
+      "severity": "error",
+      "message": "Projected context text is below the readability floor at 1440x900.",
+      "subject": {
+        "artifact": "C:\\Users\\PC-07\\Practicas_BDN_240726\\diagrama\\db-test-archify.html",
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "theme": "light"
+        }
+      },
+      "evidence": {
+        "text": "PK",
+        "detail": "context",
+        "owner": {
+          "kind": "node",
+          "id": "tb_buyer_orders"
+        },
+        "minimumProjectedNodeTextPx": 5.313157894736841,
+        "minimumRequiredNodeTextPx": 6
+      },
+      "supportedFixes": [
+        "increase projected node text to at least 6px at 1440x900, then rerun browser-check"
+      ]
+    },
+    {
+      "code": "viewer/projected-text-readability",
+      "severity": "error",
+      "message": "Projected context text is below the readability floor at 1600x1000.",
+      "subject": {
+        "artifact": "C:\\Users\\PC-07\\Practicas_BDN_240726\\diagrama\\db-test-archify.html",
+        "viewport": {
+          "width": 1600,
+          "height": 1000,
+          "theme": "light"
+        }
+      },
+      "evidence": {
+        "text": "PK",
+        "detail": "context",
+        "owner": {
+          "kind": "node",
+          "id": "tb_buyer_orders"
+        },
+        "minimumProjectedNodeTextPx": 5.9447368421052635,
+        "minimumRequiredNodeTextPx": 6
+      },
+      "supportedFixes": [
+        "increase projected node text to at least 6px at 1600x1000, then rerun browser-check"
+      ]
+    }
+  ],
   "diagnosticSummary": {
-    "total": 0,
-    "shown": 0,
+    "total": 3,
+    "shown": 3,
     "truncated": false
   },
   "evidence": {
-    "receipt": "C:\\Users\\ti_la\\Practicas_BDN_240726\\diagrama\\db-test-archify.finalize.json",
-    "summaryReceipt": "C:\\Users\\ti_la\\Practicas_BDN_240726\\diagrama\\db-test-archify.finalize-summary.json",
-    "browserCheckReceipt": "C:\\Users\\ti_la\\Practicas_BDN_240726\\diagrama\\db-test-archify.browser-check.json"
+    "receipt": "C:\\Users\\PC-07\\Practicas_BDN_240726\\.archify\\erd-db-test-20261014-1930\\review-12\\db-test-archify.finalize.json",
+    "summaryReceipt": "C:\\Users\\PC-07\\Practicas_BDN_240726\\.archify\\erd-db-test-20261014-1930\\review-12\\db-test-archify.finalize-summary.json",
+    "browserCheckReceipt": "C:\\Users\\PC-07\\Practicas_BDN_240726\\.archify\\erd-db-test-20261014-1930\\review-12\\db-test-archify.browser-check.json"
   },
   "update": {
     "status": "current",
-    "installedVersion": "3.1.0",
-    "availableVersion": "3.1.0",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
     "releaseNotes": null,
-    "checkedAt": "2026-10-15T01:33:54.669Z",
+    "checkedAt": "2026-10-28T23:57:54.302Z",
     "source": "cache",
     "noticeRequired": false,
     "noticeText": null
   },
   "visualReview": "not-requested",
-  "durationMs": 5384,
-  "visualReviewRecommendation": {
-    "action": "inspect-route-readability",
-    "signals": {
-      "routesOverSuggestedBends": 3
-    },
-    "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
-    "affectedRoutes": {
-      "crossings": [],
-      "detours": [
-        {
-          "relationship": {
-            "id": "providers_user",
-            "from": "tbd_products_users_providers",
-            "to": "tb_users",
-            "label": "provided by",
-            "collectionIndex": 8,
-            "artifactIndex": 9
-          },
-          "bends": 3,
-          "stretch": 1.062
-        },
-        {
-          "relationship": {
-            "id": "wishlist_products_product",
-            "from": "tbd_users_wishlist_products",
-            "to": "tb_products",
-            "label": "saved product",
-            "collectionIndex": 10,
-            "artifactIndex": 11
-          },
-          "bends": 4,
-          "stretch": 1
-        },
-        {
-          "relationship": {
-            "id": "wishlist_product",
-            "from": "tbd_wishlist",
-            "to": "tb_products",
-            "label": "wishlist item",
-            "collectionIndex": 12,
-            "artifactIndex": 13
-          },
-          "bends": 4,
-          "stretch": 1
-        }
-      ],
-      "truncated": false
-    },
-    "repair": "Advisory only: this mode places or routes these relationships itself. Report them; do not remove relationships or meaning to reduce crossings."
+  "durationMs": 5753,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
   }
 }

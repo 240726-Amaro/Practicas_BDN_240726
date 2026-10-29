@@ -25,7 +25,7 @@ class Links(HTMLParser):
 
 
 data = json.loads(SOURCE.read_text(encoding="utf-8-sig"))
-expected = {"tables": 26, "views": 24, "triggers": 75, "procedures": 4, "functions": 0}
+expected = {"tables": 29, "views": 25, "triggers": 75, "procedures": 7, "functions": 15}
 objects = data.get("objects", [])
 actual = {
     "tables": sum(o.get("kind") == "table" for o in objects),
@@ -44,6 +44,8 @@ required = [
     DOCS / "descargas" / "diccionario_datos.xlsx",
     DOCS / "descargas" / "diccionario_datos.md",
     DOCS / "descargas" / "schema.dbml",
+    DOCS / "descargas" / "prompts_utilizados.md",
+    DOCS / "diagrama" / "db-test-archify.html",
 ]
 assert all(path.is_file() for path in required), [str(p) for p in required if not p.is_file()]
 
@@ -68,8 +70,8 @@ for value in parser.targets:
     elif not (DOCS / value).exists():
         broken.append(f"missing:{value}")
 assert not broken, broken
-volume_total = f"{sum(data.get('row_counts', {}).values()):,}"
-for marker in ('id="volumen"', 'Volumen de datos', volume_total, 'Historial de cambios', 'Envíos, devoluciones y cancelaciones'):
+volume_total = f"{sum(v for v in data.get('row_counts', {}).values() if isinstance(v,int)):,}"
+for marker in ('id="volumen"', 'Volumen de datos', volume_total, 'Historial de cambios', 'Procedimientos'):
     assert marker in html or marker in (DOCS / "descargas" / "diccionario_datos.md").read_text(encoding="utf-8"), marker
 
 patterns = {"@" + "utxicotepec": 0, "@" + "example.": 0, "$" + "2": 0}

@@ -1,17 +1,14 @@
 {
   "schemaVersion": 1,
-  "receiptId": "2451e5ee-dd11-43db-9866-cdce1b350d1e",
-  "status": "current",
+  "receiptId": "e3a6e048-7bed-4619-984d-2fcb3c7916ed",
+  "status": "failed",
   "command": "deliver",
-  "type": "erd",
-  "input": "C:\\Users\\ti_la\\Practicas_BDN_240726\\.archify\\erd-db-test-20261014-1930\\candidate.json",
-  "output": "C:\\Users\\ti_la\\Practicas_BDN_240726\\diagrama\\db-test-archify.html",
-  "specification": {
-    "sha256": "fc5b602e19fa4e4fc1a0a9ab4d4dc6697f88da96017916089c6f3d99446e4c5b",
-    "bytes": 45036
-  },
+  "stage": "render",
+  "input": "C:\\Users\\PC-07\\Practicas_BDN_240726\\.archify\\erd-db-test-20261014-1930\\candidate.json",
+  "output": "C:\\Users\\PC-07\\Practicas_BDN_240726\\diagrama\\db-test-archify.html",
   "artifact": {
-    "sha256": "ece017cc76b51f30d477c2c2fae5b6f5331126d14d5e3ab1f744c45b2befab0d",
-    "bytes": 898880
-  }
+    "sha256": "f366e1d37cdc41e54b8e0c09c5a87264c6002ada42b392228c46d1890981380d",
+    "bytes": 1025614
+  },
+  "error": "Entity-relationship layout validation failed:\n- Entity \"tb_buyer_orders\" attribute 4 \"fulfillment_status\" needs 625px of text but only 496px is available — For this attribute row's text capacity, set entities[0].width to at least 679px, preserving the attribute name, type and key roles.\n- Entity \"tb_logs\" attribute 2 \"operation\" needs 314px of text but only 306px is available — For this attribute row's text capacity, set entities[2].width to at least 368px, preserving the attribute name, type and key roles.\n- Entity \"tb_order_cancellations\" attribute 4 \"cancellation_status\" needs 455px of text but only 366px is available — For this attribute row's text capacity, set entities[3].width to at least 509px, preserving the attribute name, type and key roles.\n- Entity \"tb_orders\" attribute 3 \"status\" needs 439px of text but only 396px is available — For this attribute row's text capacity, set entities[4].width to at least 493px, preserving the attribute name, type and key roles.\n- Entity \"tb_payment_transaction\" attribute 4 \"transaction_status\" needs 354px of text but only 346px is available — For this attribute row's text capacity, set entities[5].width to at least 408px, preserving the attribute name, type and key roles.\n- Entity \"tb_payments\" attribute 4 \"payment_status\" needs 397px of text but only 346px is available — For this attribute row's text capacity, set entities[6].width to at least 451px, preserving the attribute name, type and key roles.\n- Entity \"tb_refunds\" attribute 5 \"refund_status\" needs 334px of text but only 326px is available — For this attribute row's text capacity, set entities[9].width to at least 388px, preserving the attribute name, type and key roles.\n- Entity \"tb_returns\" attribute 4 \"return_status\" needs 479px of text but only 396px is available — For this attribute row's text capacity, set entities[10].width to at least 533px, preserving the attribute name, type and key roles.\n- Entity \"tb_shipments\" attribute 5 \"shipment_status\" needs 504px of text but only 396px is available — For this attribute row's text capacity, set entities[11].width to at least 558px, preserving the attribute name, type and key roles.\n- Entity \"tbd_products_users_providers\" attribute 2 \"type_ownership\" needs 340px of text but only 286px is available — For this attribute row's text capacity, set entities[22].width to at least 414px, preserving the attribute name, type and key roles.\n- Label \"fk_addresses_users\" overlaps entity \"tb_user_addresses\" — adjust labelDx/labelDy/labelSegment or set labelAt.\n  label rect: [311, 556, 110, 14]\n  entity \"tb_user_addresses\" rect: [70, 474, 285, 204]\n  Suggested fix: set labelAt [367, 692] or set labelDx 1 with labelDy 126 (below); or set labelAt [367, 466] or set labelDx 1 with labelDy -100 (above)"
 }

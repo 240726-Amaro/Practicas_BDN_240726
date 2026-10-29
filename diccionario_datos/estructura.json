@@ -1,17 +1,18 @@
 {
-  "database": "db_test",
+  "database": "BD17",
   "mysql_version": "8.0.36",
-  "source": "Practica03/backups/BD15.sql",
-  "source_date": "2026-10-27",
-  "extraction_scope": "Solo CREATE TABLE/VIEW/TRIGGER/PROCEDURE/FUNCTION. INSERT INTO se descarta antes de acumular contenido.",
+  "source": "Practica03/backups/BD17.sql",
+  "source_date": "2026-10-28",
+  "source_modified": "2026-10-28 19:01:58 -06:00",
+  "extraction_scope": "CREATE TABLE (incluye índices, claves y CHECK declarados en tabla), CREATE/ALTER TABLE y CREATE INDEX si existen, además de VIEW/TRIGGER/PROCEDURE/FUNCTION. INSERT INTO se descarta durante extracción de esquema.",
   "counts": {
-    "tables": 26,
-    "views": 24,
+    "tables": 29,
+    "views": 25,
     "triggers": 75,
-    "procedures": 4,
-    "functions": 0,
-    "columns": 198,
-    "foreign_keys": 37,
+    "procedures": 7,
+    "functions": 15,
+    "columns": 212,
+    "foreign_keys": 39,
     "derived_columns": 1
   },
   "objects": [
@@ -300,7 +301,7 @@
     {
       "kind": "table",
       "name": "tb_logs",
-      "sql": "CREATE TABLE `tb_logs` (\n  `ID` int NOT NULL AUTO_INCREMENT,\n  `table_name` varchar(100) NOT NULL,\n  `operation` enum('Create','Read','Update','Delete') NOT NULL,\n  `db_user` varchar(80) NOT NULL,\n  `description` text NOT NULL,\n  `operation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `operation_status` bit(1) DEFAULT b'1',\n  PRIMARY KEY (`ID`)\n) ENGINE=InnoDB AUTO_INCREMENT=40187 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n",
+      "sql": "CREATE TABLE `tb_logs` (\n  `ID` int NOT NULL AUTO_INCREMENT,\n  `table_name` varchar(100) NOT NULL,\n  `operation` enum('Create','Read','Update','Delete') NOT NULL,\n  `db_user` varchar(80) NOT NULL,\n  `description` text NOT NULL,\n  `operation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `operation_status` bit(1) DEFAULT b'1',\n  PRIMARY KEY (`ID`)\n) ENGINE=InnoDB AUTO_INCREMENT=60631 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n",
       "columns": [
         {
           "name": "ID",
@@ -1107,7 +1108,7 @@
     {
       "kind": "table",
       "name": "tb_people",
-      "sql": "CREATE TABLE `tb_people` (\n  `person_ID` bigint unsigned NOT NULL AUTO_INCREMENT,\n  `user_ID` int NOT NULL,\n  `courtesy_title_ID` char(10) DEFAULT NULL,\n  `given_names` varchar(150) NOT NULL,\n  `family_names` varchar(150) NOT NULL,\n  `birth_date` date DEFAULT NULL,\n  `gender_ID` tinyint unsigned DEFAULT NULL,\n  `country_code` char(2) DEFAULT NULL,\n  `phone` varchar(25) DEFAULT NULL,\n  `last_update` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n  PRIMARY KEY (`person_ID`),\n  KEY `fk_people_user` (`user_ID`),\n  CONSTRAINT `fk_people_user` FOREIGN KEY (`user_ID`) REFERENCES `tb_users` (`ID`),\n  CONSTRAINT `chk_gender_values` CHECK ((`gender_ID` in (1,2,3)))\n) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n",
+      "sql": "CREATE TABLE `tb_people` (\n  `person_ID` bigint unsigned NOT NULL AUTO_INCREMENT,\n  `user_ID` int NOT NULL,\n  `courtesy_title_ID` char(10) DEFAULT NULL,\n  `given_names` varchar(150) NOT NULL,\n  `family_names` varchar(150) NOT NULL,\n  `birth_date` date DEFAULT NULL,\n  `gender_ID` tinyint unsigned DEFAULT NULL,\n  `country_code` char(2) DEFAULT NULL,\n  `phone` varchar(25) DEFAULT NULL,\n  `last_update` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n  PRIMARY KEY (`person_ID`),\n  KEY `fk_people_user` (`user_ID`),\n  CONSTRAINT `fk_people_user` FOREIGN KEY (`user_ID`) REFERENCES `tb_users` (`ID`),\n  CONSTRAINT `chk_gender_values` CHECK ((`gender_ID` in (1,2,3)))\n) ENGINE=InnoDB AUTO_INCREMENT=10226 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n",
       "columns": [
         {
           "name": "person_ID",
@@ -2331,7 +2332,7 @@
     {
       "kind": "table",
       "name": "tb_users",
-      "sql": "CREATE TABLE `tb_users` (\n  `ID` int NOT NULL AUTO_INCREMENT,\n  `email` varchar(80) NOT NULL,\n  `nickname` varchar(100) NOT NULL,\n  `password` varchar(255) NOT NULL,\n  `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `last_login` datetime DEFAULT NULL,\n  `status` bit(1) DEFAULT b'1',\n  PRIMARY KEY (`ID`),\n  UNIQUE KEY `email` (`email`),\n  UNIQUE KEY `nickname` (`nickname`)\n) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n",
+      "sql": "CREATE TABLE `tb_users` (\n  `ID` int NOT NULL AUTO_INCREMENT,\n  `email` varchar(80) NOT NULL,\n  `nickname` varchar(100) NOT NULL,\n  `password` varchar(255) NOT NULL,\n  `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `last_login` datetime DEFAULT NULL,\n  `status` bit(1) DEFAULT b'1',\n  PRIMARY KEY (`ID`),\n  UNIQUE KEY `email` (`email`),\n  UNIQUE KEY `nickname` (`nickname`)\n) ENGINE=InnoDB AUTO_INCREMENT=10234 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n",
       "columns": [
         {
           "name": "ID",
@@ -2627,6 +2628,285 @@
       "kind": "trigger",
       "name": "trg_tbc_categories_after_delete",
       "sql": "/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_tbc_categories_after_delete` AFTER DELETE ON `tbc_categories` FOR EACH ROW BEGIN\n    INSERT INTO tb_logs (\n        table_name,\n        operation,\n        db_user,\n        operation_date,\n        description,\n        operation_status\n    )\n    VALUES (\n        'tbc_categories',\n        'Delete',\n        USER(),\n        CURRENT_TIMESTAMP,\n        CONCAT(\n            'Categor�a eliminada. ID=', OLD.ID,\n            ', nombre=', OLD.name\n        ),\n        b'1'\n    );\nEND */;;\n"
+    },
+    {
+      "kind": "table",
+      "name": "tbc_gen_country_profile",
+      "sql": "CREATE TABLE `tbc_gen_country_profile` (\n  `country_code` char(2) NOT NULL,\n  `country_name` varchar(60) NOT NULL,\n  `phone_prefix` varchar(6) NOT NULL,\n  `phone_digits` tinyint NOT NULL,\n  `title_male` varchar(10) NOT NULL,\n  `title_female` varchar(10) NOT NULL,\n  `status` bit(1) NOT NULL DEFAULT b'1',\n  PRIMARY KEY (`country_code`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n",
+      "columns": [
+        {
+          "name": "country_code",
+          "type": "char(2)",
+          "nullable": "NO",
+          "default": "Sin dato declarado",
+          "extra": "—",
+          "key": "PK",
+          "classification": {
+            "valor": "Monovalor",
+            "origen": "Almacenado",
+            "obligatoriedad": "Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido)",
+            "llave": "PK",
+            "naturaleza": "Cualitativa nominal",
+            "composicion_formal": "country_code = {carácter}",
+            "dominio": "country_code ∈ cadena(≤2); tipo char(2)",
+            "descripcion_detallada": "Código ISO de dos caracteres que identifica el país usado como clave del perfil de generación; permite relacionar los catálogos auxiliares con sus parámetros locales."
+          }
+        },
+        {
+          "name": "country_name",
+          "type": "varchar(60)",
+          "nullable": "NO",
+          "default": "Sin dato declarado",
+          "extra": "—",
+          "key": "No",
+          "classification": {
+            "valor": "Monovalor",
+            "origen": "Almacenado",
+            "obligatoriedad": "Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido)",
+            "llave": "No",
+            "naturaleza": "Cualitativa nominal",
+            "composicion_formal": "country_name = {carácter}",
+            "dominio": "country_name ∈ cadena(≤60); tipo varchar(60)",
+            "descripcion_detallada": "Nombre legible del país asociado al código country_code."
+          }
+        },
+        {
+          "name": "phone_prefix",
+          "type": "varchar(6)",
+          "nullable": "NO",
+          "default": "Sin dato declarado",
+          "extra": "—",
+          "key": "No",
+          "classification": {
+            "valor": "Monovalor",
+            "origen": "Almacenado",
+            "obligatoriedad": "Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido)",
+            "llave": "No",
+            "naturaleza": "Cualitativa nominal",
+            "composicion_formal": "phone_prefix = {carácter}",
+            "dominio": "phone_prefix ∈ cadena(≤6); tipo varchar(6)",
+            "descripcion_detallada": "Prefijo telefónico internacional que se antepone a los dígitos locales al generar teléfonos."
+          }
+        },
+        {
+          "name": "phone_digits",
+          "type": "tinyint",
+          "nullable": "NO",
+          "default": "Sin dato declarado",
+          "extra": "—",
+          "key": "No",
+          "classification": {
+            "valor": "Monovalor",
+            "origen": "Almacenado",
+            "obligatoriedad": "Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido)",
+            "llave": "No",
+            "naturaleza": "Cualitativa nominal",
+            "composicion_formal": "phone_digits = {entero}",
+            "dominio": "phone_digits ∈ ℤ; tipo tinyint",
+            "descripcion_detallada": "Cantidad de dígitos locales que deben generarse para completar el teléfono del país."
+          }
+        },
+        {
+          "name": "title_male",
+          "type": "varchar(10)",
+          "nullable": "NO",
+          "default": "Sin dato declarado",
+          "extra": "—",
+          "key": "No",
+          "classification": {
+            "valor": "Monovalor",
+            "origen": "Almacenado",
+            "obligatoriedad": "Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido)",
+            "llave": "No",
+            "naturaleza": "Cualitativa nominal",
+            "composicion_formal": "title_male = {carácter}",
+            "dominio": "title_male ∈ cadena(≤10); tipo varchar(10)",
+            "descripcion_detallada": "Título de cortesía que se asigna a personas del género masculino en el contexto del país."
+          }
+        },
+        {
+          "name": "title_female",
+          "type": "varchar(10)",
+          "nullable": "NO",
+          "default": "Sin dato declarado",
+          "extra": "—",
+          "key": "No",
+          "classification": {
+            "valor": "Monovalor",
+            "origen": "Almacenado",
+            "obligatoriedad": "Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido)",
+            "llave": "No",
+            "naturaleza": "Cualitativa nominal",
+            "composicion_formal": "title_female = {carácter}",
+            "dominio": "title_female ∈ cadena(≤10); tipo varchar(10)",
+            "descripcion_detallada": "Título de cortesía que se asigna a personas del género femenino en el contexto del país."
+          }
+        },
+        {
+          "name": "status",
+          "type": "bit(1)",
+          "nullable": "NO",
+          "default": "b'1'",
+          "extra": "—",
+          "key": "No",
+          "classification": {
+            "valor": "Monovalor",
+            "origen": "Almacenado",
+            "obligatoriedad": "Obligatorio (NOT NULL); valor por sistema (DEFAULT b'1')",
+            "llave": "No",
+            "naturaleza": "Cualitativa nominal",
+            "composicion_formal": "status = {0 | 1}",
+            "dominio": "status ∈ {0,1}; 1 activo, 0 inactivo (borrado lógico); bit(1)",
+            "descripcion_detallada": "Indica el estado lógico del registro (inferido); usa DEFAULT b'1'."
+          }
+        }
+      ],
+      "description_detailed": "Catálogo de apoyo para la generación masiva de usuarios; define el país y los parámetros locales usados para construir teléfono y título de cortesía. Pertenece al módulo de direcciones (inferido por el nombre). Se relaciona con `tbc_gen_family_names`, `tbc_gen_given_names`; las FK entrantes y salientes están enumeradas en Relaciones. Reglas de negocio declaradas: CHECK ninguno; UNIQUE ninguno; acciones referenciales sin acción explícita; columnas generadas ninguna. Triggers asociados: ninguno; la función se deriva de los eventos y mensajes de auditoría visibles (inferido).",
+      "formal_notation": "tbc_gen_country_profile = @country_code + country_name + phone_prefix + phone_digits + title_male + title_female + status"
+    },
+    {
+      "kind": "table",
+      "name": "tbc_gen_family_names",
+      "sql": "CREATE TABLE `tbc_gen_family_names` (\n  `ID` int NOT NULL AUTO_INCREMENT,\n  `country_code` char(2) NOT NULL,\n  `name` varchar(60) NOT NULL,\n  PRIMARY KEY (`ID`),\n  UNIQUE KEY `uk_gen_family` (`country_code`,`name`),\n  CONSTRAINT `fk_gen_family_country` FOREIGN KEY (`country_code`) REFERENCES `tbc_gen_country_profile` (`country_code`)\n) ENGINE=InnoDB AUTO_INCREMENT=229 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n",
+      "columns": [
+        {
+          "name": "ID",
+          "type": "int",
+          "nullable": "NO",
+          "default": "Sin dato declarado",
+          "extra": "AUTO_INCREMENT",
+          "key": "PK",
+          "classification": {
+            "valor": "Monovalor",
+            "origen": "Almacenado",
+            "obligatoriedad": "Obligatorio (NOT NULL); valor aportado por sistema (AUTO_INCREMENT)",
+            "llave": "PK",
+            "naturaleza": "Cualitativa nominal",
+            "composicion_formal": "ID = {dígito}",
+            "dominio": "ID ∈ ℤ⁺; tipo int; AUTO_INCREMENT",
+            "descripcion_detallada": "Identificador numérico generado automáticamente para distinguir registros; es llave primaria y se incrementa al insertar."
+          }
+        },
+        {
+          "name": "country_code",
+          "type": "char(2)",
+          "nullable": "NO",
+          "default": "Sin dato declarado",
+          "extra": "—",
+          "key": "FK → tbc_gen_country_profile.country_code; UK",
+          "classification": {
+            "valor": "Monovalor",
+            "origen": "Almacenado",
+            "obligatoriedad": "Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido)",
+            "llave": "FK → tbc_gen_country_profile.country_code; UK",
+            "naturaleza": "Cualitativa nominal",
+            "composicion_formal": "country_code = {carácter}",
+            "dominio": "country_code ∈ {tbc_gen_country_profile.country_code}; ON DELETE sin acción",
+            "descripcion_detallada": "Identifica o enlaza el registro con `tbc_gen_country_profile.country_code`; su valor se almacena al crear la relación y debe corresponder a la fila referenciada."
+          }
+        },
+        {
+          "name": "name",
+          "type": "varchar(60)",
+          "nullable": "NO",
+          "default": "Sin dato declarado",
+          "extra": "—",
+          "key": "UK",
+          "classification": {
+            "valor": "Monovalor",
+            "origen": "Almacenado",
+            "obligatoriedad": "Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido)",
+            "llave": "UK",
+            "naturaleza": "Cualitativa nominal",
+            "composicion_formal": "name = {carácter}",
+            "dominio": "name ∈ cadena(≤60); tipo varchar(60)",
+            "descripcion_detallada": "Apellido disponible para selección aleatoria durante la generación masiva de usuarios."
+          }
+        }
+      ],
+      "description_detailed": "Catálogo de apoyo para la generación masiva de usuarios; almacena apellidos por país y mantiene FK al perfil del país. Pertenece al módulo de direcciones (inferido por el nombre). Se relaciona con `tbc_gen_country_profile`; las FK entrantes y salientes están enumeradas en Relaciones. Reglas de negocio declaradas: CHECK ninguno; UNIQUE UNIQUE KEY `uk_gen_family` (`country_code`,`name`); acciones referenciales sin acción explícita; columnas generadas ninguna. Triggers asociados: ninguno; la función se deriva de los eventos y mensajes de auditoría visibles (inferido).",
+      "formal_notation": "tbc_gen_family_names = @ID + #country_code + name"
+    },
+    {
+      "kind": "table",
+      "name": "tbc_gen_given_names",
+      "sql": "CREATE TABLE `tbc_gen_given_names` (\n  `ID` int NOT NULL AUTO_INCREMENT,\n  `country_code` char(2) NOT NULL,\n  `gender_ID` tinyint unsigned NOT NULL,\n  `name` varchar(60) NOT NULL,\n  PRIMARY KEY (`ID`),\n  UNIQUE KEY `uk_gen_given` (`country_code`,`gender_ID`,`name`),\n  CONSTRAINT `fk_gen_given_country` FOREIGN KEY (`country_code`) REFERENCES `tbc_gen_country_profile` (`country_code`),\n  CONSTRAINT `chk_gen_given_gender` CHECK ((`gender_ID` in (1,2)))\n) ENGINE=InnoDB AUTO_INCREMENT=457 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n",
+      "columns": [
+        {
+          "name": "ID",
+          "type": "int",
+          "nullable": "NO",
+          "default": "Sin dato declarado",
+          "extra": "AUTO_INCREMENT",
+          "key": "PK",
+          "classification": {
+            "valor": "Monovalor",
+            "origen": "Almacenado",
+            "obligatoriedad": "Obligatorio (NOT NULL); valor aportado por sistema (AUTO_INCREMENT)",
+            "llave": "PK",
+            "naturaleza": "Cualitativa nominal",
+            "composicion_formal": "ID = {dígito}",
+            "dominio": "ID ∈ ℤ⁺; tipo int; AUTO_INCREMENT",
+            "descripcion_detallada": "Identificador numérico generado automáticamente para distinguir registros; es llave primaria y se incrementa al insertar."
+          }
+        },
+        {
+          "name": "country_code",
+          "type": "char(2)",
+          "nullable": "NO",
+          "default": "Sin dato declarado",
+          "extra": "—",
+          "key": "FK → tbc_gen_country_profile.country_code; UK",
+          "classification": {
+            "valor": "Monovalor",
+            "origen": "Almacenado",
+            "obligatoriedad": "Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido)",
+            "llave": "FK → tbc_gen_country_profile.country_code; UK",
+            "naturaleza": "Cualitativa nominal",
+            "composicion_formal": "country_code = {carácter}",
+            "dominio": "country_code ∈ {tbc_gen_country_profile.country_code}; ON DELETE sin acción",
+            "descripcion_detallada": "Identifica o enlaza el registro con `tbc_gen_country_profile.country_code`; su valor se almacena al crear la relación y debe corresponder a la fila referenciada."
+          }
+        },
+        {
+          "name": "gender_ID",
+          "type": "tinyint unsigned",
+          "nullable": "NO",
+          "default": "Sin dato declarado",
+          "extra": "—",
+          "key": "UK",
+          "classification": {
+            "valor": "Monovalor",
+            "origen": "Almacenado",
+            "obligatoriedad": "Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido)",
+            "llave": "UK",
+            "naturaleza": "Cualitativa nominal",
+            "composicion_formal": "gender_ID = {dígito}",
+            "dominio": "gender_ID ∈ ℤ⁺ ∪ {0}; tipo tinyint unsigned; CHECK ((`gender_ID` in (1,2)))",
+            "descripcion_detallada": "Identificador del género al que se asocia el nombre; CHECK restringe el valor a 1 o 2."
+          }
+        },
+        {
+          "name": "name",
+          "type": "varchar(60)",
+          "nullable": "NO",
+          "default": "Sin dato declarado",
+          "extra": "—",
+          "key": "UK",
+          "classification": {
+            "valor": "Monovalor",
+            "origen": "Almacenado",
+            "obligatoriedad": "Obligatorio (NOT NULL); valor capturado por usuario/proceso (inferido)",
+            "llave": "UK",
+            "naturaleza": "Cualitativa nominal",
+            "composicion_formal": "name = {carácter}",
+            "dominio": "name ∈ cadena(≤60); tipo varchar(60)",
+            "descripcion_detallada": "Nombre de pila disponible para selección por país y género durante la generación masiva de usuarios."
+          }
+        }
+      ],
+      "description_detailed": "Catálogo de apoyo para la generación masiva de usuarios; almacena nombres por país y género, con FK al perfil del país y CHECK de género. Pertenece al módulo de direcciones (inferido por el nombre). Se relaciona con `tbc_gen_country_profile`; las FK entrantes y salientes están enumeradas en Relaciones. Reglas de negocio declaradas: CHECK ((`gender_ID` in (1,2))); UNIQUE UNIQUE KEY `uk_gen_given` (`country_code`,`gender_ID`,`name`); acciones referenciales sin acción explícita; columnas generadas ninguna. Triggers asociados: ninguno; la función se deriva de los eventos y mensajes de auditoría visibles (inferido).",
+      "formal_notation": "tbc_gen_given_names = @ID + #country_code + gender_ID + name"
     },
     {
       "kind": "table",
@@ -4275,6 +4555,11 @@
     },
     {
       "kind": "view",
+      "name": "vw_trazabilidad_productos_categorias",
+      "sql": "/*!50001 CREATE VIEW `vw_trazabilidad_productos_categorias` AS SELECT \n 1 AS `log_id`,\n 1 AS `operation`,\n 1 AS `inserted_by`,\n 1 AS `operation_description`,\n 1 AS `operation_date`*/;\n"
+    },
+    {
+      "kind": "view",
       "name": "vw_trazabilidad_proveedores_productos",
       "sql": "/*!50001 CREATE VIEW `vw_trazabilidad_proveedores_productos` AS SELECT \n 1 AS `log_id`,\n 1 AS `user_ID`,\n 1 AS `provider_nickname`,\n 1 AS `provider_email`,\n 1 AS `product_ID`,\n 1 AS `product_name`,\n 1 AS `type_ownership`,\n 1 AS `inserted_by`,\n 1 AS `roles`,\n 1 AS `operation_description`,\n 1 AS `operation_date`*/;\n"
     },
@@ -4309,6 +4594,96 @@
       "sql": "/*!50001 CREATE VIEW `vw_trazabilidad_usuarios_wishlist_productos` AS SELECT \n 1 AS `log_id`,\n 1 AS `operation`,\n 1 AS `inserted_by`,\n 1 AS `operation_description`,\n 1 AS `operation_date`*/;\n"
     },
     {
+      "kind": "function",
+      "name": "fn_gen_birth_date",
+      "sql": "CREATE DEFINER=`jose.amaro`@`%` FUNCTION `fn_gen_birth_date`(p_min_age INT, p_max_age INT) RETURNS date\n    NO SQL\nBEGIN\n    DECLARE v_oldest   DATE;   \n    DECLARE v_youngest DATE;   \n    SET v_oldest   = DATE_ADD(DATE_SUB(CURDATE(), INTERVAL (p_max_age + 1) YEAR), INTERVAL 1 DAY);\n    SET v_youngest = DATE_SUB(CURDATE(), INTERVAL p_min_age YEAR);\n    RETURN DATE_ADD(v_oldest, INTERVAL fn_gen_random_int(0, DATEDIFF(v_youngest, v_oldest)) DAY);\nEND ;;\n"
+    },
+    {
+      "kind": "function",
+      "name": "fn_gen_courtesy_title",
+      "sql": "CREATE DEFINER=`jose.amaro`@`%` FUNCTION `fn_gen_courtesy_title`(p_country CHAR(2), p_gender TINYINT UNSIGNED) RETURNS char(10) CHARSET utf8mb4\n    READS SQL DATA\nBEGIN\n    DECLARE v_title VARCHAR(10);\n    SELECT IF(p_gender = 1, title_male, title_female) INTO v_title\n    FROM tbc_gen_country_profile\n    WHERE country_code = p_country;\n    RETURN v_title;\nEND ;;\n"
+    },
+    {
+      "kind": "function",
+      "name": "fn_gen_datetime_between",
+      "sql": "CREATE DEFINER=`jose.amaro`@`%` FUNCTION `fn_gen_datetime_between`(p_from DATETIME, p_to DATETIME) RETURNS datetime\n    NO SQL\nBEGIN\n    RETURN DATE_ADD(p_from, INTERVAL fn_gen_random_int(0, TIMESTAMPDIFF(SECOND, p_from, p_to)) SECOND);\nEND ;;\n"
+    },
+    {
+      "kind": "function",
+      "name": "fn_gen_email",
+      "sql": "CREATE DEFINER=`jose.amaro`@`%` FUNCTION `fn_gen_email`(p_given VARCHAR(60), p_family VARCHAR(60), p_seq BIGINT) RETURNS varchar(80) CHARSET utf8mb4\n    NO SQL\nBEGIN\n    RETURN CONCAT(LEFT(fn_gen_slug(p_given), 20), '.', LEFT(fn_gen_slug(p_family), 20),\n                  '.', p_seq, '@', fn_gen_email_domain());\nEND ;;\n"
+    },
+    {
+      "kind": "function",
+      "name": "fn_gen_email_domain",
+      "sql": "CREATE DEFINER=`jose.amaro`@`%` FUNCTION `fn_gen_email_domain`() RETURNS varchar(20) CHARSET utf8mb4\n    NO SQL\nBEGIN\n    RETURN ELT(fn_gen_random_int(1, 3), 'example.com', 'example.org', 'example.net');\nEND ;;\n"
+    },
+    {
+      "kind": "function",
+      "name": "fn_gen_family_name",
+      "sql": "CREATE DEFINER=`jose.amaro`@`%` FUNCTION `fn_gen_family_name`(p_country CHAR(2)) RETURNS varchar(60) CHARSET utf8mb4\n    READS SQL DATA\nBEGIN\n    DECLARE v_name VARCHAR(60);\n    SELECT name INTO v_name\n    FROM tbc_gen_family_names\n    WHERE country_code = p_country\n    ORDER BY RAND() LIMIT 1;\n    RETURN v_name;\nEND ;;\n"
+    },
+    {
+      "kind": "function",
+      "name": "fn_gen_gender_id",
+      "sql": "CREATE DEFINER=`jose.amaro`@`%` FUNCTION `fn_gen_gender_id`() RETURNS tinyint unsigned\n    NO SQL\nBEGIN\n    RETURN fn_gen_random_int(1, 2);\nEND ;;\n"
+    },
+    {
+      "kind": "function",
+      "name": "fn_gen_given_name",
+      "sql": "CREATE DEFINER=`jose.amaro`@`%` FUNCTION `fn_gen_given_name`(p_country CHAR(2), p_gender TINYINT UNSIGNED) RETURNS varchar(60) CHARSET utf8mb4\n    READS SQL DATA\nBEGIN\n    DECLARE v_name VARCHAR(60);\n    SELECT name INTO v_name\n    FROM tbc_gen_given_names\n    WHERE country_code = p_country AND gender_ID = p_gender\n    ORDER BY RAND() LIMIT 1;\n    RETURN v_name;\nEND ;;\n"
+    },
+    {
+      "kind": "function",
+      "name": "fn_gen_is_active",
+      "sql": "CREATE DEFINER=`jose.amaro`@`%` FUNCTION `fn_gen_is_active`(p_index INT, p_total INT, p_active_pct DECIMAL(5,2)) RETURNS tinyint\n    NO SQL\n    DETERMINISTIC\nBEGIN\n    DECLARE v_active_total BIGINT;\n    SET v_active_total = CAST(ROUND(p_total * p_active_pct / 100) AS SIGNED);\n    RETURN IF((p_index * v_active_total) DIV p_total > ((p_index - 1) * v_active_total) DIV p_total, 1, 0);\nEND ;;\n"
+    },
+    {
+      "kind": "function",
+      "name": "fn_gen_nickname",
+      "sql": "CREATE DEFINER=`jose.amaro`@`%` FUNCTION `fn_gen_nickname`(p_given VARCHAR(60), p_family VARCHAR(60), p_seq BIGINT) RETURNS varchar(100) CHARSET utf8mb4\n    NO SQL\n    DETERMINISTIC\nBEGIN\n    RETURN CONCAT(LEFT(fn_gen_slug(p_given), 1), LEFT(fn_gen_slug(p_family), 20), p_seq);\nEND ;;\n"
+    },
+    {
+      "kind": "function",
+      "name": "fn_gen_password_hash",
+      "sql": "CREATE DEFINER=`jose.amaro`@`%` FUNCTION `fn_gen_password_hash`() RETURNS varchar(255) CHARSET utf8mb4\n    NO SQL\nBEGIN\n    RETURN SHA2(CONCAT(UUID(), RAND()), 256);\nEND ;;\n"
+    },
+    {
+      "kind": "function",
+      "name": "fn_gen_phone",
+      "sql": "CREATE DEFINER=`jose.amaro`@`%` FUNCTION `fn_gen_phone`(p_country CHAR(2)) RETURNS varchar(25) CHARSET utf8mb4\n    READS SQL DATA\nBEGIN\n    DECLARE v_prefix VARCHAR(6);\n    DECLARE v_digits TINYINT;\n    SELECT phone_prefix, phone_digits INTO v_prefix, v_digits\n    FROM tbc_gen_country_profile\n    WHERE country_code = p_country;\n    RETURN CONCAT(v_prefix, LPAD(FLOOR(RAND() * POW(10, v_digits)), v_digits, '0'));\nEND ;;\n"
+    },
+    {
+      "kind": "function",
+      "name": "fn_gen_random_country",
+      "sql": "CREATE DEFINER=`jose.amaro`@`%` FUNCTION `fn_gen_random_country`() RETURNS char(2) CHARSET utf8mb4\n    READS SQL DATA\nBEGIN\n    DECLARE v_country CHAR(2);\n    SELECT country_code INTO v_country\n    FROM tbc_gen_country_profile\n    WHERE status = 1\n    ORDER BY RAND() LIMIT 1;\n    RETURN v_country;\nEND ;;\n"
+    },
+    {
+      "kind": "function",
+      "name": "fn_gen_random_int",
+      "sql": "CREATE DEFINER=`jose.amaro`@`%` FUNCTION `fn_gen_random_int`(p_min INT, p_max INT) RETURNS int\n    NO SQL\nBEGIN\n    RETURN p_min + FLOOR(RAND() * (p_max - p_min + 1));\nEND ;;\n"
+    },
+    {
+      "kind": "function",
+      "name": "fn_gen_slug",
+      "sql": "CREATE DEFINER=`jose.amaro`@`%` FUNCTION `fn_gen_slug`(p_text VARCHAR(150)) RETURNS varchar(150) CHARSET utf8mb4\n    NO SQL\n    DETERMINISTIC\nBEGIN\n    RETURN LOWER(REPLACE(REPLACE(REPLACE(REPLACE(p_text, ' ', ''), '''', ''), '-', ''), '.', ''));\nEND ;;\n"
+    },
+    {
+      "kind": "procedure",
+      "name": "sp_generate_users",
+      "sql": "CREATE DEFINER=`jose.amaro`@`%` PROCEDURE `sp_generate_users`(\n    IN p_total      INT,\n    IN p_country    CHAR(2),\n    IN p_min_age    INT,\n    IN p_max_age    INT,\n    IN p_active_pct DECIMAL(5,2)\n)\nBEGIN\n    DECLARE v_i          INT DEFAULT 1;\n    DECLARE v_seq_base   BIGINT;\n    DECLARE v_first_id   INT DEFAULT NULL;\n    DECLARE v_user_id    INT;\n    DECLARE v_country    CHAR(2);\n    DECLARE v_gender     TINYINT UNSIGNED;\n    DECLARE v_given      VARCHAR(60);\n    DECLARE v_family     VARCHAR(60);\n    DECLARE v_created    DATETIME;\n    DECLARE v_last_login DATETIME;\n    DECLARE c_history_days INT DEFAULT 730;   \n\n    DECLARE EXIT HANDLER FOR SQLEXCEPTION\n    BEGIN\n        ROLLBACK;\n        RESIGNAL;\n    END;\n"
+    },
+    {
+      "kind": "procedure",
+      "name": "sp_gen_insert_user_person",
+      "sql": "CREATE DEFINER=`jose.amaro`@`%` PROCEDURE `sp_gen_insert_user_person`(\n    IN  p_email          VARCHAR(80),\n    IN  p_nickname       VARCHAR(100),\n    IN  p_password_hash  VARCHAR(255),\n    IN  p_creation_date  DATETIME,\n    IN  p_last_login     DATETIME,\n    IN  p_status         TINYINT,\n    IN  p_courtesy_title CHAR(10),\n    IN  p_given_names    VARCHAR(150),\n    IN  p_family_names   VARCHAR(150),\n    IN  p_birth_date     DATE,\n    IN  p_gender_ID      TINYINT UNSIGNED,\n    IN  p_country_code   CHAR(2),\n    IN  p_phone          VARCHAR(25),\n    OUT p_user_id        INT\n)\nBEGIN\n    INSERT INTO tb_users (email, nickname, password, creation_date, last_login, status)\n    VALUES (p_email, p_nickname, p_password_hash, p_creation_date, p_last_login, p_status);\n\n    SET p_user_id = LAST_INSERT_ID();\n\n    INSERT INTO tb_people (user_ID, courtesy_title_ID, given_names, family_names,\n                           birth_date, gender_ID, country_code, phone)\n    VALUES (p_user_id, p_courtesy_title, p_given_names, p_family_names,\n            p_birth_date, p_gender_ID, p_country_code, p_phone);\nEND ;;\n"
+    },
+    {
+      "kind": "procedure",
+      "name": "sp_gen_validate_params",
+      "sql": "CREATE DEFINER=`jose.amaro`@`%` PROCEDURE `sp_gen_validate_params`(\n    IN p_total      INT,\n    IN p_country    CHAR(2),\n    IN p_min_age    INT,\n    IN p_max_age    INT,\n    IN p_active_pct DECIMAL(5,2)\n)\nBEGIN\n    IF p_total IS NULL OR p_total < 1 OR p_total > 100000 THEN\n        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'p_total debe estar entre 1 y 100000';\n    END IF;\n    IF p_min_age IS NULL OR p_max_age IS NULL OR p_min_age < 18 OR p_max_age > 100 OR p_min_age > p_max_age THEN\n        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Edades invalidas: se requiere 18 <= p_min_age <= p_max_age <= 100';\n    END IF;\n    IF p_active_pct IS NULL OR p_active_pct < 0 OR p_active_pct > 100 THEN\n        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'p_active_pct debe estar entre 0 y 100';\n    END IF;\n    IF p_country IS NOT NULL THEN\n        IF NOT EXISTS (SELECT 1 FROM tbc_gen_country_profile WHERE country_code = p_country AND status = 1)\n           OR NOT EXISTS (SELECT 1 FROM tbc_gen_given_names  WHERE country_code = p_country AND gender_ID = 1)\n           OR NOT EXISTS (SELECT 1 FROM tbc_gen_given_names  WHERE country_code = p_country AND gender_ID = 2)\n           OR NOT EXISTS (SELECT 1 FROM tbc_gen_family_names WHERE country_code = p_country) THEN\n            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El pais no existe, esta deshabilitado o no tiene catalogo de nombres';\n        END IF;\n    ELSEIF NOT EXISTS (SELECT 1 FROM tbc_gen_country_profile WHERE status = 1) THEN\n        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No hay paises habilitados en tbc_gen_country_profile';\n    END IF;\nEND ;;\n"
+    },
+    {
       "kind": "procedure",
       "name": "sp_register_user_person",
       "sql": "CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_register_user_person`(\n    -- Parámetros para tb_users\n    IN p_email VARCHAR(80),\n    IN p_nickname VARCHAR(100),\n    IN p_password VARCHAR(255),\n    \n    -- Parámetros para tb_people\n    IN p_courtesy_title_ID CHAR(10),\n    IN p_given_names VARCHAR(150),\n    IN p_family_names VARCHAR(150),\n    IN p_birth_date DATE,\n    IN p_gender_ID TINYINT UNSIGNED,\n    IN p_country_code CHAR(2),\n    IN p_phone VARCHAR(25)\n)\nBEGIN\n    -- Variable para guardar el ID generado en tb_users\n    DECLARE v_user_id INT;\n\n    -- Manejo de errores: Si ocurre una falla, deshace los cambios (ROLLBACK)\n    DECLARE EXIT HANDLER FOR SQLEXCEPTION\n    BEGIN\n        ROLLBACK;\n        RESIGNAL;\n    END;\n"
@@ -4330,34 +4705,38 @@
     }
   ],
   "row_counts": {
-    "tb_logs": 40186,
-    "tb_people": 3,
+    "tb_logs": 60630,
+    "tb_people": 10225,
     "tb_products": 15007,
-    "tb_users": 5,
+    "tb_users": 10227,
     "tbc_categories": 160,
-    "tb_buyer_orders": 0,
-    "tb_carts": 0,
-    "tb_order_cancellations": 0,
-    "tb_orders": 0,
-    "tb_payment_transaction": 0,
-    "tb_payments": 0,
-    "tb_refunds": 0,
-    "tb_returns": 0,
-    "tb_shipments": 0,
-    "tb_user_addresses": 0,
-    "tbc_payment_methods": 0,
-    "tbc_payment_methods_types": 0,
-    "tbd_address_components": 0,
-    "tbd_cancellation_items": 0,
-    "tbd_carts_items": 0,
-    "tbd_order_items": 0,
-    "tbd_products_categories": 0,
-    "tbd_products_users_providers": 0,
-    "tbd_return_items": 0,
-    "tbd_user_payment_methods": 0,
-    "tbd_users_wishlist_products": 0
+    "tbc_gen_country_profile": 12,
+    "tbc_gen_family_names": 225,
+    "tbc_gen_given_names": 344,
+    "tb_buyer_orders": "No verificable en el respaldo",
+    "tb_carts": "No verificable en el respaldo",
+    "tb_order_cancellations": "No verificable en el respaldo",
+    "tb_orders": "No verificable en el respaldo",
+    "tb_payment_transaction": "No verificable en el respaldo",
+    "tb_payments": "No verificable en el respaldo",
+    "tb_refunds": "No verificable en el respaldo",
+    "tb_returns": "No verificable en el respaldo",
+    "tb_shipments": "No verificable en el respaldo",
+    "tb_user_addresses": "No verificable en el respaldo",
+    "tbc_payment_methods": "No verificable en el respaldo",
+    "tbc_payment_methods_types": "No verificable en el respaldo",
+    "tbd_address_components": "No verificable en el respaldo",
+    "tbd_cancellation_items": "No verificable en el respaldo",
+    "tbd_carts_items": "No verificable en el respaldo",
+    "tbd_order_items": "No verificable en el respaldo",
+    "tbd_products_categories": "No verificable en el respaldo",
+    "tbd_products_users_providers": "No verificable en el respaldo",
+    "tbd_return_items": "No verificable en el respaldo",
+    "tbd_user_payment_methods": "No verificable en el respaldo",
+    "tbd_users_wishlist_products": "No verificable en el respaldo"
   },
-  "row_count_source": "Conteo streaming de tuplas VALUES en BD15.sql; valores de fila descartados; 2026-10-27",
+  "row_counted_at": "2026-10-28 19:11:25 -06:00",
+  "row_count_source": "Conteo streaming de filas reales en sentencias INSERT de BD17.sql; 2026-10-28 19:11:25 -06:00; corresponde al respaldo, no a la instancia en vivo.",
   "pending_confirmations": [
     "tb_payments.transaction_reference: confirmar qué pasarelas o medios pueden dejar la referencia NULL y el momento en que se recibe.",
     "tb_products.SKU: confirmar el estándar del código y si se captura manualmente o se importa desde otro sistema.",

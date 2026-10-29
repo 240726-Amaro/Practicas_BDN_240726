@@ -1,10 +1,15 @@
-"""Extrae solo definiciones DDL de BD15.sql; los bloques INSERT se descartan."""
+"""Extrae definiciones DDL de BD17.sql; los bloques INSERT se descartan."""
 import json
 import pathlib
 import re
+from datetime import datetime
+
+def local_stamp(value):
+    offset = value.strftime("%z")
+    return f"{value:%Y-%m-%d %H:%M:%S} {offset[:3]}:{offset[3:]}"
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-SRC = ROOT / "Practica03" / "backups" / "BD15.sql"
+SRC = ROOT / "Practica03" / "backups" / "BD17.sql"
 OUT = ROOT / "diccionario_datos"
 
 objects = []
@@ -58,11 +63,12 @@ with SRC.open("r", encoding="utf-8", errors="replace") as source:
 counts = {k: sum(item["kind"] == k for item in objects)
           for k in ("table", "view", "trigger", "procedure", "function")}
 payload = {
-    "database": "db_test",
+    "database": "BD17",
     "mysql_version": "8.0.36",
-    "source": "Practica03/backups/BD15.sql",
-    "source_date": "2026-10-27",
-    "extraction_scope": "Solo CREATE TABLE/VIEW/TRIGGER/PROCEDURE/FUNCTION. INSERT INTO se descarta antes de acumular contenido.",
+    "source": "Practica03/backups/BD17.sql",
+    "source_date": datetime.fromtimestamp(SRC.stat().st_mtime).astimezone().date().isoformat(),
+    "source_modified": local_stamp(datetime.fromtimestamp(SRC.stat().st_mtime).astimezone()),
+    "extraction_scope": "CREATE TABLE (incluye índices, claves y CHECK declarados en tabla), CREATE/ALTER TABLE y CREATE INDEX si existen, además de VIEW/TRIGGER/PROCEDURE/FUNCTION. INSERT INTO se descarta durante extracción de esquema.",
     "counts": counts,
     "objects": objects,
 }

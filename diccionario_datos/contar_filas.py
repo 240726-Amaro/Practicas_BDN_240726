@@ -2,9 +2,14 @@
 import json
 import pathlib
 import re
+from datetime import datetime
+
+def local_stamp(value):
+    offset = value.strftime("%z")
+    return f"{value:%Y-%m-%d %H:%M:%S} {offset[:3]}:{offset[3:]}"
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-SOURCE = ROOT / "Practica03" / "backups" / "BD15.sql"
+SOURCE = ROOT / "Practica03" / "backups" / "BD17.sql"
 OUT = ROOT / "diccionario_datos" / "estructura.json"
 counts = {}
 table = None
@@ -69,10 +74,12 @@ with SOURCE.open("r", encoding="utf-8", errors="replace") as source:
 
 data = json.loads(OUT.read_text(encoding="utf-8"))
 for obj in data.get("objects", []):
-    if obj.get("kind") == "table": counts.setdefault(obj["name"], 0)
+    if obj.get("kind") == "table": counts.setdefault(obj["name"], "No verificable en el respaldo")
 data["row_counts"] = counts
-data["row_count_source"] = "Conteo streaming de tuplas VALUES en BD15.sql; valores de fila descartados; 2026-10-27"
+counted_at = local_stamp(datetime.now().astimezone())
+data["row_counted_at"] = counted_at
+data["row_count_source"] = f"Conteo streaming de filas reales en sentencias INSERT de BD17.sql; {counted_at}; corresponde al respaldo, no a la instancia en vivo."
 OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-total = sum(counts.values())
-print(json.dumps({"tablas_con_insert": len(counts), "total_filas": total,
-                  "tablas_vacias_o_sin_insert": sum(value == 0 for value in counts.values())}, ensure_ascii=False))
+verified = [value for value in counts.values() if isinstance(value, int)]
+print(json.dumps({"tablas_con_insert": len(verified), "total_filas_verificables": sum(verified),
+                  "tablas_sin_insert": sum(value == "No verificable en el respaldo" for value in counts.values())}, ensure_ascii=False))
