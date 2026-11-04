@@ -1,0 +1,1294 @@
+mysql> SHOW TRIGGERS FROM db_test;
++-----------------------------------------------+--------+------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------+----------------------+----------------------+--------------------+
+| Trigger                                       | Event  | Table                        | Statement                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Timing | Created                | sql_mode                                                                                                              | Definer        | character_set_client | collation_connection | Database Collation |
++-----------------------------------------------+--------+------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------+----------------------+----------------------+--------------------+
+| trg_tb_buyer_orders_after_insert              | INSERT | tb_buyer_orders              | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_buyer_orders', 'Create', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Orden de comprador creado. ', 'ID=', NEW.ID,
+            ', seller_ID=', COALESCE(NEW.seller_ID, 'NULL'),
+            ', subtotal=', COALESCE(NEW.subtotal, 'NULL'),
+            ', shipping_cost=', COALESCE(NEW.shipping_cost, 'NULL'),
+            ', fulfillment_status=', COALESCE(NEW.fulfillment_status, 'NULL'),
+            ', status=', COALESCE(CAST(NEW.status AS UNSIGNED), 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                      | AFTER  | 2026-11-04 05:28:07.91 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_buyer_orders_after_update              | UPDATE | tb_buyer_orders              | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_buyer_orders', 'Update', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Orden de comprador actualizado. ', 'ID=', NEW.ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.seller_ID <=> NEW.seller_ID), CONCAT('seller_ID: [', COALESCE(OLD.seller_ID, 'NULL'), '] -> [', COALESCE(NEW.seller_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.subtotal <=> NEW.subtotal), CONCAT('subtotal: [', COALESCE(OLD.subtotal, 'NULL'), '] -> [', COALESCE(NEW.subtotal, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.shipping_cost <=> NEW.shipping_cost), CONCAT('shipping_cost: [', COALESCE(OLD.shipping_cost, 'NULL'), '] -> [', COALESCE(NEW.shipping_cost, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.fulfillment_status <=> NEW.fulfillment_status), CONCAT('fulfillment_status: [', COALESCE(OLD.fulfillment_status, 'NULL'), '] -> [', COALESCE(NEW.fulfillment_status, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.status <=> NEW.status), CONCAT('status: [', COALESCE(CAST(OLD.status AS UNSIGNED), 'NULL'), '] -> [', COALESCE(CAST(NEW.status AS UNSIGNED), 'NULL'), ']'), NULL)
+            )
+        ),
+        b'1'
+    );
+END | AFTER  | 2026-11-04 05:28:07.91 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_buyer_orders_after_delete              | DELETE | tb_buyer_orders              | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_buyer_orders', 'Delete', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Orden de comprador eliminado. ', 'ID=', OLD.ID,
+            ', seller_ID=', COALESCE(OLD.seller_ID, 'NULL'),
+            ', subtotal=', COALESCE(OLD.subtotal, 'NULL'),
+            ', shipping_cost=', COALESCE(OLD.shipping_cost, 'NULL'),
+            ', fulfillment_status=', COALESCE(OLD.fulfillment_status, 'NULL'),
+            ', status=', COALESCE(CAST(OLD.status AS UNSIGNED), 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                   | AFTER  | 2026-11-04 05:28:07.92 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_carts_after_insert                     | INSERT | tb_carts                     | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_carts', 'Create', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Carrito creado. ', 'ID=', NEW.ID,
+            ', user_ID=', COALESCE(NEW.user_ID, 'NULL'),
+            ', status=', COALESCE(CAST(NEW.status AS UNSIGNED), 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | AFTER  | 2026-11-04 05:28:07.96 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_carts_after_update                     | UPDATE | tb_carts                     | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_carts', 'Update', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Carrito actualizado. ', 'ID=', NEW.ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.user_ID <=> NEW.user_ID), CONCAT('user_ID: [', COALESCE(OLD.user_ID, 'NULL'), '] -> [', COALESCE(NEW.user_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.status <=> NEW.status), CONCAT('status: [', COALESCE(CAST(OLD.status AS UNSIGNED), 'NULL'), '] -> [', COALESCE(CAST(NEW.status AS UNSIGNED), 'NULL'), ']'), NULL)
+            )
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                    | AFTER  | 2026-11-04 05:28:07.96 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_carts_after_delete                     | DELETE | tb_carts                     | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_carts', 'Delete', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Carrito eliminado. ', 'ID=', OLD.ID,
+            ', user_ID=', COALESCE(OLD.user_ID, 'NULL'),
+            ', status=', COALESCE(CAST(OLD.status AS UNSIGNED), 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | AFTER  | 2026-11-04 05:28:07.97 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_order_cancellations_after_insert       | INSERT | tb_order_cancellations       | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_order_cancellations', 'Create', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Cancelaci n de orden creada. ', 'ID=', NEW.ID,
+            ', buyer_order_ID=', NEW.buyer_order_ID,
+            ', user_ID=', NEW.user_ID,
+            ', cancellation_status=', NEW.cancellation_status
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | AFTER  | 2026-11-04 05:28:09.23 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_order_cancellations_after_update       | UPDATE | tb_order_cancellations       | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_order_cancellations', 'Update', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Cancelaci n de orden actualizada. ', 'ID=', NEW.ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.buyer_order_ID <=> NEW.buyer_order_ID), CONCAT('buyer_order_ID: [', COALESCE(OLD.buyer_order_ID, 'NULL'), '] -> [', COALESCE(NEW.buyer_order_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.user_ID <=> NEW.user_ID), CONCAT('user_ID: [', COALESCE(OLD.user_ID, 'NULL'), '] -> [', COALESCE(NEW.user_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.cancellation_status <=> NEW.cancellation_status), CONCAT('cancellation_status: [', COALESCE(OLD.cancellation_status, 'NULL'), '] -> [', COALESCE(NEW.cancellation_status, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.reason <=> NEW.reason), 'reason modificado', NULL)
+            )
+        ),
+        b'1'
+    );
+END | AFTER  | 2026-11-04 05:28:09.24 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_order_cancellations_after_delete       | DELETE | tb_order_cancellations       | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_order_cancellations', 'Delete', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Cancelaci n de orden eliminada. ', 'ID=', OLD.ID,
+            ', buyer_order_ID=', OLD.buyer_order_ID,
+            ', user_ID=', OLD.user_ID,
+            ', cancellation_status=', OLD.cancellation_status
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | AFTER  | 2026-11-04 05:28:09.25 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_orders_after_insert                    | INSERT | tb_orders                    | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_orders', 'Create', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Orden creado. ', 'ID=', NEW.ID,
+            ', user_id=', COALESCE(NEW.user_id, 'NULL'),
+            ', total_amount=', COALESCE(NEW.total_amount, 'NULL'),
+            ', status=', COALESCE(NEW.status, 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | AFTER  | 2026-11-04 05:28:09.29 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_orders_after_update                    | UPDATE | tb_orders                    | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_orders', 'Update', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Orden actualizado. ', 'ID=', NEW.ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.user_id <=> NEW.user_id), CONCAT('user_id: [', COALESCE(OLD.user_id, 'NULL'), '] -> [', COALESCE(NEW.user_id, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.total_amount <=> NEW.total_amount), CONCAT('total_amount: [', COALESCE(OLD.total_amount, 'NULL'), '] -> [', COALESCE(NEW.total_amount, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.status <=> NEW.status), CONCAT('status: [', COALESCE(OLD.status, 'NULL'), '] -> [', COALESCE(NEW.status, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.shipping_address <=> NEW.shipping_address), 'shipping_address modificado', NULL)
+            )
+        ),
+        b'1'
+    );
+END                                                                  | AFTER  | 2026-11-04 05:28:09.29 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_orders_after_delete                    | DELETE | tb_orders                    | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_orders', 'Delete', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Orden eliminado. ', 'ID=', OLD.ID,
+            ', user_id=', COALESCE(OLD.user_id, 'NULL'),
+            ', total_amount=', COALESCE(OLD.total_amount, 'NULL'),
+            ', status=', COALESCE(OLD.status, 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | AFTER  | 2026-11-04 05:28:09.30 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_payment_transaction_after_insert       | INSERT | tb_payment_transaction       | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_payment_transaction', 'Create', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Transacci n de pago creada. ', 'ID=', NEW.ID,
+            ', payment_ID=', NEW.payment_ID,
+            ', transaction_type=', NEW.transaction_type,
+            ', amount=', NEW.amount,
+            ', transaction_status=', NEW.transaction_status
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | AFTER  | 2026-11-04 05:28:09.33 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_payment_transaction_after_update       | UPDATE | tb_payment_transaction       | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_payment_transaction', 'Update', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Transacci n de pago actualizada. ', 'ID=', NEW.ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.payment_ID <=> NEW.payment_ID), CONCAT('payment_ID: [', COALESCE(OLD.payment_ID, 'NULL'), '] -> [', COALESCE(NEW.payment_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.transaction_type <=> NEW.transaction_type), CONCAT('transaction_type: [', COALESCE(OLD.transaction_type, 'NULL'), '] -> [', COALESCE(NEW.transaction_type, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.amount <=> NEW.amount), CONCAT('amount: [', COALESCE(OLD.amount, 'NULL'), '] -> [', COALESCE(NEW.amount, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.transaction_status <=> NEW.transaction_status), CONCAT('transaction_status: [', COALESCE(OLD.transaction_status, 'NULL'), '] -> [', COALESCE(NEW.transaction_status, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.gateway_reference <=> NEW.gateway_reference), CONCAT('gateway_reference: [', COALESCE(OLD.gateway_reference, 'NULL'), '] -> [', COALESCE(NEW.gateway_reference, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.response_message <=> NEW.response_message), 'response_message modificado', NULL)
+            )
+        ),
+        b'1'
+    );
+END | AFTER  | 2026-11-04 05:28:09.34 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_payment_transaction_after_delete       | DELETE | tb_payment_transaction       | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_payment_transaction', 'Delete', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Transacci n de pago eliminada. ', 'ID=', OLD.ID,
+            ', payment_ID=', OLD.payment_ID,
+            ', transaction_type=', OLD.transaction_type,
+            ', amount=', OLD.amount,
+            ', transaction_status=', OLD.transaction_status
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | AFTER  | 2026-11-04 05:28:09.34 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_payments_after_insert                  | INSERT | tb_payments                  | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_payments', 'Create', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Pago creado. ', 'ID=', NEW.ID,
+            ', order_id=', COALESCE(NEW.order_id, 'NULL'),
+            ', payment_method_id=', COALESCE(NEW.payment_method_id, 'NULL'),
+            ', amount=', COALESCE(NEW.amount, 'NULL'),
+            ', payment_status=', COALESCE(NEW.payment_status, 'NULL'),
+            ', transaction_reference=', COALESCE(NEW.transaction_reference, 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                  | AFTER  | 2026-11-04 05:28:09.40 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_payments_after_update                  | UPDATE | tb_payments                  | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_payments', 'Update', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Pago actualizado. ', 'ID=', NEW.ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.order_id <=> NEW.order_id), CONCAT('order_id: [', COALESCE(OLD.order_id, 'NULL'), '] -> [', COALESCE(NEW.order_id, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.payment_method_id <=> NEW.payment_method_id), CONCAT('payment_method_id: [', COALESCE(OLD.payment_method_id, 'NULL'), '] -> [', COALESCE(NEW.payment_method_id, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.amount <=> NEW.amount), CONCAT('amount: [', COALESCE(OLD.amount, 'NULL'), '] -> [', COALESCE(NEW.amount, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.payment_status <=> NEW.payment_status), CONCAT('payment_status: [', COALESCE(OLD.payment_status, 'NULL'), '] -> [', COALESCE(NEW.payment_status, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.transaction_reference <=> NEW.transaction_reference), CONCAT('transaction_reference: [', COALESCE(OLD.transaction_reference, 'NULL'), '] -> [', COALESCE(NEW.transaction_reference, 'NULL'), ']'), NULL)
+            )
+        ),
+        b'1'
+    );
+END | AFTER  | 2026-11-04 05:28:09.40 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_payments_after_delete                  | DELETE | tb_payments                  | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_payments', 'Delete', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Pago eliminado. ', 'ID=', OLD.ID,
+            ', order_id=', COALESCE(OLD.order_id, 'NULL'),
+            ', payment_method_id=', COALESCE(OLD.payment_method_id, 'NULL'),
+            ', amount=', COALESCE(OLD.amount, 'NULL'),
+            ', payment_status=', COALESCE(OLD.payment_status, 'NULL'),
+            ', transaction_reference=', COALESCE(OLD.transaction_reference, 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                               | AFTER  | 2026-11-04 05:28:09.41 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_people_after_insert                    | INSERT | tb_people                    | BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        'tb_people',
+        'Create',
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            'Persona creada. person_ID=', NEW.person_ID,
+            ', user_ID=', NEW.user_ID,
+            ', nombres=', NEW.given_names,
+            ', apellidos=', NEW.family_names,
+            ', tel fono=', COALESCE(NEW.phone, 'Sin registro')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | AFTER  | 2026-11-04 05:28:09.66 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_people_after_update                    | UPDATE | tb_people                    | BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        'tb_people',
+        'Update',
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            'Persona actualizada. person_ID=', NEW.person_ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.given_names <=> NEW.given_names), CONCAT('nombres: [', OLD.given_names, '] -> [', NEW.given_names, ']'), NULL),
+                IF(NOT (OLD.family_names <=> NEW.family_names), CONCAT('apellidos: [', OLD.family_names, '] -> [', NEW.family_names, ']'), NULL),
+                IF(NOT (OLD.phone <=> NEW.phone), CONCAT('tel fono: [', COALESCE(OLD.phone, 'NULL'), '] -> [', COALESCE(NEW.phone, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.country_code <=> NEW.country_code), CONCAT('pa s: [', COALESCE(OLD.country_code, 'NULL'), '] -> [', COALESCE(NEW.country_code, 'NULL'), ']'), NULL)
+            )
+        ),
+        b'1'
+    );
+END | AFTER  | 2026-11-04 05:28:09.67 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_people_after_delete                    | DELETE | tb_people                    | BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        'tb_people',
+        'Delete',
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            'Persona eliminada. person_ID=', OLD.person_ID,
+            ', user_ID=', OLD.user_ID,
+            ', nombre=', OLD.given_names, ' ', OLD.family_names
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | AFTER  | 2026-11-04 05:28:09.67 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_products_after_insert                     | INSERT | tb_products                  | BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        description,
+        operation_date,
+        operation_status
+    )
+    VALUES (
+        'tb_products',
+        'Create',
+        USER(),
+        CONCAT('Producto creado. ID: ', NEW.ID, ', SKU: ', COALESCE(NEW.SKU, 'NULL'), ', Nombre: ', COALESCE(NEW.name, 'NULL'), ', Precio: ', NEW.current_price, ', Stock: ', NEW.current_stock),
+        CURRENT_TIMESTAMP,
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | AFTER  | 2026-11-04 05:28:10.09 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_products_after_update                     | UPDATE | tb_products                  | BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        description,
+        operation_date,
+        operation_status
+    )
+    VALUES (
+        'tb_products',
+        'Update',
+        USER(),
+        CONCAT(
+            'Producto actualizado. ID=', NEW.ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.SKU <=> NEW.SKU), CONCAT('SKU: [', COALESCE(OLD.SKU, 'NULL'), '] -> [', COALESCE(NEW.SKU, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.name <=> NEW.name), CONCAT('name: [', COALESCE(OLD.name, 'NULL'), '] -> [', COALESCE(NEW.name, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.description <=> NEW.description), CONCAT('description: [', COALESCE(OLD.description, 'NULL'), '] -> [', COALESCE(NEW.description, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.current_price <=> NEW.current_price), CONCAT('price: [', COALESCE(OLD.current_price, '0'), '] -> [', COALESCE(NEW.current_price, '0'), ']'), NULL),
+                IF(NOT (OLD.current_stock <=> NEW.current_stock), CONCAT('stock: [', COALESCE(OLD.current_stock, '0'), '] -> [', COALESCE(NEW.current_stock, '0'), ']'), NULL),
+                IF(NOT (OLD.status <=> NEW.status), CONCAT('status: [', COALESCE(OLD.status, '0'), '] -> [', COALESCE(NEW.status, '0'), ']'), NULL)
+            )
+        ),
+        CURRENT_TIMESTAMP,
+        b'1'
+    );
+END | AFTER  | 2026-11-04 05:28:10.09 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_products_after_delete                     | DELETE | tb_products                  | BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        description,
+        operation_date,
+        operation_status
+    )
+    VALUES (
+        'tb_products',
+        'Delete',
+        USER(),
+        CONCAT(
+            'Producto eliminado. ID=', OLD.ID,
+            ', SKU=', COALESCE(OLD.SKU, 'NULL'),
+            ', Nombre=', COALESCE(OLD.name, 'NULL')
+        ),
+        CURRENT_TIMESTAMP,
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | AFTER  | 2026-11-04 05:28:10.10 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_refunds_after_insert                   | INSERT | tb_refunds                   | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_refunds', 'Create', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Reembolso creado. ', 'ID=', NEW.ID,
+            ', payment_ID=', NEW.payment_ID,
+            ', return_ID=', COALESCE(NEW.return_ID, 'NULL'),
+            ', cancellation_ID=', COALESCE(NEW.cancellation_ID, 'NULL'),
+            ', amount=', NEW.amount,
+            ', refund_status=', NEW.refund_status
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | AFTER  | 2026-11-04 05:28:10.14 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_refunds_after_update                   | UPDATE | tb_refunds                   | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_refunds', 'Update', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Reembolso actualizado. ', 'ID=', NEW.ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.payment_ID <=> NEW.payment_ID), CONCAT('payment_ID: [', COALESCE(OLD.payment_ID, 'NULL'), '] -> [', COALESCE(NEW.payment_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.return_ID <=> NEW.return_ID), CONCAT('return_ID: [', COALESCE(OLD.return_ID, 'NULL'), '] -> [', COALESCE(NEW.return_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.cancellation_ID <=> NEW.cancellation_ID), CONCAT('cancellation_ID: [', COALESCE(OLD.cancellation_ID, 'NULL'), '] -> [', COALESCE(NEW.cancellation_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.amount <=> NEW.amount), CONCAT('amount: [', COALESCE(OLD.amount, 'NULL'), '] -> [', COALESCE(NEW.amount, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.refund_status <=> NEW.refund_status), CONCAT('refund_status: [', COALESCE(OLD.refund_status, 'NULL'), '] -> [', COALESCE(NEW.refund_status, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.reason <=> NEW.reason), 'reason modificado', NULL),
+                IF(NOT (OLD.refund_date <=> NEW.refund_date), CONCAT('refund_date: [', COALESCE(OLD.refund_date, 'NULL'), '] -> [', COALESCE(NEW.refund_date, 'NULL'), ']'), NULL)
+            )
+        ),
+        b'1'
+    );
+END | AFTER  | 2026-11-04 05:28:10.15 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_refunds_after_delete                   | DELETE | tb_refunds                   | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_refunds', 'Delete', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Reembolso eliminado. ', 'ID=', OLD.ID,
+            ', payment_ID=', OLD.payment_ID,
+            ', return_ID=', COALESCE(OLD.return_ID, 'NULL'),
+            ', cancellation_ID=', COALESCE(OLD.cancellation_ID, 'NULL'),
+            ', amount=', OLD.amount,
+            ', refund_status=', OLD.refund_status
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | AFTER  | 2026-11-04 05:28:10.15 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_returns_after_insert                   | INSERT | tb_returns                   | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_returns', 'Create', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Devoluci n creada. ', 'ID=', NEW.ID,
+            ', buyer_order_ID=', NEW.buyer_order_ID,
+            ', user_ID=', NEW.user_ID,
+            ', return_status=', NEW.return_status
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | AFTER  | 2026-11-04 05:28:10.20 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_returns_after_update                   | UPDATE | tb_returns                   | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_returns', 'Update', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Devoluci n actualizada. ', 'ID=', NEW.ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.buyer_order_ID <=> NEW.buyer_order_ID), CONCAT('buyer_order_ID: [', COALESCE(OLD.buyer_order_ID, 'NULL'), '] -> [', COALESCE(NEW.buyer_order_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.user_ID <=> NEW.user_ID), CONCAT('user_ID: [', COALESCE(OLD.user_ID, 'NULL'), '] -> [', COALESCE(NEW.user_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.return_status <=> NEW.return_status), CONCAT('return_status: [', COALESCE(OLD.return_status, 'NULL'), '] -> [', COALESCE(NEW.return_status, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.reason <=> NEW.reason), 'reason modificado', NULL)
+            )
+        ),
+        b'1'
+    );
+END                                             | AFTER  | 2026-11-04 05:28:10.21 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_returns_after_delete                   | DELETE | tb_returns                   | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_returns', 'Delete', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Devoluci n eliminada. ', 'ID=', OLD.ID,
+            ', buyer_order_ID=', OLD.buyer_order_ID,
+            ', user_ID=', OLD.user_ID,
+            ', return_status=', OLD.return_status
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | AFTER  | 2026-11-04 05:28:10.21 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_shipments_after_insert                 | INSERT | tb_shipments                 | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_shipments', 'Create', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Env o creado. ', 'ID=', NEW.ID,
+            ', buyer_order_ID=', NEW.buyer_order_ID,
+            ', address_ID=', NEW.address_ID,
+            ', carrier=', COALESCE(NEW.carrier, 'NULL'),
+            ', tracking_number=', COALESCE(NEW.tracking_number, 'NULL'),
+            ', shipment_status=', NEW.shipment_status
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | AFTER  | 2026-11-04 05:28:10.26 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_shipments_after_update                 | UPDATE | tb_shipments                 | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_shipments', 'Update', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Env o actualizado. ', 'ID=', NEW.ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.buyer_order_ID <=> NEW.buyer_order_ID), CONCAT('buyer_order_ID: [', COALESCE(OLD.buyer_order_ID, 'NULL'), '] -> [', COALESCE(NEW.buyer_order_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.address_ID <=> NEW.address_ID), CONCAT('address_ID: [', COALESCE(OLD.address_ID, 'NULL'), '] -> [', COALESCE(NEW.address_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.carrier <=> NEW.carrier), CONCAT('carrier: [', COALESCE(OLD.carrier, 'NULL'), '] -> [', COALESCE(NEW.carrier, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.tracking_number <=> NEW.tracking_number), CONCAT('tracking_number: [', COALESCE(OLD.tracking_number, 'NULL'), '] -> [', COALESCE(NEW.tracking_number, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.shipment_status <=> NEW.shipment_status), CONCAT('shipment_status: [', COALESCE(OLD.shipment_status, 'NULL'), '] -> [', COALESCE(NEW.shipment_status, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.shipped_date <=> NEW.shipped_date), CONCAT('shipped_date: [', COALESCE(OLD.shipped_date, 'NULL'), '] -> [', COALESCE(NEW.shipped_date, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.estimated_delivery_date <=> NEW.estimated_delivery_date), CONCAT('estimated_delivery_date: [', COALESCE(OLD.estimated_delivery_date, 'NULL'), '] -> [', COALESCE(NEW.estimated_delivery_date, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.delivered_date <=> NEW.delivered_date), CONCAT('delivered_date: [', COALESCE(OLD.delivered_date, 'NULL'), '] -> [', COALESCE(NEW.delivered_date, 'NULL'), ']'), NULL)
+            )
+        ),
+        b'1'
+    );
+END | AFTER  | 2026-11-04 05:28:10.26 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_shipments_after_delete                 | DELETE | tb_shipments                 | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_shipments', 'Delete', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Env o eliminado. ', 'ID=', OLD.ID,
+            ', buyer_order_ID=', OLD.buyer_order_ID,
+            ', address_ID=', OLD.address_ID,
+            ', carrier=', COALESCE(OLD.carrier, 'NULL'),
+            ', tracking_number=', COALESCE(OLD.tracking_number, 'NULL'),
+            ', shipment_status=', OLD.shipment_status
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | AFTER  | 2026-11-04 05:28:10.27 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_user_addresses_after_insert            | INSERT | tb_user_addresses            | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_user_addresses', 'Create', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Direcci n de usuario creada. ID=', NEW.ID,
+            ', user_ID=', NEW.user_ID,
+            ', etiqueta=', NEW.address_label,
+            ', is_default=', NEW.is_default,
+            ', status=', CAST(NEW.status AS UNSIGNED)
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | AFTER  | 2026-11-04 05:28:10.30 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_user_addresses_after_update            | UPDATE | tb_user_addresses            | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_user_addresses', 'Update', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Direcci n de usuario actualizada. ID=', NEW.ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.user_ID <=> NEW.user_ID), CONCAT('user_ID: [', OLD.user_ID, '] -> [', NEW.user_ID, ']'), NULL),
+                IF(NOT (OLD.address_label <=> NEW.address_label), CONCAT('etiqueta: [', OLD.address_label, '] -> [', NEW.address_label, ']'), NULL),
+                IF(NOT (OLD.recipient_name <=> NEW.recipient_name), 'recipient_name modificado', NULL),
+                IF(NOT (OLD.recipient_phone <=> NEW.recipient_phone), 'recipient_phone modificado', NULL),
+                IF(NOT (OLD.delivery_instructions <=> NEW.delivery_instructions), 'delivery_instructions modificado', NULL),
+                IF(NOT (OLD.latitude <=> NEW.latitude) OR NOT (OLD.longitude <=> NEW.longitude), 'coordenadas modificadas', NULL),
+                IF(NOT (OLD.is_default <=> NEW.is_default), CONCAT('is_default: [', OLD.is_default, '] -> [', NEW.is_default, ']'), NULL),
+                IF(NOT (OLD.status <=> NEW.status), CONCAT('status: [', CAST(OLD.status AS UNSIGNED), '] -> [', CAST(NEW.status AS UNSIGNED), ']'), NULL)
+            )
+        ),
+        b'1'
+    );
+END | AFTER  | 2026-11-04 05:28:10.31 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tb_user_addresses_after_delete            | DELETE | tb_user_addresses            | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tb_user_addresses', 'Delete', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Direcci n de usuario eliminada. ID=', OLD.ID,
+            ', user_ID=', OLD.user_ID,
+            ', etiqueta=', OLD.address_label,
+            ', status=', CAST(OLD.status AS UNSIGNED)
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | AFTER  | 2026-11-04 05:28:10.31 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_users_after_insert                        | INSERT | tb_users                     | BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        description,
+        operation_date,
+        operation_status
+    )
+    VALUES (
+        'tb_users',
+        'Create',
+        USER(),
+        CONCAT('Usuario creado, ID: ', NEW.ID, ', email: ', NEW.email, ', nickname: ', NEW.nickname),
+        CURRENT_TIMESTAMP,
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | AFTER  | 2026-11-04 05:28:10.66 | NO_AUTO_VALUE_ON_ZERO                                                                                                 | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_users_after_update                        | UPDATE | tb_users                     | BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        description,
+        operation_date,
+        operation_status
+    )
+    VALUES (
+        'tb_users',
+        'Update',
+        USER(),
+        CONCAT(
+            'Usuario actualizado. ID=', NEW.ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(
+                    NOT (OLD.email <=> NEW.email),
+                    CONCAT(
+                        'email: [',
+                        COALESCE(OLD.email, 'NULL'),
+                        '] -> [',
+                        COALESCE(NEW.email, 'NULL'),
+                        ']'
+                    ),
+                    NULL
+                ),
+                IF(
+                    NOT (OLD.nickname <=> NEW.nickname),
+                    CONCAT(
+                        'nickname: [',
+                        COALESCE(OLD.nickname, 'NULL'),
+                        '] -> [',
+                        COALESCE(NEW.nickname, 'NULL'),
+                        ']'
+                    ),
+                    NULL
+                )
+            )
+        ),
+        CURRENT_TIMESTAMP,
+        b'1'
+    );
+END | AFTER  | 2026-11-04 05:28:10.66 | NO_AUTO_VALUE_ON_ZERO                                                                                                 | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_users_after_delete                        | DELETE | tb_users                     | BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        description,
+        operation_date,
+        operation_status
+    )
+    VALUES (
+        'tb_users',
+        'Delete',
+        USER(),
+        CONCAT(
+            'Usuario eliminado. ID=', OLD.ID,
+            ', email=', COALESCE(OLD.email, 'NULL'),
+            ', nickname=', COALESCE(OLD.nickname, 'NULL')
+        ),
+        CURRENT_TIMESTAMP,
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | AFTER  | 2026-11-04 05:28:10.67 | NO_AUTO_VALUE_ON_ZERO                                                                                                 | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbc_categories_after_insert               | INSERT | tbc_categories               | BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        'tbc_categories',
+        'Create',
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            'Categor ? a creada. ID=', NEW.ID,
+            ', nombre=', NEW.name
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | AFTER  | 2026-11-04 05:28:10.71 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | cp850                | cp850_general_ci     | utf8mb4_0900_ai_ci |
+| trg_tbc_categories_after_update               | UPDATE | tbc_categories               | BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        'tbc_categories',
+        'Update',
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            'Categor ? a actualizada. ID=', NEW.ID,
+            ', nombre antiguo=', OLD.name, ', nombre nuevo=', NEW.name,
+            ', estado antiguo=', OLD.status, ', estado nuevo=', NEW.status
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | AFTER  | 2026-11-04 05:28:10.71 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | cp850                | cp850_general_ci     | utf8mb4_0900_ai_ci |
+| trg_tbc_categories_after_delete               | DELETE | tbc_categories               | BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        'tbc_categories',
+        'Delete',
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            'Categor ? a eliminada. ID=', OLD.ID,
+            ', nombre=', OLD.name
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | AFTER  | 2026-11-04 05:28:10.72 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | cp850                | cp850_general_ci     | utf8mb4_0900_ai_ci |
+| trg_tbc_payment_methods_after_insert          | INSERT | tbc_payment_methods          | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbc_payment_methods', 'Create', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'M todo de pago creado. ', 'ID=', NEW.ID,
+            ', name=', COALESCE(NEW.name, 'NULL'),
+            ', status=', COALESCE(CAST(NEW.status AS UNSIGNED), 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | AFTER  | 2026-11-04 05:28:10.88 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbc_payment_methods_after_update          | UPDATE | tbc_payment_methods          | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbc_payment_methods', 'Update', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'M todo de pago actualizado. ', 'ID=', NEW.ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.name <=> NEW.name), CONCAT('name: [', COALESCE(OLD.name, 'NULL'), '] -> [', COALESCE(NEW.name, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.description <=> NEW.description), 'description modificado', NULL),
+                IF(NOT (OLD.status <=> NEW.status), CONCAT('status: [', COALESCE(CAST(OLD.status AS UNSIGNED), 'NULL'), '] -> [', COALESCE(CAST(NEW.status AS UNSIGNED), 'NULL'), ']'), NULL)
+            )
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                  | AFTER  | 2026-11-04 05:28:10.88 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbc_payment_methods_after_delete          | DELETE | tbc_payment_methods          | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbc_payment_methods', 'Delete', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'M todo de pago eliminado. ', 'ID=', OLD.ID,
+            ', name=', COALESCE(OLD.name, 'NULL'),
+            ', status=', COALESCE(CAST(OLD.status AS UNSIGNED), 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | AFTER  | 2026-11-04 05:28:10.89 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbc_payment_methods_types_after_insert    | INSERT | tbc_payment_methods_types    | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbc_payment_methods_types', 'Create', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Tipo de m todo de pago creado. ', 'ID=', NEW.ID,
+            ', code=', COALESCE(NEW.code, 'NULL'),
+            ', status=', COALESCE(CAST(NEW.status AS UNSIGNED), 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | AFTER  | 2026-11-04 05:28:10.93 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbc_payment_methods_types_after_update    | UPDATE | tbc_payment_methods_types    | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbc_payment_methods_types', 'Update', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Tipo de m todo de pago actualizado. ', 'ID=', NEW.ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.code <=> NEW.code), CONCAT('code: [', COALESCE(OLD.code, 'NULL'), '] -> [', COALESCE(NEW.code, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.description <=> NEW.description), 'description modificado', NULL),
+                IF(NOT (OLD.status <=> NEW.status), CONCAT('status: [', COALESCE(CAST(OLD.status AS UNSIGNED), 'NULL'), '] -> [', COALESCE(CAST(NEW.status AS UNSIGNED), 'NULL'), ']'), NULL)
+            )
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                    | AFTER  | 2026-11-04 05:28:10.94 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbc_payment_methods_types_after_delete    | DELETE | tbc_payment_methods_types    | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbc_payment_methods_types', 'Delete', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Tipo de m todo de pago eliminado. ', 'ID=', OLD.ID,
+            ', code=', COALESCE(OLD.code, 'NULL'),
+            ', status=', COALESCE(CAST(OLD.status AS UNSIGNED), 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | AFTER  | 2026-11-04 05:28:10.95 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_address_components_after_insert       | INSERT | tbd_address_components       | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_address_components', 'Create', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Componente de direcci n creado. ID=', NEW.ID,
+            ', address_ID=', NEW.address_ID,
+            ', tipo=', NEW.component_type,
+            ', address_sup_ID=', COALESCE(NEW.address_sup_ID, 'NULL'),
+            ', status=', CAST(NEW.status AS UNSIGNED)
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | AFTER  | 2026-11-04 05:28:10.98 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_address_components_after_update       | UPDATE | tbd_address_components       | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_address_components', 'Update', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Componente de direcci n actualizado. ID=', NEW.ID,
+            ', address_ID=', NEW.address_ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.address_ID <=> NEW.address_ID), CONCAT('address_ID: [', OLD.address_ID, '] -> [', NEW.address_ID, ']'), NULL),
+                IF(NOT (OLD.`value` <=> NEW.`value`), 'value modificado', NULL),
+                IF(NOT (OLD.component_type <=> NEW.component_type), CONCAT('tipo: [', OLD.component_type, '] -> [', NEW.component_type, ']'), NULL),
+                IF(NOT (OLD.address_sup_ID <=> NEW.address_sup_ID), CONCAT('address_sup_ID: [', COALESCE(OLD.address_sup_ID, 'NULL'), '] -> [', COALESCE(NEW.address_sup_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.status <=> NEW.status), CONCAT('status: [', CAST(OLD.status AS UNSIGNED), '] -> [', CAST(NEW.status AS UNSIGNED), ']'), NULL)
+            )
+        ),
+        b'1'
+    );
+END | AFTER  | 2026-11-04 05:28:10.99 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_address_components_after_delete       | DELETE | tbd_address_components       | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_address_components', 'Delete', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Componente de direcci n eliminado. ID=', OLD.ID,
+            ', address_ID=', OLD.address_ID,
+            ', tipo=', OLD.component_type,
+            ', address_sup_ID=', COALESCE(OLD.address_sup_ID, 'NULL'),
+            ', status=', CAST(OLD.status AS UNSIGNED)
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | AFTER  | 2026-11-04 05:28:10.99 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_cancellation_items_after_insert       | INSERT | tbd_cancellation_items       | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_cancellation_items', 'Create', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Producto de cancelaci n agregado. ',
+            'cancellation_ID=', NEW.cancellation_ID,
+            ', order_item_ID=', NEW.order_item_ID,
+            ', quantity=', NEW.quantity
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | AFTER  | 2026-11-04 05:28:11.04 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_cancellation_items_after_update       | UPDATE | tbd_cancellation_items       | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_cancellation_items', 'Update', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Producto de cancelaci n actualizado. ',
+            'cancellation_ID=', NEW.cancellation_ID, ', order_item_ID=', NEW.order_item_ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.cancellation_ID <=> NEW.cancellation_ID), CONCAT('cancellation_ID: [', COALESCE(OLD.cancellation_ID, 'NULL'), '] -> [', COALESCE(NEW.cancellation_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.order_item_ID <=> NEW.order_item_ID), CONCAT('order_item_ID: [', COALESCE(OLD.order_item_ID, 'NULL'), '] -> [', COALESCE(NEW.order_item_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.quantity <=> NEW.quantity), CONCAT('quantity: [', COALESCE(OLD.quantity, 'NULL'), '] -> [', COALESCE(NEW.quantity, 'NULL'), ']'), NULL)
+            )
+        ),
+        b'1'
+    );
+END             | AFTER  | 2026-11-04 05:28:11.04 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_cancellation_items_after_delete       | DELETE | tbd_cancellation_items       | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_cancellation_items', 'Delete', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Producto de cancelaci n eliminado. ',
+            'cancellation_ID=', OLD.cancellation_ID,
+            ', order_item_ID=', OLD.order_item_ID,
+            ', quantity=', OLD.quantity
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | AFTER  | 2026-11-04 05:28:11.05 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_carts_items_after_insert              | INSERT | tbd_carts_items              | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_carts_items', 'Create', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            ' tem de carrito creado. ', 'cart_ID=', NEW.cart_ID,
+            ', provider_ID=', NEW.provider_ID,
+            ', product_ID=', NEW.product_ID,
+            ', quantity=', COALESCE(NEW.quantity, 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | AFTER  | 2026-11-04 05:28:11.08 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_carts_items_after_update              | UPDATE | tbd_carts_items              | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_carts_items', 'Update', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            ' tem de carrito actualizado. ', 'cart_ID=', NEW.cart_ID,
+            ', provider_ID=', NEW.provider_ID,
+            ', product_ID=', NEW.product_ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.quantity <=> NEW.quantity), CONCAT('quantity: [', COALESCE(OLD.quantity, 'NULL'), '] -> [', COALESCE(NEW.quantity, 'NULL'), ']'), NULL)
+            )
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                         | AFTER  | 2026-11-04 05:28:11.09 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_carts_items_after_delete              | DELETE | tbd_carts_items              | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_carts_items', 'Delete', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            ' tem de carrito eliminado. ', 'cart_ID=', OLD.cart_ID,
+            ', provider_ID=', OLD.provider_ID,
+            ', product_ID=', OLD.product_ID,
+            ', quantity=', COALESCE(OLD.quantity, 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | AFTER  | 2026-11-04 05:28:11.09 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_order_items_after_insert              | INSERT | tbd_order_items              | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_order_items', 'Create', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            ' tem de orden de comprador creado. ', 'ID=', NEW.ID,
+            ', buyer_order_ID=', COALESCE(NEW.buyer_order_ID, 'NULL'),
+            ', product_ID=', COALESCE(NEW.product_ID, 'NULL'),
+            ', provider_ID=', COALESCE(NEW.provider_ID, 'NULL'),
+            ', product_name=', COALESCE(NEW.product_name, 'NULL'),
+            ', quantity=', COALESCE(NEW.quantity, 'NULL'),
+            ', unit_price=', COALESCE(NEW.unit_price, 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                               | AFTER  | 2026-11-04 05:28:11.12 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_order_items_after_update              | UPDATE | tbd_order_items              | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_order_items', 'Update', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            ' tem de orden de comprador actualizado. ', 'ID=', NEW.ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.buyer_order_ID <=> NEW.buyer_order_ID), CONCAT('buyer_order_ID: [', COALESCE(OLD.buyer_order_ID, 'NULL'), '] -> [', COALESCE(NEW.buyer_order_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.product_ID <=> NEW.product_ID), CONCAT('product_ID: [', COALESCE(OLD.product_ID, 'NULL'), '] -> [', COALESCE(NEW.product_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.provider_ID <=> NEW.provider_ID), CONCAT('provider_ID: [', COALESCE(OLD.provider_ID, 'NULL'), '] -> [', COALESCE(NEW.provider_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.product_name <=> NEW.product_name), CONCAT('product_name: [', COALESCE(OLD.product_name, 'NULL'), '] -> [', COALESCE(NEW.product_name, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.quantity <=> NEW.quantity), CONCAT('quantity: [', COALESCE(OLD.quantity, 'NULL'), '] -> [', COALESCE(NEW.quantity, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.unit_price <=> NEW.unit_price), CONCAT('unit_price: [', COALESCE(OLD.unit_price, 'NULL'), '] -> [', COALESCE(NEW.unit_price, 'NULL'), ']'), NULL)
+            )
+        ),
+        b'1'
+    );
+END | AFTER  | 2026-11-04 05:28:11.13 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_order_items_after_delete              | DELETE | tbd_order_items              | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_order_items', 'Delete', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            ' tem de orden de comprador eliminado. ', 'ID=', OLD.ID,
+            ', buyer_order_ID=', COALESCE(OLD.buyer_order_ID, 'NULL'),
+            ', product_ID=', COALESCE(OLD.product_ID, 'NULL'),
+            ', provider_ID=', COALESCE(OLD.provider_ID, 'NULL'),
+            ', product_name=', COALESCE(OLD.product_name, 'NULL'),
+            ', quantity=', COALESCE(OLD.quantity, 'NULL'),
+            ', unit_price=', COALESCE(OLD.unit_price, 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                            | AFTER  | 2026-11-04 05:28:11.13 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_products_categories_after_insert      | INSERT | tbd_products_categories      | BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        'tbd_products_categories',
+        'Create',
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            'Asociaci ? n producto-categor ? a creada. category_ID=', NEW.category_ID,
+            ', product_ID=', NEW.product_ID
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | AFTER  | 2026-11-04 05:28:11.23 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | cp850                | cp850_general_ci     | utf8mb4_0900_ai_ci |
+| trg_tbd_products_categories_after_update      | UPDATE | tbd_products_categories      | BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        'tbd_products_categories',
+        'Update',
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            'Asociaci ? n producto-categor ? a actualizada. category_ID=', NEW.category_ID,
+            ', product_ID=', NEW.product_ID,
+            ', estado antiguo=', OLD.status, ', estado nuevo=', NEW.status
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | AFTER  | 2026-11-04 05:28:11.23 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | cp850                | cp850_general_ci     | utf8mb4_0900_ai_ci |
+| trg_tbd_products_categories_after_delete      | DELETE | tbd_products_categories      | BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        'tbd_products_categories',
+        'Delete',
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            'Asociaci ? n producto-categor ? a eliminada. category_ID=', OLD.category_ID,
+            ', product_ID=', OLD.product_ID
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | AFTER  | 2026-11-04 05:28:11.24 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | cp850                | cp850_general_ci     | utf8mb4_0900_ai_ci |
+| trg_tbd_products_users_providers_after_insert | INSERT | tbd_products_users_providers | BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        'tbd_products_users_providers',
+        'Create',
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            'Asociaci n proveedor-producto creada. user_ID=', NEW.user_ID,
+            ', product_ID=', NEW.product_ID,
+            ', tipo=', COALESCE(NEW.type_ownership, 'Sin definir'),
+            ', fecha_disponible=', NEW.avalaible_date
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | AFTER  | 2026-11-04 05:28:11.27 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_products_users_providers_after_update | UPDATE | tbd_products_users_providers | BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        'tbd_products_users_providers',
+        'Update',
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            'Asociaci n proveedor-producto actualizada. user_ID=', NEW.user_ID,
+            ', product_ID=', NEW.product_ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.type_ownership <=> NEW.type_ownership), CONCAT('tipo: [', COALESCE(OLD.type_ownership, 'NULL'), '] -> [', COALESCE(NEW.type_ownership, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.status <=> NEW.status), CONCAT('status: [', OLD.status, '] -> [', NEW.status, ']'), NULL),
+                IF(NOT (OLD.avalaible_date <=> NEW.avalaible_date), CONCAT('fecha: [', OLD.avalaible_date, '] -> [', NEW.avalaible_date, ']'), NULL)
+            )
+        ),
+        b'1'
+    );
+END                                                 | AFTER  | 2026-11-04 05:28:11.28 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_products_users_providers_after_delete | DELETE | tbd_products_users_providers | BEGIN
+    INSERT INTO tb_logs (
+        table_name,
+        operation,
+        db_user,
+        operation_date,
+        description,
+        operation_status
+    )
+    VALUES (
+        'tbd_products_users_providers',
+        'Delete',
+        USER(),
+        CURRENT_TIMESTAMP,
+        CONCAT(
+            'Asociaci n proveedor-producto eliminada. user_ID=', OLD.user_ID,
+            ', product_ID=', OLD.product_ID
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | AFTER  | 2026-11-04 05:28:11.28 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_return_items_after_insert             | INSERT | tbd_return_items             | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_return_items', 'Create', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Producto de devoluci n agregado. ',
+            'return_ID=', NEW.return_ID,
+            ', order_item_ID=', NEW.order_item_ID,
+            ', quantity=', NEW.quantity
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | AFTER  | 2026-11-04 05:28:11.30 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_return_items_after_update             | UPDATE | tbd_return_items             | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_return_items', 'Update', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Producto de devoluci n actualizado. ',
+            'return_ID=', NEW.return_ID, ', order_item_ID=', NEW.order_item_ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.return_ID <=> NEW.return_ID), CONCAT('return_ID: [', COALESCE(OLD.return_ID, 'NULL'), '] -> [', COALESCE(NEW.return_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.order_item_ID <=> NEW.order_item_ID), CONCAT('order_item_ID: [', COALESCE(OLD.order_item_ID, 'NULL'), '] -> [', COALESCE(NEW.order_item_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.quantity <=> NEW.quantity), CONCAT('quantity: [', COALESCE(OLD.quantity, 'NULL'), '] -> [', COALESCE(NEW.quantity, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.condition_notes <=> NEW.condition_notes), 'condition_notes modificado', NULL)
+            )
+        ),
+        b'1'
+    );
+END | AFTER  | 2026-11-04 05:28:11.31 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_return_items_after_delete             | DELETE | tbd_return_items             | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_return_items', 'Delete', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Producto de devoluci n eliminado. ',
+            'return_ID=', OLD.return_ID,
+            ', order_item_ID=', OLD.order_item_ID,
+            ', quantity=', OLD.quantity
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | AFTER  | 2026-11-04 05:28:11.31 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_user_payment_methods_after_insert     | INSERT | tbd_user_payment_methods     | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_user_payment_methods', 'Create', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'M todo de pago de usuario creado. ', 'ID=', NEW.ID,
+            ', user_ID=', COALESCE(NEW.user_ID, 'NULL'),
+            ', payment_method_type_ID=', COALESCE(NEW.payment_method_type_ID, 'NULL'),
+            ', provider=', COALESCE(NEW.provider, 'NULL'),
+            ', label=', COALESCE(NEW.label, 'NULL'),
+            ', last_four=', COALESCE(NEW.last_four, 'NULL'),
+            ', is_default=', COALESCE(NEW.is_default, 'NULL'),
+            ', status=', COALESCE(CAST(NEW.status AS UNSIGNED), 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                      | AFTER  | 2026-11-04 05:28:11.34 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_user_payment_methods_after_update     | UPDATE | tbd_user_payment_methods     | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_user_payment_methods', 'Update', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'M todo de pago de usuario actualizado. ', 'ID=', NEW.ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.user_ID <=> NEW.user_ID), CONCAT('user_ID: [', COALESCE(OLD.user_ID, 'NULL'), '] -> [', COALESCE(NEW.user_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.payment_method_type_ID <=> NEW.payment_method_type_ID), CONCAT('payment_method_type_ID: [', COALESCE(OLD.payment_method_type_ID, 'NULL'), '] -> [', COALESCE(NEW.payment_method_type_ID, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.provider <=> NEW.provider), CONCAT('provider: [', COALESCE(OLD.provider, 'NULL'), '] -> [', COALESCE(NEW.provider, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.label <=> NEW.label), CONCAT('label: [', COALESCE(OLD.label, 'NULL'), '] -> [', COALESCE(NEW.label, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.last_four <=> NEW.last_four), CONCAT('last_four: [', COALESCE(OLD.last_four, 'NULL'), '] -> [', COALESCE(NEW.last_four, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.is_default <=> NEW.is_default), CONCAT('is_default: [', COALESCE(OLD.is_default, 'NULL'), '] -> [', COALESCE(NEW.is_default, 'NULL'), ']'), NULL),
+                IF(NOT (OLD.status <=> NEW.status), CONCAT('status: [', COALESCE(CAST(OLD.status AS UNSIGNED), 'NULL'), '] -> [', COALESCE(CAST(NEW.status AS UNSIGNED), 'NULL'), ']'), NULL)
+            )
+        ),
+        b'1'
+    );
+END | AFTER  | 2026-11-04 05:28:11.34 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_user_payment_methods_after_delete     | DELETE | tbd_user_payment_methods     | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_user_payment_methods', 'Delete', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'M todo de pago de usuario eliminado. ', 'ID=', OLD.ID,
+            ', user_ID=', COALESCE(OLD.user_ID, 'NULL'),
+            ', payment_method_type_ID=', COALESCE(OLD.payment_method_type_ID, 'NULL'),
+            ', provider=', COALESCE(OLD.provider, 'NULL'),
+            ', label=', COALESCE(OLD.label, 'NULL'),
+            ', last_four=', COALESCE(OLD.last_four, 'NULL'),
+            ', is_default=', COALESCE(OLD.is_default, 'NULL'),
+            ', status=', COALESCE(CAST(OLD.status AS UNSIGNED), 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                   | AFTER  | 2026-11-04 05:28:11.35 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_users_wishlist_products_after_insert  | INSERT | tbd_users_wishlist_products  | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_users_wishlist_products', 'Create', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Producto en lista de deseos creado. ', 'user_ID=', NEW.user_ID,
+            ', product_ID=', NEW.product_ID,
+            ', status=', COALESCE(CAST(NEW.status AS UNSIGNED), 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | AFTER  | 2026-11-04 05:28:11.37 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_users_wishlist_products_after_update  | UPDATE | tbd_users_wishlist_products  | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_users_wishlist_products', 'Update', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Producto en lista de deseos actualizado. ', 'user_ID=', NEW.user_ID,
+            ', product_ID=', NEW.product_ID,
+            '. Cambios: ',
+            CONCAT_WS(', ',
+                IF(NOT (OLD.status <=> NEW.status), CONCAT('status: [', COALESCE(CAST(OLD.status AS UNSIGNED), 'NULL'), '] -> [', COALESCE(CAST(NEW.status AS UNSIGNED), 'NULL'), ']'), NULL)
+            )
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                      | AFTER  | 2026-11-04 05:28:11.38 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
+| trg_tbd_users_wishlist_products_after_delete  | DELETE | tbd_users_wishlist_products  | BEGIN
+    INSERT INTO tb_logs (table_name, operation, db_user, operation_date, description, operation_status)
+    VALUES (
+        'tbd_users_wishlist_products', 'Delete', USER(), CURRENT_TIMESTAMP,
+        CONCAT(
+            'Producto en lista de deseos eliminado. ', 'user_ID=', OLD.user_ID,
+            ', product_ID=', OLD.product_ID,
+            ', status=', COALESCE(CAST(OLD.status AS UNSIGNED), 'NULL')
+        ),
+        b'1'
+    );
+END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | AFTER  | 2026-11-04 05:28:11.38 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_0900_ai_ci   | utf8mb4_0900_ai_ci |
++-----------------------------------------------+--------+------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------+----------------------+----------------------+--------------------+
+75 rows in set (0.01 sec)
+
+mysql>

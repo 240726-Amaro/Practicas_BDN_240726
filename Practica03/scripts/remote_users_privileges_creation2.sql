@@ -75,7 +75,7 @@ GRANT SELECT, INSERT, UPDATE         ON db_test.tbd_users_wishlist_products TO '
 GRANT SELECT, INSERT         ON db_test.tb_orders      TO 'buyer';
 GRANT SELECT, INSERT, UPDATE ON db_test.tb_buyer_orders TO 'buyer';
 GRANT SELECT, INSERT         ON db_test.tbd_order_items TO 'buyer';
-GRANT SELECT, INSERT         ON db_test.tb_payments     TO 'buyer';
+GRANT SELECT ON db_test.tb_payments TO 'buyer';
 GRANT SELECT                 ON db_test.tb_payment_transaction TO 'buyer';
 GRANT SELECT                 ON db_test.tb_shipments    TO 'buyer';
 
@@ -166,6 +166,23 @@ GRANT SELECT ON db_test.tbd_users_wishlist_products TO 'support';
       vw_trazabilidad_*).
    ============================================================ */
 
+GRANT SELECT ON db_test.tb_products TO 'common_user';
+GRANT SELECT ON db_test.tbc_categories TO 'common_user';
+GRANT SELECT ON db_test.tbd_products_categories TO 'common_user';
+GRANT SELECT ON db_test.tbd_products_users_providers TO 'common_user';
+
+GRANT SELECT, INSERT, UPDATE ON db_test.tb_carts TO 'common_user';
+GRANT SELECT, INSERT, UPDATE, DELETE ON db_test.tbd_carts_items TO 'common_user';
+
+GRANT SELECT, INSERT ON db_test.tb_orders TO 'common_user';
+GRANT SELECT, INSERT ON db_test.tb_buyer_orders TO 'common_user';
+GRANT SELECT, INSERT ON db_test.tbd_order_items TO 'common_user';
+
+GRANT SELECT, INSERT, UPDATE ON db_test.tb_user_addresses TO 'common_user';
+GRANT SELECT, INSERT, UPDATE ON db_test.tbd_address_components TO 'common_user';
+GRANT SELECT, INSERT, UPDATE ON db_test.tbd_user_payment_methods TO 'common_user';
+GRANT SELECT ON db_test.tbc_payment_methods TO 'common_user';
+GRANT SELECT ON db_test.tbc_payment_methods_types TO 'common_user';
 
 /* ============================================================
    6. CORRECCIONES EN USUARIOS
@@ -179,8 +196,8 @@ SET DEFAULT ROLE 'support' TO 'eduardo.amaro'@'%';
 -- Un rol otorgado con GRANT no se activa al conectarse si no está en el rol por
 -- defecto. Este bloque debe ejecutarse DESPUÉS de la sección 5 de tu script de
 -- usuarios (o actualiza esa sección), porque el último SET DEFAULT ROLE es el que vale.
-SET DEFAULT ROLE 'user_not_registered', 'common_user', 'buyer' TO 'app.movil'@'%';
-SET DEFAULT ROLE 'user_not_registered', 'common_user', 'buyer' TO 'app.web'@'%';
+SET DEFAULT ROLE 'user_not_registered' TO 'app.movil'@'%';
+SET DEFAULT ROLE 'user_not_registered' TO 'app.web'@'%';
 
 -- Pendientes (descomenta y ajusta cuando decidas su rol):
 -- GRANT 'support' TO 'uriel.gonzalez'@'%';
@@ -201,5 +218,9 @@ SET DEFAULT ROLE 'user_not_registered', 'common_user', 'buyer' TO 'app.web'@'%';
 -- SHOW GRANTS FOR 'support';
 -- SHOW GRANTS FOR 'user_not_registered';
 -- SHOW GRANTS FOR 'jose.castillo'@'%' USING 'buyer';
+
+GRANT EXECUTE ON PROCEDURE db_test.sp_process_payment TO 'buyer';
+
+
 
 SELECT 'Privilegios por rol aplicados correctamente' AS mensaje;
