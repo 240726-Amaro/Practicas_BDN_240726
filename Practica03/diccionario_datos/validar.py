@@ -5,9 +5,10 @@ ROOT = BASE.parent
 MD = (BASE / 'diccionario_datos.md').read_text(encoding='utf-8')
 DBML = (BASE / 'schema.dbml').read_text(encoding='utf-8')
 SCHEMA = json.loads((BASE / 'estructura.json').read_text(encoding='utf-8'))
-TABLES = [o['name'] for o in SCHEMA['objects'] if o['kind'] == 'table']
-EXPECTED_COLUMNS = sum(len(o.get('columns', [])) for o in SCHEMA['objects'] if o['kind'] == 'table')
-TABLE_OBJECTS = [o for o in SCHEMA['objects'] if o['kind'] == 'table']
+SELECTED = set(SCHEMA.get('dictionary_tables', []))
+TABLES = [o['name'] for o in SCHEMA['objects'] if o['kind'] == 'table' and o['name'] in SELECTED]
+EXPECTED_COLUMNS = sum(len(o.get('columns', [])) for o in SCHEMA['objects'] if o['kind'] == 'table' and o['name'] in SELECTED)
+TABLE_OBJECTS = [o for o in SCHEMA['objects'] if o['kind'] == 'table' and o['name'] in SELECTED]
 OBJECT_COUNTS = {k: sum(o['kind'] == k for o in SCHEMA['objects']) for k in ('table','view','trigger','procedure','function')}
 FK_NAMES = []
 for table in TABLE_OBJECTS:
@@ -20,7 +21,7 @@ DBML_STRUCTURAL_OK = len(DBML_TABLES) == len(TABLE_OBJECTS) and len(DBML_REFS) =
 
 def independent_insert_count(target):
     """Second count-only tokenizer for quoted top-level INSERT lines; stores no values."""
-    source = ROOT / 'Practica03' / 'backups' / 'BD17.sql'
+    source = ROOT / 'Practica03' / 'backups' / 'BD19.sql'
     active = False; in_values = False; depth = 0; total = 0
     with source.open('r', encoding='utf-8', errors='replace') as stream:
         for line in stream:
@@ -177,7 +178,7 @@ result = {
         'columnas': EXPECTED_COLUMNS,
         'llaves_foraneas': len(FK_NAMES),
         'columnas_derivadas': sum('GENERATED' in c.get('extra','').upper() for t in TABLE_OBJECTS for c in t.get('columns',[])),
-        'coinciden_con_estructura_json': SCHEMA.get('counts',{}).get('columns') == EXPECTED_COLUMNS and SCHEMA.get('counts',{}).get('foreign_keys') == len(FK_NAMES),
+        'coinciden_con_estructura_json': SCHEMA.get('dictionary_counts',{}).get('columns') == EXPECTED_COLUMNS and SCHEMA.get('dictionary_counts',{}).get('foreign_keys') == len(FK_NAMES),
         'campos_de_clasificacion_vacios': CLASSIFICATION_EMPTY,
         'llaves_foraneas_detectadas': FK_NAMES,
         'verificacion_independiente_tablas_pequenas': SMALL_TABLE_CHECKS,
@@ -217,7 +218,7 @@ result = {
         'errores_dominio_FK': bad_fk_domains,
         'errores_dominio_fecha': bad_date_domains,
     },
-    'resultado': 'OK' if not (md_missing_sections or md_bad_descriptions or xlsx_missing_tables or xlsx_bad_table_rows or xlsx_bad_column_descriptions or md_class_rows != EXPECTED_COLUMNS or xlsx_column_count != EXPECTED_COLUMNS or bad_identifier_nature or bad_formal_notation or bad_auto_increment_domain or not password_hash_ok or bad_fk_domains or bad_date_domains or generic_descriptions or descriptions_with_restrictions or CLASSIFICATION_EMPTY or not SMALL_TABLE_CHECKS_OK or not DBML_STRUCTURAL_OK or SCHEMA.get('counts',{}).get('columns') != EXPECTED_COLUMNS or SCHEMA.get('counts',{}).get('foreign_keys') != len(FK_NAMES)) else 'FALLÓ'
+    'resultado': 'OK' if not (md_missing_sections or md_bad_descriptions or xlsx_missing_tables or xlsx_bad_table_rows or xlsx_bad_column_descriptions or md_class_rows != EXPECTED_COLUMNS or xlsx_column_count != EXPECTED_COLUMNS or bad_identifier_nature or bad_formal_notation or bad_auto_increment_domain or not password_hash_ok or bad_fk_domains or bad_date_domains or generic_descriptions or descriptions_with_restrictions or CLASSIFICATION_EMPTY or not SMALL_TABLE_CHECKS_OK or not DBML_STRUCTURAL_OK or SCHEMA.get('dictionary_counts',{}).get('columns') != EXPECTED_COLUMNS or SCHEMA.get('dictionary_counts',{}).get('foreign_keys') != len(FK_NAMES)) else 'FALLÓ'
 }
 print(json.dumps(result, ensure_ascii=False, indent=2))
 if result['resultado'] != 'OK':

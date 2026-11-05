@@ -8,9 +8,9 @@ def local_stamp(value):
     offset = value.strftime("%z")
     return f"{value:%Y-%m-%d %H:%M:%S} {offset[:3]}:{offset[3:]}"
 
-ROOT = pathlib.Path(__file__).resolve().parent.parent
-SRC = ROOT / "Practica03" / "backups" / "BD17.sql"
-OUT = ROOT / "diccionario_datos"
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+SRC = ROOT / "Practica03" / "backups" / "BD19.sql"
+OUT = ROOT / "Practica03" / "diccionario_datos"
 
 objects = []
 active = None
@@ -60,12 +60,24 @@ with SRC.open("r", encoding="utf-8", errors="replace") as source:
             add_object(kind, blob)
             active, kind = None, None
 
+# mysqldump writes temporary CREATE VIEW stubs (SELECT 1) and the real
+# definitions later as /*!50001 VIEW ... */ statements. Prefer the final SQL.
+source_text = SRC.read_text(encoding="utf-8", errors="replace")
+final_views = re.findall(r"/\*!50001\s+VIEW\s+`([^`]+)`\s+AS\s+(.*?)\*/;", source_text, re.I | re.S)
+for name, definition in final_views:
+    sql = f"CREATE VIEW `{name}` AS {definition.strip()};"
+    existing = next((obj for obj in objects if obj["kind"] == "view" and obj["name"] == name), None)
+    if existing:
+        existing["sql"] = sql
+    else:
+        objects.append({"kind": "view", "name": name, "sql": sql})
+
 counts = {k: sum(item["kind"] == k for item in objects)
           for k in ("table", "view", "trigger", "procedure", "function")}
 payload = {
-    "database": "BD17",
-    "mysql_version": "8.0.36",
-    "source": "Practica03/backups/BD17.sql",
+    "database": "BD19",
+    "mysql_version": "8.0.45",
+    "source": "Practica03/backups/BD19.sql",
     "source_date": datetime.fromtimestamp(SRC.stat().st_mtime).astimezone().date().isoformat(),
     "source_modified": local_stamp(datetime.fromtimestamp(SRC.stat().st_mtime).astimezone()),
     "extraction_scope": "CREATE TABLE (incluye índices, claves y CHECK declarados en tabla), CREATE/ALTER TABLE y CREATE INDEX si existen, además de VIEW/TRIGGER/PROCEDURE/FUNCTION. INSERT INTO se descarta durante extracción de esquema.",

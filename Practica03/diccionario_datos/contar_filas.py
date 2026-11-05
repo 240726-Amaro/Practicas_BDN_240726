@@ -8,9 +8,9 @@ def local_stamp(value):
     offset = value.strftime("%z")
     return f"{value:%Y-%m-%d %H:%M:%S} {offset[:3]}:{offset[3:]}"
 
-ROOT = pathlib.Path(__file__).resolve().parent.parent
-SOURCE = ROOT / "Practica03" / "backups" / "BD17.sql"
-OUT = ROOT / "diccionario_datos" / "estructura.json"
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+SOURCE = ROOT / "Practica03" / "backups" / "BD19.sql"
+OUT = ROOT / "Practica03" / "diccionario_datos" / "estructura.json"
 counts = {}
 table = None
 in_insert = False
@@ -76,9 +76,13 @@ data = json.loads(OUT.read_text(encoding="utf-8"))
 for obj in data.get("objects", []):
     if obj.get("kind") == "table": counts.setdefault(obj["name"], "No verificable en el respaldo")
 data["row_counts"] = counts
+table_order = [obj["name"] for obj in data.get("objects", []) if obj.get("kind") == "table"]
+populated = [name for name in table_order if isinstance(counts.get(name), int) and counts[name] > 0]
+empty = [name for name in table_order if name not in populated]
+data["dictionary_tables"] = (populated + empty)[:25]
 counted_at = local_stamp(datetime.now().astimezone())
 data["row_counted_at"] = counted_at
-data["row_count_source"] = f"Conteo streaming de filas reales en sentencias INSERT de BD17.sql; {counted_at}; corresponde al respaldo, no a la instancia en vivo."
+data["row_count_source"] = f"Conteo streaming de filas reales en sentencias INSERT de BD19.sql; {counted_at}; corresponde al respaldo, no a la instancia en vivo."
 OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 verified = [value for value in counts.values() if isinstance(value, int)]
 print(json.dumps({"tablas_con_insert": len(verified), "total_filas_verificables": sum(verified),

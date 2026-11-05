@@ -25,7 +25,7 @@ class Links(HTMLParser):
 
 
 data = json.loads(SOURCE.read_text(encoding="utf-8-sig"))
-expected = {"tables": 29, "views": 25, "triggers": 75, "procedures": 7, "functions": 15}
+expected = {"tables": 29, "views": 25, "triggers": 75, "procedures": 8, "functions": 15}
 objects = data.get("objects", [])
 actual = {
     "tables": sum(o.get("kind") == "table" for o in objects),

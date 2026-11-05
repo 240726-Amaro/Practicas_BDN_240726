@@ -8,9 +8,15 @@ OUT = ROOT / 'docs'
 DOWNLOADS = OUT / 'descargas'
 ASSETS = OUT / 'assets'
 DATA = json.loads((SRC / 'estructura.json').read_text(encoding='utf-8'))
-SOURCE_NOTE = f"Estructura y totales de registros obtenidos del respaldo BD17.sql (fecha del archivo: {DATA.get('source_modified')}). Conteo de registros realizado el: {DATA.get('row_counted_at')}. Los totales corresponden al respaldo, no a la instancia en vivo."
+SOURCE_NOTE = f"Estructura y totales de registros obtenidos del respaldo BD19.sql (fecha del archivo: {DATA.get('source_modified')}). Conteo de registros realizado el: {DATA.get('row_counted_at')}. Los totales corresponden al respaldo, no a la instancia en vivo."
 OBJECTS = DATA['objects']
-TABLES = [o for o in OBJECTS if o['kind'] == 'table']
+SELECTED = set(DATA.get('dictionary_tables', [o['name'] for o in OBJECTS if o['kind'] == 'table'][:25]))
+TABLES = sorted((o for o in OBJECTS if o['kind'] == 'table' and o['name'] in SELECTED),key=lambda o:DATA.get('dictionary_tables',[]).index(o['name']))
+def view_is_selected(obj):
+    owners=set(re.findall(r"'((?:tb_|tbc_|tbd_)[\w]+)'",obj['sql']))
+    if owners: return bool(owners & SELECTED)
+    refs=set(re.findall(r'`([^`]+)`',obj['sql'])); refs.discard('tb_logs')
+    return bool(refs & SELECTED)
 VIEWS = [o for o in OBJECTS if o['kind'] == 'view']
 TRIGGERS = [o for o in OBJECTS if o['kind'] == 'trigger']
 PROCEDURES = [o for o in OBJECTS if o['kind'] == 'procedure']
@@ -49,7 +55,7 @@ def render_table(t):
     constraint_html='<ul>'+''.join(f'<li><code>{esc(item)}</code></li>' for item in constraints)+'</ul>' if constraints else '<p>Sin índices o restricciones declarados.</p>'
     return f'''<article class="table-card" id="{slug(t['name'])}" data-table="{esc(t['name'].lower())}" data-search="{esc(t['name'].lower())}">
       <details open><summary><h3>{esc(t['name'])}</h3><span class="table-module">{esc(obj_group(t['name']))}</span></summary>
-      <div class="table-content"><p><b>Registros en BD17:</b> {DATA.get('row_counts',{}).get(t['name'],0)}</p><p>{esc(t.get('description_detailed','Descripción del objeto según estructura.json.'))}</p>
+      <div class="table-content"><p><b>Registros en BD19:</b> {DATA.get('row_counts',{}).get(t['name'],0)}</p><p>{esc(t.get('description_detailed','Descripción del objeto según estructura.json.'))}</p>
       <h4>Notación formal</h4><pre class="formal">{esc(t.get('formal_notation','No disponible'))}</pre>
       <h4>Tabla técnica de columnas</h4><div class="table-wrap"><table><thead><tr><th>#</th><th>Nombre</th><th>Tipo</th><th>Longitud/precisión</th><th>NULL</th><th>Default</th><th>Extras</th><th>Llave</th><th>Descripción</th></tr></thead><tbody>{''.join(technical)}</tbody></table></div>
       <h4>Tabla de clasificación</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Valor</th><th>Origen</th><th>Obligatoriedad</th><th>Llave</th><th>Naturaleza</th><th>Composición formal</th><th>Dominio</th><th>Descripción detallada</th></tr></thead><tbody>{''.join(classified)}</tbody></table></div>
@@ -58,7 +64,7 @@ def render_table(t):
 def render_views():
  rows=[]
  for v in VIEWS:
-  s=v['sql']; bases=list(dict.fromkeys(re.findall(r'\b(?:FROM|JOIN)\s+`?([\w]+)`?',s,re.I))); aliases=re.findall(r'\bAS\s+`([^`]+)`',s,re.I)
+  s=v['sql']; bases=list(dict.fromkeys(re.findall(r'\b(?:FROM|JOIN)\s+`?([\w]+)`?',s,re.I)+re.findall(r"'((?:tb_|tbc_|tbd_)[\w]+)'",s))); aliases=re.findall(r'\bAS\s+`([^`]+)`',s,re.I)
   rows.append(f'<article class="object-card"><h3>{esc(v["name"])}</h3><p>Presenta trazabilidad de {esc(v["name"].replace("vw_trazabilidad_"," ").replace("_"," "))}, según el SELECT declarado (inferido).</p><p><b>Tablas base:</b> {esc(", ".join(bases) or "Fuentes declaradas por las expresiones SELECT")}</p><p><b>Columnas expuestas:</b> {esc(", ".join(aliases) or "Columnas seleccionadas en el cuerpo SQL")}</p></article>')
  return ''.join(rows)
 
@@ -183,7 +189,7 @@ for module,names in MODULES.items():
   if child in names and parent in names:
    diagrams.append(f'{parent} ||--o{{ {child} : "{fk}"')
  diagrams.append('</pre></div></div></div>')
-diagram_html='<div class="archify-frame"><iframe src="diagrama/db-test-archify.html" title="Diagrama relacional Archify de BD17" loading="lazy"></iframe><p><a href="diagrama/db-test-archify.html" target="_blank" rel="noopener">Abrir el diagrama Archify en una pestaña</a></p></div>'
+diagram_html='<div class="archify-frame"><iframe src="diagrama/db-test-archify.html" title="Diagrama relacional Archify de BD19" loading="lazy"></iframe><p><a href="diagrama/db-test-archify.html" target="_blank" rel="noopener">Abrir el diagrama Archify en una pestaña</a></p></div>'
 
 nav=[('inicio','Inicio'),('tablas','Tablas'),('volumen','Volumen de datos'),('vistas','Vistas'),('triggers','Triggers'),('procedimientos','Procedimientos'),('funciones','Funciones'),('dominios','Dominios y ENUM'),('convenciones','Convenciones'),('leyenda','Notación y criterios'),('resumen','Resumen estadístico'),('observaciones','Observaciones de calidad'),('historial','Historial de cambios'),('diagrama','Diagrama ER')]
 sidebar=''.join(f'<a href="#{i}">{esc(label)}</a>' for i,label in nav)
@@ -192,11 +198,11 @@ sections.append(f'<section id="tablas"><h2>Tablas</h2><div class="filters"><labe
 row_counts=DATA.get('row_counts',{}); row_total=sum(v for v in row_counts.values() if isinstance(v,int)); verified=sum(isinstance(row_counts.get(t['name']),int) for t in TABLES)
 volume_body=md_section(md_text,'Volumen de datos')
 volume_rows=''.join(f'<tr><td><code>{esc(t["name"])}</code></td><td>{row_counts.get(t["name"],"No verificable en el respaldo")}</td><td>{(100*row_counts[t["name"]]/row_total):.2f}%</td></tr>' if isinstance(row_counts.get(t['name']),int) and row_total else f'<tr><td><code>{esc(t["name"])}</code></td><td>No verificable en el respaldo</td><td>—</td></tr>' for t in sorted(TABLES,key=lambda t:(-(row_counts.get(t['name']) if isinstance(row_counts.get(t['name']),int) else -1),t['name'])))
-sections.append('<section id="volumen"><h2>Volumen de datos</h2><p>'+esc(SOURCE_NOTE)+'</p><p>Total: '+str(row_total)+' registros verificables en '+str(verified)+' tablas; '+str(len(TABLES)-verified)+' tablas sin INSERT no verificables en el respaldo BD17.sql.</p><div class="table-wrap"><table><thead><tr><th>Tabla</th><th>Registros</th><th>Porcentaje del total</th></tr></thead><tbody>'+volume_rows+f'<tr><th>Total</th><th>{row_total}</th><th>100.00%</th></tr></tbody></table></div><p>Tablas sin INSERT verificable: '+str(len(TABLES)-verified)+'. tb_logs crece con cada INSERT/UPDATE/DELETE auditado y no representa datos de negocio; gran parte de tb_users y tb_people corresponde a datos de prueba generados.</p>'+volume_body+'</section>')
+sections.append('<section id="volumen"><h2>Volumen de datos</h2><p>'+esc(SOURCE_NOTE)+'</p><p>Total: '+str(row_total)+' registros verificables en '+str(verified)+' tablas; '+str(len(TABLES)-verified)+' tablas sin INSERT no verificables en el respaldo BD19.sql.</p><div class="table-wrap"><table><thead><tr><th>Tabla</th><th>Registros</th><th>Porcentaje del total</th></tr></thead><tbody>'+volume_rows+f'<tr><th>Total</th><th>{row_total}</th><th>100.00%</th></tr></tbody></table></div><p>Tablas sin INSERT verificable: '+str(len(TABLES)-verified)+'. tb_logs crece con cada INSERT/UPDATE/DELETE auditado y no representa datos de negocio; gran parte de tb_users y tb_people corresponde a datos de prueba generados.</p>'+volume_body+'</section>')
 sections.append('<section id="vistas"><h2>Vistas</h2>'+render_views()+'</section>')
 sections.append('<section id="triggers"><h2>Triggers</h2><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Tabla</th><th>Evento</th><th>Momento</th><th>Columnas escritas en tb_logs</th><th>Formato de description</th></tr></thead><tbody>'+render_triggers()+'</tbody></table></div></section>')
 sections.append('<section id="procedimientos"><h2>Procedimientos</h2>'+render_procedures()+'</section>')
-sections.append('<section id="funciones"><h2>Funciones</h2>'+('<p>No hay funciones definidas en BD17.sql.</p>' if not FUNCTIONS else ''.join(render_function(f) for f in FUNCTIONS))+'</section>')
+sections.append('<section id="funciones"><h2>Funciones</h2>'+('<p>No hay funciones definidas en BD19.sql.</p>' if not FUNCTIONS else ''.join(render_function(f) for f in FUNCTIONS))+'</section>')
 sections.append('<section id="dominios"><h2>Dominios y ENUM</h2>'+render_domains()+'</section>')
 sections.append('<section id="convenciones"><h2>Convenciones de nombres</h2>'+conventions+'</section>')
 sections.append('<section id="leyenda"><h2>Leyenda de la notación y criterios de clasificación</h2>'+legend+'</section>')
@@ -207,9 +213,9 @@ sections.append('<section id="diagrama"><h2>Diagrama ER</h2><p>Diagramas generad
 sections.append('<section id="pendientes"><h2>Pendientes por confirmar</h2><ul>'+notes+'</ul></section>')
 
 html_doc=f'''<!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Diccionario de datos de BD17, MySQL 8.0.36"><title>Diccionario de datos · BD17</title><link rel="stylesheet" href="assets/site.css"><script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js"></script><script defer src="assets/site.js"></script></head><body>
-<aside class="sidebar"><a class="brand" href="#inicio">BD17</a><label class="search-label" for="site-search">Buscar tablas y columnas</label><input id="site-search" type="search" placeholder="Nombre de tabla o columna"><nav>{sidebar}</nav><div class="sidebar-actions"><button id="theme-toggle" type="button">Modo oscuro</button><a href="descargas/diccionario_datos.xlsx" download>Descargar XLSX</a><a href="descargas/diccionario_datos.md" download>Descargar Markdown</a><a href="descargas/schema.dbml" download>Descargar DBML</a><a href="descargas/prompts_utilizados.md" download>Registro de prompts</a></div></aside>
-<main><section id="inicio" class="hero"><p class="eyebrow">Diccionario de datos</p><h1>BD17</h1><p>Esquema relacional documentado para <b>MySQL {esc(DATA['mysql_version'])}</b>.</p><div class="counts"><span><b>{len(TABLES)}</b> tablas</span><span><b>{len(VIEWS)}</b> vistas</span><span><b>{len(TRIGGERS)}</b> triggers</span><span><b>{len(PROCEDURES)}</b> procedimientos</span><span><b>{row_total:,}</b> registros</span></div><p>Consulta el modelo, los dominios, la auditoría y las reglas del esquema. El sitio se genera desde <code>estructura.json</code>.</p></section>{''.join(sections)}<footer>Generado localmente con HTML, CSS y JavaScript. Mermaid.js 11.4.1 se carga desde jsDelivr.</footer></main></body></html>'''
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Diccionario de datos de BD19, MySQL 8.0.45"><title>Diccionario de datos · BD19</title><link rel="stylesheet" href="assets/site.css"><script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js"></script><script defer src="assets/site.js"></script></head><body>
+<aside class="sidebar"><a class="brand" href="#inicio">BD19</a><label class="search-label" for="site-search">Buscar tablas y columnas</label><input id="site-search" type="search" placeholder="Nombre de tabla o columna"><nav>{sidebar}</nav><div class="sidebar-actions"><button id="theme-toggle" type="button">Modo oscuro</button><a href="descargas/diccionario_datos.xlsx" download>Descargar XLSX</a><a href="descargas/diccionario_datos.md" download>Descargar Markdown</a><a href="descargas/schema.dbml" download>Descargar DBML</a><a href="descargas/prompts_utilizados.md" download>Registro de prompts</a></div></aside>
+<main><section id="inicio" class="hero"><p class="eyebrow">Diccionario de datos</p><h1>BD19</h1><p>Esquema relacional documentado para <b>MySQL {esc(DATA['mysql_version'])}</b>.</p><div class="counts"><span><b>{len(TABLES)}</b> tablas</span><span><b>{len(VIEWS)}</b> vistas</span><span><b>{len(TRIGGERS)}</b> triggers</span><span><b>{len(PROCEDURES)}</b> procedimientos</span><span><b>{row_total:,}</b> registros</span></div><p>Consulta el modelo, los dominios, la auditoría y las reglas del esquema. El sitio se genera desde <code>estructura.json</code>.</p></section>{''.join(sections)}<footer>Generado localmente con HTML, CSS y JavaScript. Mermaid.js 11.4.1 se carga desde jsDelivr.</footer></main></body></html>'''
 
 OUT.mkdir(exist_ok=True); DOWNLOADS.mkdir(parents=True,exist_ok=True); ASSETS.mkdir(parents=True,exist_ok=True)
 (OUT/'diagrama').mkdir(parents=True,exist_ok=True)
