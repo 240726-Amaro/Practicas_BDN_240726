@@ -104,6 +104,18 @@ SET DEFAULT ROLE 'buyer' TO 'jose.castillo'@'%';
 SET DEFAULT ROLE 'user_not_registered' TO 'app.movil'@'%';
 SET DEFAULT ROLE 'user_not_registered' TO 'app.web'@'%';
 
+-- buyer: registrar el pago por medio del procedimiento
+GRANT EXECUTE ON PROCEDURE db_test.sp_pay_order TO 'buyer';
+
+-- common_user: "iniciar sesión" y ver su perfil (sin password)
+GRANT SELECT (ID, email, nickname, creation_date, last_login, status)
+      ON db_test.tb_users TO 'common_user';
+GRANT SELECT ON db_test.tb_people TO 'common_user';
+
+-- common_user: poner el domicilio de envío en su orden después de crearla
+GRANT UPDATE (shipping_address) ON db_test.tb_orders TO 'common_user';
+
+SELECT 'sp_pay_order y permisos para los casos 2-5 aplicados' AS mensaje;
 /* Recargar la tabla de privilegios */
 FLUSH PRIVILEGES;
 
