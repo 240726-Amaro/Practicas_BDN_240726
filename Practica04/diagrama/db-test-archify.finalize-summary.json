@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "erd",
+  "quality": "standard",
+  "specification": {
+    "path": "C:\\BDN\\Practicas_BDN_240726\\.archify\\erd-db-test-20261119-111107\\candidate.json",
+    "sha256": "03745f8f8dd8f55189fbfc837aad224a9834bbec07ca6009f874654d32ca033e",
+    "bytes": 39614
+  },
+  "artifact": {
+    "path": "C:\\BDN\\Practicas_BDN_240726\\Practica04\\diagrama\\db-test-archify.html",
+    "sha256": "1402cbb4071961a60e5faeb69ae9be7610068e2a68f5402f6d6395d0f1fe4f05",
+    "bytes": 1003235
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "C:\\BDN\\Practicas_BDN_240726\\.archify\\erd-db-test-20261119-111107\\review-3\\db-test-archify.finalize.json",
+    "summaryReceipt": "C:\\BDN\\Practicas_BDN_240726\\.archify\\erd-db-test-20261119-111107\\review-3\\db-test-archify.finalize-summary.json",
+    "browserCheckReceipt": "C:\\BDN\\Practicas_BDN_240726\\.archify\\erd-db-test-20261119-111107\\review-3\\db-test-archify.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-19T17:11:44.334Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 16438,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  },
+  "visualReviewRecommendation": {
+    "action": "inspect-route-readability",
+    "signals": {
+      "routesOverSuggestedBends": 14,
+      "routesOverSuggestedStretch": 1
+    },
+    "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
+    "affectedRoutes": {
+      "crossings": [],
+      "detours": [
+        {
+          "relationship": {
+            "id": "fk_carts_user",
+            "from": "tb_carts",
+            "to": "tb_users",
+            "label": "",
+            "collectionIndex": 8,
+            "artifactIndex": 9
+          },
+          "bends": 4,
+          "stretch": 1.106
+        },
+        {
+          "relationship": {
+            "id": "fk_orders_cart",
+            "from": "tb_orders",
+            "to": "tb_carts",
+            "label": "1:1 se genera de",
+            "collectionIndex": 11,
+            "artifactIndex": 12
+          },
+          "bends": 3,
+          "stretch": 1.075,
+          "directCorridorBlockers": [
+            {
+              "id": "tbd_carts_items",
+              "label": "tbd_carts_items",
+              "box": [
+                757,
+                352,
+                229,
+                136
+              ]
+            }
+          ]
+        },
+        {
+          "relationship": {
+            "id": "fk_orders_user",
+            "from": "tb_orders",
+            "to": "tb_users",
+            "label": "",
+            "collectionIndex": 12,
+            "artifactIndex": 13
+          },
+          "bends": 6,
+          "stretch": 1.678
+        },
+        {
+          "relationship": {
+            "id": "fk_seller_orders_seller",
+            "from": "tb_buyer_orders",
+            "to": "tb_users",
+            "label": "",
+            "collectionIndex": 14,
+            "artifactIndex": 15
+          },
+          "bends": 4,
+          "stretch": 1
+        },
+        {
+          "relationship": {
+            "id": "tbd_user_payment_methods_ibfk_1",
+            "from": "tbd_user_payment_methods",
+            "to": "tb_users",
+            "label": "",
+            "collectionIndex": 17,
+            "artifactIndex": 18
+          },
+          "bends": 4,
+          "stretch": 1.119
+        },
+        {
+          "relationship": {
+            "id": "fk_shipments_buyer_order",
+            "from": "tb_shipments",
+            "to": "tb_buyer_orders",
+            "label": "",
+            "collectionIndex": 24,
+            "artifactIndex": 25
+          },
+          "bends": 4,
+          "stretch": 1
+        },
+        {
+          "relationship": {
+            "id": "fk_returns_buyer_order",
+            "from": "tb_returns",
+            "to": "tb_buyer_orders",
+            "label": "",
+            "collectionIndex": 25,
+            "artifactIndex": 26
+          },
+          "bends": 4,
+          "stretch": 1
+        },
+        {
+          "relationship": {
+            "id": "fk_returns_user",
+            "from": "tb_returns",
+            "to": "tb_users",
+            "label": "",
+            "collectionIndex": 26,
+            "artifactIndex": 27
+          },
+          "bends": 4,
+          "stretch": 1
+        }
+      ],
+      "truncated": true
+    },
+    "repair": "Advisory only: this mode places or routes these relationships itself. Report them; do not remove relationships or meaning to reduce crossings."
+  }
+}
